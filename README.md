@@ -1,5 +1,5 @@
-# Wordpress plugin for displaying 
-# BEST current courses and list of lbgs
+# Wordpress plugin 
+# Displaying current BEST courses and list of lbgs on wordpress site 
 
 Plugin is in development as part of project for IT students.
 
