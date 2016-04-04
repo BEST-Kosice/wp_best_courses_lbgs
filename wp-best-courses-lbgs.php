@@ -29,6 +29,16 @@ require_once( 'includes/lib/class-wp-best-courses-lbgs-post-type.php' );
 require_once( 'includes/lib/class-wp-best-courses-lbgs-taxonomy.php' );
 
 /**
+ * Cron support
+ */
+function wp_best_courses_lbgs_cron_task () {
+    //TODO: put here code to execute on cron run
+
+}
+
+add_action('best_courses_lbgs_cron_task', 'wp_best_courses_lbgs_cron_task');
+
+/**
  * Returns the main instance of wp_best_courses_lbgs to prevent the need to use globals.
  *
  * @since  1.0.0
