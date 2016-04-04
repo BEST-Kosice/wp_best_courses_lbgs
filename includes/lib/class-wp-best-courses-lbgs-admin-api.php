@@ -2,6 +2,8 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+use best\kosice\datalib as BST_data;
+
 class wp_best_courses_lbgs_Admin_API {
 
 	/**
@@ -197,6 +199,15 @@ class wp_best_courses_lbgs_Admin_API {
 		}
 
 		echo $html;
+
+
+
+
+		$BEST_data = new BST_data\best_kosice_data();
+
+		echo '<pre>';
+		$parsed = $BEST_data->courses();
+		var_dump($parsed);
 
 	}
 
