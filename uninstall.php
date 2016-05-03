@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 
+ *
  * This file runs when the plugin in uninstalled (deleted).
  * This will not run when the plugin is deactivated.
  * Ideally you will add all your clean-up scripts here
@@ -23,19 +23,11 @@ $wp_best_courses_lbgs_database_tables = array('best_events', 'lbg');
 /**
  * Deletes a table from the database.
  * Should be run at the time of plugin deactivation on all custom tables.
- *
- * @param $table_name_without_prefix table name before WP adds a prefix.
  */
-function wp_best_courses_lbgs_drop_table( $table_name_without_prefix ) {
-    //Global instance of the WordPress Database
-    global $wpdb;
+ function wp_best_courses_lbgs_drop_tables() {
+     //Global instance of the WordPress Database
+     global $wpdb;
 
-    //Name of the dropped table
-    $table_name = $wpdb->prefix . $table_name_without_prefix;
-
-    $wpdb->query("DROP TABLE IF EXISTS $table_name");
-}
-
-foreach($wp_best_courses_lbgs_database_tables as $table) {
-    wp_best_courses_lbgs_drop_table($table);
-}
+     $wpdb->query('DROP TABLE IF EXISTS '.$wpdb->prefix.'best_events, '.$wpdb->prefix.'best_lbg');
+ }
+wp_best_courses_lbgs_drop_tables();

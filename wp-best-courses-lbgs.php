@@ -2,10 +2,10 @@
 /*
  * Plugin Name: wp_best_courses_lbgs
  * Version: 1.0
- * Plugin URI: http://www.hughlashbrooke.com/
+ * Plugin URI: http://www.best.tuke.sk/
  * Description: This is your starter template for your next WordPress plugin.
- * Author: Hugh Lashbrooke
- * Author URI: http://www.hughlashbrooke.com/
+ * Author: BEST AJ TY
+ * Author URI: http://www.best.tuke.sk/
  * Requires at least: 4.0
  * Tested up to: 4.0
  *
@@ -13,7 +13,7 @@
  * Domain Path: /lang/
  *
  * @package WordPress
- * @author Hugh Lashbrooke
+ * @author BEST AJ TY
  * @since 1.0.0
  */
 
@@ -46,35 +46,95 @@ $wp_best_courses_lbgs_database_tables = array('best_events', 'lbg');
  * Content of the file must be only a list of rows expected BETWEEN parenthesis, in the following format:
  * CREATE TABLE name ( FILE_CONTENT );
  */
-function wp_best_courses_lbgs_create_table( $table_name_without_prefix ) {
+function wp_best_courses_lbgs_create_tables() {
     //Global instance of the WordPress Database
     global $wpdb;
 
+    // sql for creating tables in heredoc
+
+    $sql_events = <<< SQL
+CREATE TABLE IF NOT EXISTS {$wpdb->prefix}best_events (
+id_event int(11) NOT NULL,
+event_name varchar(100) NOT NULL,
+place varchar(40) NOT NULL,
+dates varchar(40) NOT NULL,
+event_type varchar(100) NOT NULL,
+acad_compl varchar(20) DEFAULT NULL,
+fee varchar(10) NOT NULL,
+app_deadline varchar(30) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
+SQL;
+
+// podľa mňa nieje potrebné kedže nieje relácia
+    $sql_events_pk = <<< SQL
+ALTER TABLE {$wpdb->prefix}best_events
+ADD PRIMARY KEY (id_event)
+SQL;
+
+// auto increment
+    $sql_events_auto_inc = <<< SQL
+ALTER TABLE {$wpdb->prefix}best_events
+MODIFY id_event int(11) NOT NULL AUTO_INCREMENT
+SQL;
+
+    $sql_lbg = <<< SQL
+CREATE TABLE IF NOT EXISTS {$wpdb->prefix}best_lbg (
+id_lbg int(11) NOT NULL,
+city varchar(50) NOT NULL,
+state varchar(50) NOT NULL,
+web_page varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
+SQL;
+
+    $sql_lbg_pk = <<< SQL
+ALTER TABLE {$wpdb->prefix}best_lbg
+ADD PRIMARY KEY (id_lbg);
+SQL;
+    $sql_lbg_auto_inc = <<< SQL
+ALTER TABLE {$wpdb->prefix}best_lbg
+MODIFY id_lbg int(11) NOT NULL AUTO_INCREMENT;
+SQL;
+
+// CREATE EVENTS TABLE
+  $wpdb->query($sql_events);
+  $wpdb->query($sql_events_pk);
+  $wpdb->query($sql_events_auto_inc);
+
+// CREATE LBG TABLE
+  $wpdb->query($sql_lbg);
+  $wpdb->query($sql_lbg_pk);
+  $wpdb->query($sql_lbg_auto_inc);
+
+    // príde mi to príliš komplikované riešenie prečo načítavaš a otváraš súbory zbytočné rovno môžeš písať sql ako heredoc
+    // chýbajú tam autoicrementy a primary key
+    // taktiež čo sa týka charsetu potrebuješ držať utf8 lebo vyparsované údaje su utf8
+    // odkazuješ na jadro wp čo sa občas  môže pri aktualizácii  zmeniť
+
     //Name of the created table
-    $table_name = $wpdb->prefix . $table_name_without_prefix;
-
-    //Path to the create table database script file
-    $path_script = plugin_dir_path ( __FILE__ ) . 'db-script/create_' . $table_name_without_prefix . '.sql';
-
-    //Reading the content of the create table database script
-    $file_script = fopen($path_script, "r") or die("Unable to open file!");
-    $create_script_content = fread($file_script, filesize($path_script));
-    fclose($file_script);
-
-    //Charset
-    $charset_collate = $wpdb->get_charset_collate();
-
-    //Preparing the SQL statement
-    $sql_script = "CREATE TABLE $table_name (
-$create_script_content
-) $charset_collate;";
-
-    //DEBUG: Logging the SQL Statement
-    //scsc_log("Creating database using script:\n" . $sql_script);
-
-    //Creating (or upgrading) the databases
-    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-    dbDelta( $sql_script );
+//     $table_name = $wpdb->prefix . $table_name_without_prefix;
+//
+//     //Path to the create table database script file
+//     $path_script = plugin_dir_path ( __FILE__ ) . 'db-script/create_' . $table_name_without_prefix . '.sql';
+//
+//     //Reading the content of the create table database script
+//     $file_script = fopen($path_script, "r") or die("Unable to open file!");
+//     $create_script_content = fread($file_script, filesize($path_script));
+//     fclose($file_script);
+//
+//     //Charset
+//     $charset_collate = $wpdb->get_charset_collate();
+//
+//     //Preparing the SQL statement
+//     $sql_script = "CREATE TABLE $table_name (
+// $create_script_content
+// ) $charset_collate;";
+//
+//     //DEBUG: Logging the SQL Statement
+//     //scsc_log("Creating database using script:\n" . $sql_script);
+//
+//     //Creating (or upgrading) the databases
+//     require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+//     dbDelta( $sql_script );
 }
 
 /**
@@ -184,14 +244,8 @@ add_action('best_courses_lbgs_cron_task', 'wp_best_courses_lbgs_cron_task');
  */
 function wp_best_courses_lbgs_activation() {
     wp_schedule_event(time(), 'hourly', 'best_courses_lbgs_cron_task');
-
-    global $wp_best_courses_lbgs_database_tables;
-    foreach($wp_best_courses_lbgs_database_tables as $table) {
-        //scsc_log("Did table $table already exist", wp_best_courses_lbgs_exists_table($table));
-        wp_best_courses_lbgs_create_table($table);
-    }
+    wp_best_courses_lbgs_create_tables();
 }
-
 register_activation_hook(__FILE__, 'wp_best_courses_lbgs_activation');
 
 /**
