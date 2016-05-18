@@ -55,7 +55,7 @@ class wp_best_courses_lbgs_Post_Type {
 		$this->description = $description;
 		$this->options = $options;
 
-		// Regsiter post type
+		// Register post type
 		add_action( 'init' , array( $this, 'register_post_type' ) );
 
 		// Display custom update messages for posts edits

@@ -56,8 +56,21 @@ class best_kosice_data
     public $conection_info      = false;
     public $error_id            = false;
 
+    private static $_instance;
+
+    public function __construct(){
+    }
+
+    //TODO convert singleton to static class
+    public static function instance () {
+        if ( is_null( self::$_instance ) ) {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
+
     /**
-     * returt list of courses and details.
+     * return list of courses and details.
      *
      * @return array false on error
      */

@@ -29,10 +29,6 @@ require_once( 'includes/lib/class-wp-best-courses-lbgs-post-type.php' );
 require_once( 'includes/lib/class-wp-best-courses-lbgs-taxonomy.php'  );
 require_once( 'includes/lib/class-wp-best-courses-lbgs-parser.php'    );
 
-// Database table names used in this plugin (TODO: move them to a global plugin config)
-global $wp_best_courses_lbgs_database_tables;
-$wp_best_courses_lbgs_database_tables = array('best_events', 'lbg');
-
 /**
  * Creates (or upgrades) a table in the database.
  * Should be run at the time of the plugin activation on all custom tables.
@@ -104,37 +100,6 @@ SQL;
   $wpdb->query($sql_lbg);
   $wpdb->query($sql_lbg_pk);
   $wpdb->query($sql_lbg_auto_inc);
-
-    // príde mi to príliš komplikované riešenie prečo načítavaš a otváraš súbory zbytočné rovno môžeš písať sql ako heredoc
-    // chýbajú tam autoicrementy a primary key
-    // taktiež čo sa týka charsetu potrebuješ držať utf8 lebo vyparsované údaje su utf8
-    // odkazuješ na jadro wp čo sa občas  môže pri aktualizácii  zmeniť
-
-    //Name of the created table
-//     $table_name = $wpdb->prefix . $table_name_without_prefix;
-//
-//     //Path to the create table database script file
-//     $path_script = plugin_dir_path ( __FILE__ ) . 'db-script/create_' . $table_name_without_prefix . '.sql';
-//
-//     //Reading the content of the create table database script
-//     $file_script = fopen($path_script, "r") or die("Unable to open file!");
-//     $create_script_content = fread($file_script, filesize($path_script));
-//     fclose($file_script);
-//
-//     //Charset
-//     $charset_collate = $wpdb->get_charset_collate();
-//
-//     //Preparing the SQL statement
-//     $sql_script = "CREATE TABLE $table_name (
-// $create_script_content
-// ) $charset_collate;";
-//
-//     //DEBUG: Logging the SQL Statement
-//     //scsc_log("Creating database using script:\n" . $sql_script);
-//
-//     //Creating (or upgrading) the databases
-//     require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-//     dbDelta( $sql_script );
 }
 
 /**
@@ -231,9 +196,113 @@ function wp_best_courses_lbgs_cron_task () {
     //TODO: put here code to execute on cron run
 
     //scsc_log("cron wp task has been run");
+
+    refresh_db_best_events();
+    refresh_db_lbgs();
+
 }
 
 add_action('best_courses_lbgs_cron_task', 'wp_best_courses_lbgs_cron_task');
+
+//TODO javadocs
+function refresh_db_best_events() {
+    //Reads all courses from the remote db
+    $parser = best\kosice\datalib\best_kosice_data::instance();
+    $courses = $parser->courses();
+
+    if ($courses) {
+        global $wpdb;
+        $tableName = $wpdb->prefix . 'best_events';
+
+        //If the DB supports it, we will offer transaction rollback on error
+        $wpdb->query('START TRANSACTION');
+
+        //Deletes all old entries
+        $wpdb->query("TRUNCATE TABLE " . $tableName);
+
+        //Inserts new entries
+        for ($i = 0; $i < count($courses); $i++) {
+            //A concrete best course
+            $course = $courses[$i];
+
+            $insertResult = $wpdb->insert(
+                $tableName,
+                array(
+                    'event_name' => $course[0],
+                    //TODO fix add: odkaz na prihlasenie do kurzu @ https://trello.com/c/EPobfCTg/21-bugfix-v-tabu-ke-events-chyba-jeden-st-pec-na-odkaz-na-prihlasenie-na-kurz-napr-http-www-best-eu-org-student-courses-event-jsp-a
+                    'place' => $course[2],
+                    'dates' => $course[3],
+                    'event_type' => $course[4],
+                    'fee' => $course[5],
+                    'acad_compl' => $course[6],
+                )
+            );
+
+            //Problem handling
+            if (!$insertResult) {
+                $wpdb->query('ROLLBACK');
+                return;
+            }
+
+            //DEBUG:
+            //var_dump($course);
+            //echo "<br>";
+        }
+
+        //All went OK
+        $wpdb->query('COMMIT');
+    }
+}
+
+//TODO javadocs
+function refresh_db_lbgs() {
+    //Reads all courses from the remote db
+    $parser = best\kosice\datalib\best_kosice_data::instance();
+    $lbgs = $parser->lbgs();
+
+    if ($lbgs) {
+        global $wpdb;
+        $tableName = $wpdb->prefix . 'lbg';
+
+        //If the DB supports it, we will offer transaction rollback on error
+        $wpdb->query('START TRANSACTION');
+
+        //Deletes all old entries
+        $wpdb->query("TRUNCATE TABLE " . $tableName);
+
+        //Inserts new entries
+        for ($i = 0; $i < count($lbgs); $i++) {
+            //A concrete local best group
+            $lbg = $lbgs[$i];
+
+            //Parsing, TODO: implement the first normal form of parser function output format
+            $cityAndStateExploded = explode('(', $lbg[1]);
+            $stateAbbreviation = explode(')', $cityAndStateExploded[1])[0];
+
+            $insertResult = $wpdb->insert(
+                $tableName,
+                array(
+                    'web_page' => $lbg[0],
+                    'city' => $cityAndStateExploded[0],
+                    'state' => $stateAbbreviation,
+                )
+            );
+
+            //Problem handling
+            if (!$insertResult) {
+                $wpdb->query('ROLLBACK');
+                return;
+            }
+
+            //DEBUG:
+            //var_dump($lbg);
+            //echo "<br>";
+        }
+
+        //All went OK
+        $wpdb->query('COMMIT');
+    }
+}
 
 /**
  * Plugin activation event.
@@ -246,6 +315,7 @@ function wp_best_courses_lbgs_activation() {
     wp_schedule_event(time(), 'hourly', 'best_courses_lbgs_cron_task');
     wp_best_courses_lbgs_create_tables();
 }
+
 register_activation_hook(__FILE__, 'wp_best_courses_lbgs_activation');
 
 /**
