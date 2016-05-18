@@ -207,48 +207,60 @@ function refresh_db_best_events() {
         $tableName = $wpdb->prefix . 'best_events';
 
         //If the DB supports it, we will offer transaction rollback on error
-        $wpdb->query('START TRANSACTION');
+        $wpdb->query( 'START TRANSACTION' );
 
         //Deletes all old entries
-        $wpdb->query("TRUNCATE TABLE " . $tableName);
+        $wpdb->query( "TRUNCATE TABLE " . $tableName );
+
+        $insert = 'INSERT INTO ' . $tableName . ' (event_name, login_url, place, dates, event_type, acad_compl, fee) VALUES ';
+        $insertFirst = true;
 
         //Inserts new entries
-        for ($i = 0; $i < count($courses); $i++) {
+        for ($i = 0; $i < count( $courses ); $i++) {
             //A concrete best course
             $course = $courses[$i];
 
-            $insertResult = $wpdb->insert(
-                $tableName,
-                array(
-                    'event_name' => $course[0],
-                    'login_url' => $course[1],
-                    'place' => $course[2],
-                    'dates' => $course[3],
-                    'event_type' => $course[4],
-                    'acad_compl' => $course[5],
-                    'fee' => $course[6],
-                )
-            );
-
-            //Problem handling
-            if (!$insertResult) {
-                $wpdb->query('ROLLBACK');
-                return;
+            //Comma before each entry except the first entry
+            if (!$insertFirst) {
+                $insert = $insert . ',';
+            } else {
+                $insertFirst = false;
             }
 
-            //DEBUG:
-            //var_dump($course);
-            //echo "<br>";
+            //Next row
+            $insert =
+                $insert . '(' .
+                //event_name
+                "'" . $course[0] . "'," .
+                //login_url
+                "'" . $course[1] . "'," .
+                //place
+                "'" . $course[2] . "'," .
+                //dates
+                "'" . $course[3] . "'," .
+                //event_type
+                "'" . $course[4] . "'," .
+                //acad_compl
+                "'" . $course[5] . "'," .
+                //fee
+                "'" . $course[6] . "'" .
+                ')';
+        }
+
+        //Running the query and problem handling
+        if (!$wpdb->query( $insert )) {
+            $wpdb->query( 'ROLLBACK' );
+            return;
         }
 
         //All went OK
-        $wpdb->query('COMMIT');
+        $wpdb->query( 'COMMIT' );
     }
 }
 
 //TODO javadocs
 function refresh_db_best_lbg() {
-    //Reads all courses from the remote db
+    //Reads all local best groups from the remote db
     $parser = best\kosice\datalib\best_kosice_data::instance();
     $lbgs = $parser->lbgs();
 
@@ -257,42 +269,50 @@ function refresh_db_best_lbg() {
         $tableName = $wpdb->prefix . 'best_lbg';
 
         //If the DB supports it, we will offer transaction rollback on error
-        $wpdb->query('START TRANSACTION');
+        $wpdb->query( 'START TRANSACTION' );
 
         //Deletes all old entries
-        $wpdb->query("TRUNCATE TABLE " . $tableName);
+        $wpdb->query( "TRUNCATE TABLE " . $tableName );
+
+        $insert = 'INSERT INTO ' . $tableName . ' (web_page, city, state) VALUES ';
+        $insertFirst = true;
 
         //Inserts new entries
-        for ($i = 0; $i < count($lbgs); $i++) {
+        for ($i = 0; $i < count( $lbgs ); $i++) {
             //A concrete local best group
             $lbg = $lbgs[$i];
-
-            //Parsing, TODO: implement the first normal form of parser function output format
-            $cityAndStateExploded = explode('(', $lbg[1]);
-            $stateAbbreviation = explode(')', $cityAndStateExploded[1])[0];
-
-            $insertResult = $wpdb->insert(
-                $tableName,
-                array(
-                    'web_page' => $lbg[0],
-                    'city' => $cityAndStateExploded[0],
-                    'state' => $stateAbbreviation,
-                )
-            );
-
-            //Problem handling
-            if (!$insertResult) {
-                $wpdb->query('ROLLBACK');
-                return;
+            
+            //Comma before each entry except the first entry
+            if (!$insertFirst) {
+                $insert = $insert . ',';
+            } else {
+                $insertFirst = false;
             }
 
-            //DEBUG:
-            //var_dump($lbg);
-            //echo "<br>";
+            //Parsing until parenthesis based on a syntax that is not expected to change: City(State)
+            $cityAndStateExploded = explode( '(', $lbg[1] );
+            $stateAbbreviation = explode( ')', $cityAndStateExploded[1] )[0];
+
+            //Next row
+            $insert =
+                $insert . '(' .
+                //web_page
+                "'" . $lbg[0] . "'," .
+                //city
+                "trim('" . $cityAndStateExploded[0] . "')," .
+                //state
+                "'" . $stateAbbreviation . "'" .
+                ')';
+        }
+
+        //Running the query and problem handling
+        if (!$wpdb->query( $insert )) {
+            $wpdb->query( 'ROLLBACK' );
+            return;
         }
 
         //All went OK
-        $wpdb->query('COMMIT');
+        $wpdb->query( 'COMMIT' );
     }
 }
 
