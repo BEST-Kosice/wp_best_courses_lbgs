@@ -282,7 +282,10 @@ class best_kosice_data
                 if ($matches[2] != '') {
                     $rowData = array();
                     $rowData[] = $matches[2];
-                    $rowData[] = $matches[3];
+                    // parsing state
+                    preg_match('#\((.*?)\)#', $matches[3], $state);
+                    $rowData[] = $state[1];
+                    $rowData[] = trim(substr($matches[3], 0, strpos($matches[3], '(')));
                 }
             }
 
