@@ -37,7 +37,7 @@ namespace best\kosice\datalib;
 // security
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-// load lib for parsing 
+// load lib for parsing
 require 'vendor/simple_html_dom.php';
 
 
@@ -197,6 +197,8 @@ class best_kosice_data
 
         curl_close($ch);
 
+        // convert from ISO-8859-1  to uft8
+        $data  = utf8_decode($data);
         return $data;
     }
 
