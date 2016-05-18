@@ -216,16 +216,7 @@ function refresh_db_best_events() {
         $insertFirst = true;
 
         //Inserts new entries
-        for ($i = 0; $i < count( $courses ); $i++) {
-            //A concrete best course
-            $course = $courses[$i];
-
-            //Comma before each entry except the first entry
-            if (!$insertFirst) {
-                $insert = $insert . ',';
-            } else {
-                $insertFirst = false;
-            }
+        foreach ($courses as $course) {
 
             //Next row
             $insert =
@@ -244,8 +235,10 @@ function refresh_db_best_events() {
                 "'" . $course[5] . "'," .
                 //fee
                 "'" . $course[6] . "'" .
-                ')';
+                '),';
         }
+
+        $insert = rtrim ( $insert , ',');
 
         //Running the query and problem handling
         if (!$wpdb->query( $insert )) {
@@ -275,23 +268,9 @@ function refresh_db_best_lbg() {
         $wpdb->query( "TRUNCATE TABLE " . $tableName );
 
         $insert = 'INSERT INTO ' . $tableName . ' (web_page, city, state) VALUES ';
-        $insertFirst = true;
 
         //Inserts new entries
-        for ($i = 0; $i < count( $lbgs ); $i++) {
-            //A concrete local best group
-            $lbg = $lbgs[$i];
-            
-            //Comma before each entry except the first entry
-            if (!$insertFirst) {
-                $insert = $insert . ',';
-            } else {
-                $insertFirst = false;
-            }
-
-            //Parsing until parenthesis based on a syntax that is not expected to change: City(State)
-            $cityAndStateExploded = explode( '(', $lbg[1] );
-            $stateAbbreviation = explode( ')', $cityAndStateExploded[1] )[0];
+        foreach ($lbgs as $lbg) {
 
             //Next row
             $insert =
@@ -299,11 +278,13 @@ function refresh_db_best_lbg() {
                 //web_page
                 "'" . $lbg[0] . "'," .
                 //city
-                "trim('" . $cityAndStateExploded[0] . "')," .
+                "'" . $lbg[2] . "'," .
                 //state
-                "'" . $stateAbbreviation . "'" .
-                ')';
+                "'" . $lbg[1] . "'" .
+                '),';
         }
+
+        $insert = rtrim ( $insert , ',');
 
         //Running the query and problem handling
         if (!$wpdb->query( $insert )) {
