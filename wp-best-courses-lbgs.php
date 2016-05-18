@@ -36,11 +36,6 @@ require_once( 'includes/lib/class-wp-best-courses-lbgs-parser.php'    );
  * Studying references:
  * <https://codex.wordpress.org/Function_Reference/wpdb_Class>
  * <https://codex.wordpress.org/Creating_Tables_with_Plugins>
- *
- * @param $table_name_without_prefix table name before WP adds a prefix.
- * Corresponding file {Name} will be searched on path: < wp-content/plugins/{Plugin}/db-script/create_{Name}.sql >
- * Content of the file must be only a list of rows expected BETWEEN parenthesis, in the following format:
- * CREATE TABLE name ( FILE_CONTENT );
  */
 function wp_best_courses_lbgs_create_tables() {
     //Global instance of the WordPress Database
@@ -57,7 +52,8 @@ dates varchar(40) NOT NULL,
 event_type varchar(100) NOT NULL,
 acad_compl varchar(20) DEFAULT NULL,
 fee varchar(10) NOT NULL,
-app_deadline varchar(30) DEFAULT NULL
+app_deadline varchar(30) DEFAULT NULL,
+login_url varchar(1000) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
 SQL;
 
@@ -106,7 +102,7 @@ SQL;
  * Checks if a table with a specified name exists in the database.
  * Advised usage: interrupt plugin installation if the table already exists.
  *
- * @param $table_name_without_prefix table name before WP adds a prefix.
+ * @param $table_name_without_prefix string table name before WP adds a prefix.
  * @return true if the table exists in the database, false otherwise.
  */
 function wp_best_courses_lbgs_exists_table( $table_name_without_prefix ) {
@@ -138,7 +134,7 @@ function scsc_log($input1, $input2 = null) {
 
         //Reads the first $myfile_number_limit characters and uses them as a counter, then saves the remaining data
         $number = fread($myfile, $myfile_number_limit);
-        if($myfile_size - $myfile_number_limit > 0) {
+        if ($myfile_size - $myfile_number_limit > 0) {
             $data = fread($myfile, $myfile_size - $myfile_number_limit);
         } else {
             $data = '';
@@ -148,26 +144,24 @@ function scsc_log($input1, $input2 = null) {
 
         //Increases the counter
         $myfile_powered = 1;
-        for($i = 1; $i <  $myfile_number_limit; $i++)
-        {
+        for ($i = 1; $i < $myfile_number_limit; $i++) {
             $myfile_powered *= 10;
         }
-        for($i = ((int)$number)+1; $i / $myfile_powered < 1; $i*=10)
-        {
+        for ($i = ((int)$number) + 1; $i / $myfile_powered < 1; $i *= 10) {
             fwrite($myfile, "0");
         }
 
         //Writes the data back, appending a new line with the current timestamp
-        fwrite($myfile, ((int)$number)+1);
+        fwrite($myfile, ((int)$number) + 1);
         fwrite($myfile, $data);
         fwrite($myfile, "\n");
         fwrite($myfile, date("h:i:sa"));
         fwrite($myfile, " - $input1.");
 
         //If the second parameter is present, prints it as a boolean
-        if($input2 == true) {
+        if ($input2 == true) {
             fwrite($myfile, " true");
-        } else if(!is_null($input2)) {
+        } else if (!is_null($input2)) {
             fwrite($myfile, ' false');
         }
         fclose($myfile);
@@ -190,16 +184,14 @@ function WPUnscheduleEventsByName($strEventName) {
 }
 
 /**
- * Cron support of this plugin.
+ * Cron periodical (hourly) event of this plugin.
+ *
+ * List of actions:
+ * Refreshes BEST databases
  */
 function wp_best_courses_lbgs_cron_task () {
-    //TODO: put here code to execute on cron run
-
-    //scsc_log("cron wp task has been run");
-
     refresh_db_best_events();
-    refresh_db_lbgs();
-
+    refresh_db_best_lbg();
 }
 
 add_action('best_courses_lbgs_cron_task', 'wp_best_courses_lbgs_cron_task');
@@ -229,12 +221,12 @@ function refresh_db_best_events() {
                 $tableName,
                 array(
                     'event_name' => $course[0],
-                    //TODO fix add: odkaz na prihlasenie do kurzu @ https://trello.com/c/EPobfCTg/21-bugfix-v-tabu-ke-events-chyba-jeden-st-pec-na-odkaz-na-prihlasenie-na-kurz-napr-http-www-best-eu-org-student-courses-event-jsp-a
+                    'login_url' => $course[1],
                     'place' => $course[2],
                     'dates' => $course[3],
                     'event_type' => $course[4],
-                    'fee' => $course[5],
-                    'acad_compl' => $course[6],
+                    'acad_compl' => $course[5],
+                    'fee' => $course[6],
                 )
             );
 
@@ -255,14 +247,14 @@ function refresh_db_best_events() {
 }
 
 //TODO javadocs
-function refresh_db_lbgs() {
+function refresh_db_best_lbg() {
     //Reads all courses from the remote db
     $parser = best\kosice\datalib\best_kosice_data::instance();
     $lbgs = $parser->lbgs();
 
     if ($lbgs) {
         global $wpdb;
-        $tableName = $wpdb->prefix . 'lbg';
+        $tableName = $wpdb->prefix . 'best_lbg';
 
         //If the DB supports it, we will offer transaction rollback on error
         $wpdb->query('START TRANSACTION');
@@ -310,10 +302,17 @@ function refresh_db_lbgs() {
  * List of actions:
  * 1. Schedules cron events
  * 2. Creates all SQL tables
+ * 3. Refreshes BEST databases
  */
 function wp_best_courses_lbgs_activation() {
-    wp_schedule_event(time(), 'hourly', 'best_courses_lbgs_cron_task');
-    wp_best_courses_lbgs_create_tables();
+    wp_schedule_event( time(), 'hourly', 'best_courses_lbgs_cron_task' );
+
+    if (!wp_best_courses_lbgs_exists_table( 'best_events' ) || !wp_best_courses_lbgs_exists_table( 'best_lbg' )) {
+        wp_best_courses_lbgs_create_tables();
+    }
+
+    refresh_db_best_events();
+    refresh_db_best_lbg();
 }
 
 register_activation_hook(__FILE__, 'wp_best_courses_lbgs_activation');

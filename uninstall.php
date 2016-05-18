@@ -16,10 +16,6 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 
 // Do something here if plugin is being uninstalled.
 
-// Database table names used in this plugin (TODO: move them to a global plugin config)
-global $wp_best_courses_lbgs_database_tables;
-$wp_best_courses_lbgs_database_tables = array('best_events', 'lbg');
-
 /**
  * Deletes a table from the database.
  * Should be run at the time of plugin deactivation on all custom tables.
