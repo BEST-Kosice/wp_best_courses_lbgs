@@ -1,0 +1,230 @@
+# Copyright (C) 2016 Daniel Demečko
+# This file is distributed under the GNU General Public License v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: BEST Košice 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/style\n"
+"POT-Creation-Date: 2016-03-20 23:43:31+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-06-02 20:22+0100\n"
+"Last-Translator: Daniel Demečko <daniel@demecko.com>\n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;"
+"_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;"
+"esc_html_x:1,2c\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: ../\n"
+"X-Textdomain-Support: yes\n"
+"Language: sk\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: 404.php:20
+msgid "404 Page can&rsquo;t be found."
+msgstr ""
+
+#: 404.php:24
+msgid ""
+"It looks like nothing was found at this location. Return to home page to "
+"continue."
+msgstr ""
+
+#: comments.php:40 comments.php:61
+msgid "Comment navigation"
+msgstr ""
+
+#: comments.php:43 comments.php:64
+msgid "Older Comments"
+msgstr ""
+
+#: comments.php:44 comments.php:65
+msgid "Newer Comments"
+msgstr ""
+
+#: comments.php:78
+msgid "Comments are closed."
+msgstr ""
+
+#: footer.php:25
+msgid ""
+"Board of European Students of Technology is a constantly growing non-profit "
+"and non-political organisation. Since 1989 we provide communication, co-"
+"operation and exchange possibilities for students all over Europe."
+msgstr ""
+
+#: footer.php:35
+msgid "Blog"
+msgstr ""
+
+#: footer.php:59
+msgid "No posts"
+msgstr ""
+
+#: footer.php:70
+msgid "Contact"
+msgstr ""
+
+#: functions.php:51
+msgid "Header"
+msgstr ""
+
+#: functions.php:52
+msgid "Footer"
+msgstr ""
+
+#: functions.php:109
+msgid "Sidebar"
+msgstr ""
+
+#: functions.php:202
+msgid "Share on Facebook"
+msgstr ""
+
+#: home.php:30
+msgid "Leaders of tomorrow are born today."
+msgstr ""
+
+#: home.php:34
+msgid "Became one"
+msgstr ""
+
+#: home.php:43
+msgid "Educate yourself, explore Europe and experience impossible."
+msgstr ""
+
+#: home.php:47
+msgid "Apply for courses"
+msgstr ""
+
+#: home.php:74
+msgid "University"
+msgstr ""
+
+#: home.php:83
+msgid ""
+"Active participation in discussion about issues relating to higher "
+"engineering education in Europe.Promote your university to thousands of "
+"internationally minded students across Europe. Bringing new knowledge and "
+"international experience for university students."
+msgstr ""
+
+#: home.php:88
+msgid "Students"
+msgstr ""
+
+#: home.php:97
+msgid ""
+"With more than 70 academic courses, 10 leisure events, 2 general meetings, 8 "
+"workshops, 12 committee meetings, job fairs, case studies, cultural "
+"exchanges, training events, regional meetings, there is hardly a weekend "
+"during which the BEST world takes a rest."
+msgstr ""
+
+#: home.php:102
+msgid "Companies"
+msgstr ""
+
+#: home.php:111
+msgid ""
+"BEST is actively present in 96 technical universities spread in 33 "
+"countries, where it acts as a bridge between universities, their students "
+"and the industry. For doing so, we develop different projects that aim at "
+"offering, for instance, international complementary education events, "
+"training opportunities or career support to our members and all the students "
+"of our universities."
+msgstr ""
+
+#: home.php:143
+msgid "News"
+msgstr ""
+
+#: home.php:190
+msgid "Read more"
+msgstr ""
+
+#: home.php:212
+msgid "Write your e-mail ..."
+msgstr ""
+
+#: home.php:215
+msgid "Subscribe"
+msgstr ""
+
+#: home.php:226
+msgid "Our proud parners"
+msgstr ""
+
+#. translators: %s: Name of current post
+#: inc/template-tags.php:74 template-parts/content-page.php:33
+msgid "Edit %s"
+msgstr ""
+
+#: search.php:20
+msgid "Search Results for: %s"
+msgstr ""
+
+#: template-parts/content-none.php:14
+msgid "Nothing Found"
+msgstr ""
+
+#: template-parts/content-none.php:21
+msgid ""
+"Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
+msgstr ""
+
+#: template-parts/content-none.php:25
+msgid ""
+"Sorry, but nothing matched your search terms. Please try again with some "
+"different keywords."
+msgstr ""
+
+#: template-parts/content-none.php:31
+msgid ""
+"It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps "
+"searching can help."
+msgstr ""
+
+#: template-parts/content-page.php:22
+msgid "Pages:"
+msgstr ""
+
+#. translators: %s: Name of current post.
+#: template-parts/content.php:33
+msgid "Continue reading %s <span class=\"meta-nav\">&rarr;</span>"
+msgstr ""
+
+#. Theme Name of the plugin/theme
+msgid "BEST Košice"
+msgstr ""
+
+#. Theme URI of the plugin/theme
+msgid "http://underscores.me/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Description"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Daniel Demečko"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.demecko.com/"
+msgstr ""
+
+#. Template Name of the plugin/theme
+msgid "Contact page template */"
+msgstr ""
+
+#. Template Name of the plugin/theme
+msgid "Full width Template */"
+msgstr ""
+
+#: inc/template-tags.php:29
+msgctxt "post date"
+msgid "Posted on %s"
+msgstr ""

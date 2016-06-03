@@ -6,9 +6,31 @@ module.exports = function( grunt ){
 		// setting folder templates
 		dirs: {
 			css: 'assets/css',
-			less: 'assets/css',
+			sass: 'assets/sass',
 			js: 'assets/js'
 		},
+
+		//  Compile all  sass .scss files
+		sass: {
+			options: {
+	          sourceMap: true,
+	          sourceMapEmbed: false,
+	          sourceMapContents: true,
+	          includePaths: ['.']
+	        },
+        	default: {
+				files: [{
+				  expand: true,
+				  cwd: '<%= dirs.sass %>/',
+				  src: ['*.{scss,sass}'],
+				  dest: '<%= dirs.css %>/',
+				  ext: '.css'
+				}]
+        	}
+
+    	},
+
+
 
 		// Compile all .less files.
 		less: {
@@ -63,11 +85,11 @@ module.exports = function( grunt ){
 
 		// Watch changes for assets
 		watch: {
-			less: {
+			sass: {
 				files: [
-					'<%= dirs.less %>/*.less',
+					'<%= dirs.sass %>/*.scss',
 				],
-				tasks: ['less', 'cssmin'],
+				tasks: ['sass', 'cssmin'],
 			},
 			js: {
 				files: [
@@ -78,6 +100,33 @@ module.exports = function( grunt ){
 			}
 		},
 
+		// generate languages pot file for translation
+		makepot: {
+		       target: {
+		           options: {
+		               cwd: '',                          // Directory of files to internationalize.
+		               domainPath: 'lang/',                   // Where to save the POT file.
+		               exclude: [],                      // List of files or directories to ignore.
+		               include: [],                      // List of files or directories to include.
+		               mainFile: '',                     // Main project file.
+		               potComments: '',                  // The copyright at the beginning of the POT file.
+		               potFilename: 'wp-best-courses-lbgs.pot',                  // Name of the POT file.
+		               potHeaders: {
+		                   poedit: true,                 // Includes common Poedit headers.
+		                   'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
+		               },                                // Headers to add to the generated POT file.
+		               processPot: null,                 // A callback function for manipulating the POT file.
+		               type: 'wp-plugin',                // Type of project (wp-plugin or wp-theme).
+		               updateTimestamp: true,            // Whether the POT-Creation-Date should be updated without other changes.
+		               updatePoFiles: false              // Whether to update PO files in the same directory as the POT file.
+		           }
+		       }
+		   },
+
+
+
+
+
 	});
 
 	// Load NPM tasks to be used here
@@ -85,10 +134,14 @@ module.exports = function( grunt ){
 	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
 	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
+	grunt.loadNpmTasks( 'grunt-sass' );
+	grunt.loadNpmTasks( 'grunt-wp-i18n' );
+
 
 	// Register tasks
 	grunt.registerTask( 'default', [
-		'less',
+		'sass',
+		//'less',
 		'cssmin',
 		'uglify'
 	]);

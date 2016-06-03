@@ -1,0 +1,14 @@
+/*!
+ * Frontend styles
+ * Plugin Name: wp_best_courses_lbgs
+ * Version: 1.0
+ */
+
+@import 'mixins';
+@import 'variables';
+
+.test {
+    color: $color-best-blue;
+    @include animation-default;
+    @include shadow-2dp;
+}
