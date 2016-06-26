@@ -1,0 +1,38 @@
+/*!
+ * Frontend styles
+ * Plugin Name: wp_best_courses_lbgs
+ * Version: 1.0
+ */
+@import 'mixins';
+@import 'variables';
+
+#courses_table {
+    text-align: center;
+
+    td {
+        height     : 40px;
+        line-height: 15px;
+    }
+
+    tbody tr:nth-child(odd) {
+        background-color: #FFF0BE;
+    }
+
+    td,
+    th {
+        border-width   : 2px 1px 2px 1px;
+        border-color   : #fff;
+        border-style   : solid;
+        border-collapse: collapse;
+    }
+
+    thead {
+        font-size       : 14px;
+        background-color: $color-best-yellow;
+
+        &,
+        & a {
+            color: #fff;
+        }
+    }
+}

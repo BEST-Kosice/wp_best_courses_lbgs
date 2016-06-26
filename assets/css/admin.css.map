@@ -2,9 +2,9 @@
 	"version": 3,
 	"file": "admin.css",
 	"sources": [
-		"../sass/admin.scss",
-		"../sass/_mixins.scss",
-		"../sass/_variables.scss"
+		"../scss/admin.scss",
+		"../scss/_mixins.scss",
+		"../scss/_variables.scss"
 	],
 	"sourcesContent": [
 		"/*!\n * Admin styles\n * Plugin Name: wp_best_courses_lbgs\n * Version: 1.0\n */\n\n @import 'mixins';\n @import 'variables';\n \n.test {\n    color:white;\n}\n",

@@ -7,6 +7,7 @@ module.exports = function( grunt ){
 		dirs: {
 			css: 'assets/css',
 			sass: 'assets/sass',
+			scss: 'assets/scss',
 			js: 'assets/js'
 		},
 
@@ -21,7 +22,7 @@ module.exports = function( grunt ){
         	default: {
 				files: [{
 				  expand: true,
-				  cwd: '<%= dirs.sass %>/',
+				  cwd: '<%= dirs.scss %>/',
 				  src: ['*.{scss,sass}'],
 				  dest: '<%= dirs.css %>/',
 				  ext: '.css'

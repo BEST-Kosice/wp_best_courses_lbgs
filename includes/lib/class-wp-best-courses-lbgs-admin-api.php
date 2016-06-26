@@ -202,12 +202,7 @@ class wp_best_courses_lbgs_Admin_API {
 
 
 
-
-		$BEST_data = new BST_data\best_kosice_data();
-
-		echo '<pre>';
-		$parsed = $BEST_data->courses();
-		var_dump($parsed);
+wp_best_courses_lbgs_create_tables();
 
 	}
 

@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: wp_best_courses_lbgs 1.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-best-courses-lbgs\n"
-"POT-Creation-Date: 2016-06-02 18:20:32+00:00\n"
+"POT-Creation-Date: 2016-06-25 22:07:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25,160 +25,160 @@ msgstr ""
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
 
-#: includes/class-wp-best-courses-lbgs-settings.php:190
+#: includes/class-wp-best-courses-lbgs-settings.php:192
 msgid "42"
 msgstr ""
 
 #: includes/class-wp-best-courses-lbgs-settings.php:70
-#: includes/class-wp-best-courses-lbgs-settings.php:281
+#: includes/class-wp-best-courses-lbgs-settings.php:283
 msgid "Plugin Settings"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:99
+#: includes/class-wp-best-courses-lbgs-settings.php:101
 msgid "Settings"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:111
-msgid "Standard"
+#: includes/class-wp-best-courses-lbgs-settings.php:113
+msgid "Season Events"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:112
+#: includes/class-wp-best-courses-lbgs-settings.php:114
 msgid "These are fairly standard form input fields."
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:116
+#: includes/class-wp-best-courses-lbgs-settings.php:118
 msgid "Some Text"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:117
+#: includes/class-wp-best-courses-lbgs-settings.php:119
 msgid "This is a standard text field."
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:120
-#: includes/class-wp-best-courses-lbgs-settings.php:128
-#: includes/class-wp-best-courses-lbgs-settings.php:136
+#: includes/class-wp-best-courses-lbgs-settings.php:122
+#: includes/class-wp-best-courses-lbgs-settings.php:130
+#: includes/class-wp-best-courses-lbgs-settings.php:138
 msgid "Placeholder text"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:124
+#: includes/class-wp-best-courses-lbgs-settings.php:126
 msgid "A Password"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:125
+#: includes/class-wp-best-courses-lbgs-settings.php:127
 msgid "This is a standard password field."
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:132
+#: includes/class-wp-best-courses-lbgs-settings.php:134
 msgid "Some Secret Text"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:133
+#: includes/class-wp-best-courses-lbgs-settings.php:135
 msgid ""
 "This is a secret text field - any data saved here will not be displayed "
 "after the page has reloaded, but it will be saved."
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:140
+#: includes/class-wp-best-courses-lbgs-settings.php:142
 msgid "A Text Block"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:141
+#: includes/class-wp-best-courses-lbgs-settings.php:143
 msgid "This is a standard text area."
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:144
+#: includes/class-wp-best-courses-lbgs-settings.php:146
 msgid "Placeholder text for this textarea"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:148
+#: includes/class-wp-best-courses-lbgs-settings.php:150
 msgid "An Option"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:149
+#: includes/class-wp-best-courses-lbgs-settings.php:151
 msgid ""
 "A standard checkbox - if you save this option as checked then it will store "
 "the option as 'on', otherwise it will be an empty string."
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:155
+#: includes/class-wp-best-courses-lbgs-settings.php:157
 msgid "A Select Box"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:156
+#: includes/class-wp-best-courses-lbgs-settings.php:158
 msgid "A standard select box."
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:163
+#: includes/class-wp-best-courses-lbgs-settings.php:165
 msgid "Some Options"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:164
+#: includes/class-wp-best-courses-lbgs-settings.php:166
 msgid "A standard set of radio buttons."
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:171
+#: includes/class-wp-best-courses-lbgs-settings.php:173
 msgid "Some Items"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:172
+#: includes/class-wp-best-courses-lbgs-settings.php:174
 msgid "You can select multiple items and they will be stored as an array."
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:181
+#: includes/class-wp-best-courses-lbgs-settings.php:183
 msgid "Extra"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:182
+#: includes/class-wp-best-courses-lbgs-settings.php:184
 msgid "These are some extra input fields that maybe aren't as common as the others."
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:186
+#: includes/class-wp-best-courses-lbgs-settings.php:188
 msgid "A Number"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:187
+#: includes/class-wp-best-courses-lbgs-settings.php:189
 msgid ""
 "This is a standard number field - if this field contains anything other "
 "than numbers then the form will not be submitted."
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:194
+#: includes/class-wp-best-courses-lbgs-settings.php:196
 msgid "Pick a colour"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:195
+#: includes/class-wp-best-courses-lbgs-settings.php:197
 msgid ""
 "This uses WordPress' built-in colour picker - the option is stored as the "
 "colour's hex code."
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:201
+#: includes/class-wp-best-courses-lbgs-settings.php:203
 msgid "An Image"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:202
+#: includes/class-wp-best-courses-lbgs-settings.php:204
 msgid ""
 "This will upload an image to your media library and store the attachment ID "
 "in the option field. Once you have uploaded an imge the thumbnail will "
 "display above these buttons."
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:209
+#: includes/class-wp-best-courses-lbgs-settings.php:211
 msgid "A Multi-Select Box"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:210
+#: includes/class-wp-best-courses-lbgs-settings.php:212
 msgid "A standard multi-select box - the saved data is stored as an array."
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:333
+#: includes/class-wp-best-courses-lbgs-settings.php:335
 msgid "Save Settings"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:364
-#: includes/class-wp-best-courses-lbgs-settings.php:373
-#: includes/class-wp-best-courses-lbgs.php:243
-#: includes/class-wp-best-courses-lbgs.php:252
+#: includes/class-wp-best-courses-lbgs-settings.php:366
+#: includes/class-wp-best-courses-lbgs-settings.php:375
+#: includes/class-wp-best-courses-lbgs.php:246
+#: includes/class-wp-best-courses-lbgs.php:255
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 

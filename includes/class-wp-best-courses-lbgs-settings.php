@@ -79,12 +79,14 @@ class wp_best_courses_lbgs_Settings {
 
 		// We're including the farbtastic script & styles here because they're needed for the colour picker
 		// If you're not including a colour picker field then you can leave these calls out as well as the farbtastic dependency for the wpt-admin-js script below
-		wp_enqueue_style( 'farbtastic' );
-    	wp_enqueue_script( 'farbtastic' );
+		// TODO REMOVE
+		//wp_enqueue_style( 'farbtastic' );
+    	//wp_enqueue_script( 'farbtastic' );
 
     	// We're including the WP media scripts here because they're needed for the image upload field
     	// If you're not including an image upload then you can leave this function call out
-    	wp_enqueue_media();
+		// TODO REMOVE
+		//wp_enqueue_media();
 
     	wp_register_script( $this->parent->_token . '-settings-js', $this->parent->assets_url . 'js/settings' . $this->parent->script_suffix . '.js', array( 'farbtastic', 'jquery' ), '1.0.0' );
     	wp_enqueue_script( $this->parent->_token . '-settings-js' );
@@ -108,7 +110,7 @@ class wp_best_courses_lbgs_Settings {
 	private function settings_fields () {
 
 		$settings['standard'] = array(
-			'title'					=> __( 'Standard', 'wp-best-courses-lbgs' ),
+			'title'					=> __( 'Season Events', 'wp-best-courses-lbgs' ),
 			'description'			=> __( 'These are fairly standard form input fields.', 'wp-best-courses-lbgs' ),
 			'fields'				=> array(
 				array(

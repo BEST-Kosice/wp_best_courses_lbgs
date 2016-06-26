@@ -2,4 +2,4 @@
  * Frontend styles
  * Plugin Name: wp_best_courses_lbgs
  * Version: 1.0
- */.test{color:#1973BE;transition-duration:.2s;transition-timing-function:cubic-bezier(0.4,0,.2,1);box-shadow:0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12)}
+ */#courses_table{text-align:center}#courses_table td{height:40px;line-height:15px}#courses_table tbody tr:nth-child(odd){background-color:#FFF0BE}#courses_table td,#courses_table th{border-width:2px 1px;border-color:#fff;border-style:solid;border-collapse:collapse}#courses_table thead{font-size:14px;background-color:#FAA519}#courses_table thead,#courses_table thead a{color:#fff}

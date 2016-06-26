@@ -45,7 +45,7 @@ function wp_best_courses_lbgs_create_tables() {
 
     $sql_events = <<< SQL
 CREATE TABLE IF NOT EXISTS {$wpdb->prefix}best_events (
-id_event int(11) NOT NULL,
+id_event int(11) NOT NULL AUTO_INCREMENT,
 event_name varchar(100) NOT NULL,
 place varchar(40) NOT NULL,
 dates varchar(40) NOT NULL,
@@ -53,67 +53,27 @@ event_type varchar(100) NOT NULL,
 acad_compl varchar(20) DEFAULT NULL,
 fee varchar(10) NOT NULL,
 app_deadline varchar(30) DEFAULT NULL,
-login_url varchar(1000) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
-SQL;
-
-// podľa mňa nieje potrebné kedže nieje relácia
-    $sql_events_pk = <<< SQL
-ALTER TABLE {$wpdb->prefix}best_events
-ADD PRIMARY KEY (id_event)
-SQL;
-
-// auto increment
-    $sql_events_auto_inc = <<< SQL
-ALTER TABLE {$wpdb->prefix}best_events
-MODIFY id_event int(11) NOT NULL AUTO_INCREMENT
+login_url varchar(1000) DEFAULT NULL,
+PRIMARY KEY (id_event)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 SQL;
 
     $sql_lbg = <<< SQL
 CREATE TABLE IF NOT EXISTS {$wpdb->prefix}best_lbg (
-id_lbg int(11) NOT NULL,
+id_lbg int(11) NOT NULL AUTO_INCREMENT,
 city varchar(50) NOT NULL,
 state varchar(50) NOT NULL,
-web_page varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci
+web_page varchar(200) DEFAULT NULL,
+PRIMARY KEY (id_lbg)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 SQL;
 
-    $sql_lbg_pk = <<< SQL
-ALTER TABLE {$wpdb->prefix}best_lbg
-ADD PRIMARY KEY (id_lbg);
-SQL;
-    $sql_lbg_auto_inc = <<< SQL
-ALTER TABLE {$wpdb->prefix}best_lbg
-MODIFY id_lbg int(11) NOT NULL AUTO_INCREMENT;
-SQL;
+  // TODO error handling
 
-// CREATE EVENTS TABLE
   $wpdb->query($sql_events);
-  $wpdb->query($sql_events_pk);
-  $wpdb->query($sql_events_auto_inc);
 
-// CREATE LBG TABLE
   $wpdb->query($sql_lbg);
-  $wpdb->query($sql_lbg_pk);
-  $wpdb->query($sql_lbg_auto_inc);
-}
 
-/**
- * Checks if a table with a specified name exists in the database.
- * Advised usage: interrupt plugin installation if the table already exists.
- *
- * @param $table_name_without_prefix string table name before WP adds a prefix.
- * @return true if the table exists in the database, false otherwise.
- */
-function wp_best_courses_lbgs_exists_table( $table_name_without_prefix ) {
-    //Global instance of the WordPress Database
-    global $wpdb;
-
-    //Name of the checked table
-    $table_name = $wpdb->prefix . $table_name_without_prefix;
-
-    //Queries the database for a table with the same name
-    return $wpdb->get_var("SHOW TABLES LIKE '$table_name'") == $table_name;
 }
 
 /**
@@ -193,7 +153,6 @@ function wp_best_courses_lbgs_cron_task () {
     refresh_db_best_events();
     refresh_db_best_lbg();
 }
-
 add_action('best_courses_lbgs_cron_task', 'wp_best_courses_lbgs_cron_task');
 
 //TODO javadocs
@@ -308,9 +267,7 @@ function refresh_db_best_lbg() {
 function wp_best_courses_lbgs_activation() {
     wp_schedule_event( time(), 'hourly', 'best_courses_lbgs_cron_task' );
 
-    if (!wp_best_courses_lbgs_exists_table( 'best_events' ) || !wp_best_courses_lbgs_exists_table( 'best_lbg' )) {
-        wp_best_courses_lbgs_create_tables();
-    }
+    wp_best_courses_lbgs_create_tables();
 
     refresh_db_best_events();
     refresh_db_best_lbg();
@@ -347,3 +304,53 @@ function wp_best_courses_lbgs () {
 }
 
 wp_best_courses_lbgs();
+
+// TODO zaregistrovať
+// function events_custom_post_type() {
+//     register_post_type('best-events',
+//                 array(
+//                     'label'           => 'best-event',
+//                     'public'          => true,
+//                     'show_ui'         => false,
+//                     'capability_type' => 'page',
+//                     'hierarchical'	  => false,
+//                     'rewrite'         => array(
+//                         'slug'		 	=> '/',
+//                         'with_front'	=> true
+//                     ),
+//                     'hierarchical'    => true,
+//                     'supports'        => array(
+//                         //'title',
+//                         //'editor',
+//                         //'custom-fields'
+//                     ),
+//                 )
+//             );
+// }
+// add_action( 'init','events_custom_post_type'  );
+
+// add best shortcode [best-events]
+function best_events_shortcode(){
+	require ('shortcodes/events.php');
+}
+add_shortcode( 'best-events', 'best_events_shortcode' );
+// add best shortcode [best-lbgs]
+function best_lbgs(){
+	require ('shortcodes/local-best-groups.php');
+}
+add_shortcode( 'best-lbgs', 'best_lbgs' );
+
+
+add_action( 'init', 'wptuts_buttons' );
+function wptuts_buttons() {
+    add_filter( "mce_external_plugins", "wptuts_add_buttons" );
+    add_filter( 'mce_buttons', 'wptuts_register_buttons' );
+}
+function wptuts_add_buttons( $plugin_array ) {
+    $plugin_array['wptuts'] = wp_best_courses_lbgs()->assets_url.'js/shortcode.js';
+    return $plugin_array;
+}
+function wptuts_register_buttons( $buttons ) {
+    array_push( $buttons, 'dropcap', 'showrecent' ); // dropcap', 'recentposts
+    return $buttons;
+}

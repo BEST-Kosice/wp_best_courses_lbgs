@@ -97,8 +97,9 @@ class wp_best_courses_lbgs {
 		register_activation_hook( $this->file, array( $this, 'install' ) );
 
 		// Load frontend JS & CSS
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ), 10 );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
+		// TODO refactor 
+		// add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ), 10 );
+		// add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
 
 		// Load admin JS & CSS
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10, 1 );
@@ -112,6 +113,9 @@ class wp_best_courses_lbgs {
 		// Handle localisation
 		$this->load_plugin_textdomain();
 		add_action( 'init', array( $this, 'load_localisation' ), 0 );
+
+
+
 	} // End __construct ()
 
 	/**
