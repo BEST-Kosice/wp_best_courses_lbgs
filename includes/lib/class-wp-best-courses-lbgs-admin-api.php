@@ -202,7 +202,7 @@ class wp_best_courses_lbgs_Admin_API {
 
 
 
-wp_best_courses_lbgs_create_tables();
+wp_best_create_tables_events_lbgs();
 
 	}
 

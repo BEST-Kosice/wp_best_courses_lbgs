@@ -30,14 +30,14 @@ require_once( 'includes/lib/class-wp-best-courses-lbgs-taxonomy.php'  );
 require_once( 'includes/lib/class-wp-best-courses-lbgs-parser.php'    );
 
 /**
- * Creates (or upgrades) a table in the database.
- * Should be run at the time of the plugin activation on all custom tables.
+ * Creates (or upgrades) all custom tables in the database.
+ * Should be run at the time of the plugin activation.
  *
  * Studying references:
  * <https://codex.wordpress.org/Function_Reference/wpdb_Class>
  * <https://codex.wordpress.org/Creating_Tables_with_Plugins>
  */
-function wp_best_courses_lbgs_create_tables() {
+function wp_best_create_tables_events_lbgs() {
     //Global instance of the WordPress Database
     global $wpdb;
 
@@ -132,7 +132,7 @@ function scsc_log($input1, $input2 = null) {
  * This function removes registered WP Cron events by a specified event name.
  * Source: <https://wordpress.org/support/topic/wp_unschedule_event-and-wp_clear_scheduled_hook-do-not-clear-events>
  *
- * Alternatives that were tried first but were not working correctly:
+ * Alternatives that were tried first, but were not working correctly:
  * wp_clear_scheduled_hook('best_courses_lbgs_cron_task');
  * wp_unschedule_event(wp_next_scheduled('best_courses_lbgs_cron_task'),'best_courses_lbgs_cron_task');
  */
@@ -149,13 +149,16 @@ function WPUnscheduleEventsByName($strEventName) {
  * List of actions:
  * Refreshes BEST databases
  */
-function wp_best_courses_lbgs_cron_task () {
+function wp_best_courses_lbgs_cron_task() {
     refresh_db_best_events();
-    refresh_db_best_lbg();
+    refresh_db_best_lbgs();
 }
-add_action('best_courses_lbgs_cron_task', 'wp_best_courses_lbgs_cron_task');
 
-//TODO javadocs
+add_action( 'best_courses_lbgs_cron_task', 'wp_best_courses_lbgs_cron_task' );
+
+/**
+ * Refreshes the state of the BEST Events database.
+ */
 function refresh_db_best_events() {
     //Reads all courses from the remote db
     $parser = best\kosice\datalib\best_kosice_data::instance();
@@ -210,8 +213,10 @@ function refresh_db_best_events() {
     }
 }
 
-//TODO javadocs
-function refresh_db_best_lbg() {
+/**
+ * Refreshes the state of the BEST Local Best Groups database.
+ */
+function refresh_db_best_lbgs() {
     //Reads all local best groups from the remote db
     $parser = best\kosice\datalib\best_kosice_data::instance();
     $lbgs = $parser->lbgs();
@@ -243,7 +248,7 @@ function refresh_db_best_lbg() {
                 '),';
         }
 
-        $insert = rtrim ( $insert , ',');
+        $insert = rtrim( $insert, ',' );
 
         //Running the query and problem handling
         if (!$wpdb->query( $insert )) {
@@ -267,13 +272,13 @@ function refresh_db_best_lbg() {
 function wp_best_courses_lbgs_activation() {
     wp_schedule_event( time(), 'hourly', 'best_courses_lbgs_cron_task' );
 
-    wp_best_courses_lbgs_create_tables();
+    wp_best_create_tables_events_lbgs();
 
     refresh_db_best_events();
-    refresh_db_best_lbg();
+    refresh_db_best_lbgs();
 }
 
-register_activation_hook(__FILE__, 'wp_best_courses_lbgs_activation');
+register_activation_hook( __FILE__, 'wp_best_courses_lbgs_activation' );
 
 /**
  * Plugin deactivation event.
@@ -282,10 +287,54 @@ register_activation_hook(__FILE__, 'wp_best_courses_lbgs_activation');
  * 1. Removes cron scheduling
  */
 function wp_best_courses_lbgs_deactivation() {
-    WPUnscheduleEventsByName('best_courses_lbgs_cron_task');
+    WPUnscheduleEventsByName( 'best_courses_lbgs_cron_task' );
 }
 
-register_deactivation_hook(__FILE__, 'wp_best_courses_lbgs_deactivation');
+register_deactivation_hook( __FILE__, 'wp_best_courses_lbgs_deactivation' );
+
+/**
+ * Plugin initialization event.
+ *
+ * List of actions:
+ * 1. Registers a custom post type for BEST events
+ *    Reference: <http://www.wpbeginner.com/wp-tutorials/how-to-create-custom-post-types-in-wordpress/>
+ *    (Is not currently being used for anything and may be removed later)
+ */
+function wp_best_courses_lbgs_init() {
+    register_post_type( 'best-events',
+        //Custom post type options
+        array(
+            'labels' => array(
+                'name'          => __( 'BEST Events' ),
+                'singular_name' => __( 'BEST Event' )
+            ),
+            'public'          => true,
+            //'has_archive'     => true,
+
+            //Hiding from the user administration view
+            'show_ui'         => false,
+
+            'capability_type' => 'page',
+            'hierarchical'	  => false,
+            //'hierarchical'    => true,
+
+            //Rewriting path in the address bar
+            'rewrite' => array(
+                'slug'		 	=> '/',
+                'with_front'	=> true
+            ),
+
+            'supports'        => array(
+                //'title',
+                //'editor',
+                //'custom-fields',
+            ),
+        )
+    );
+}
+
+//Hooking up initialization function to the theme setup
+add_action( 'init', 'wp_best_courses_lbgs_init' );
 
 /**
  * Returns the main instance of wp_best_courses_lbgs to prevent the need to use globals.
@@ -294,63 +343,75 @@ register_deactivation_hook(__FILE__, 'wp_best_courses_lbgs_deactivation');
  * @return object wp_best_courses_lbgs
  */
 function wp_best_courses_lbgs () {
-	$instance = wp_best_courses_lbgs::instance( __FILE__, '1.0.0' );
+    $instance = wp_best_courses_lbgs::instance( __FILE__, '1.0.0' );
 
-	if ( is_null( $instance->settings ) ) {
-		$instance->settings = wp_best_courses_lbgs_Settings::instance( $instance );
-	}
+    if ( is_null( $instance->settings ) ) {
+        $instance->settings = wp_best_courses_lbgs_Settings::instance( $instance );
+    }
 
-	return $instance;
+    return $instance;
 }
 
 wp_best_courses_lbgs();
 
-// TODO zaregistrovať
-// function events_custom_post_type() {
-//     register_post_type('best-events',
-//                 array(
-//                     'label'           => 'best-event',
-//                     'public'          => true,
-//                     'show_ui'         => false,
-//                     'capability_type' => 'page',
-//                     'hierarchical'	  => false,
-//                     'rewrite'         => array(
-//                         'slug'		 	=> '/',
-//                         'with_front'	=> true
-//                     ),
-//                     'hierarchical'    => true,
-//                     'supports'        => array(
-//                         //'title',
-//                         //'editor',
-//                         //'custom-fields'
-//                     ),
-//                 )
-//             );
-// }
-// add_action( 'init','events_custom_post_type'  );
+/**
+ * Runs a PHP code in a file and instead of displaying the resulting HTML page, only returns it as a string.
+ * Source: <http://stackoverflow.com/questions/1683771/execute-a-php-file-and-return-the-result-as-a-string>
+ *
+ * @param $php_file string PHP file to be run
+ * @return string PHP result as HTML, that is supposed to be displayed in the browser
+ */
+function run_php_file_for_html( $php_file ) {
+    ob_start();
+    include( $php_file );
+    $returned = ob_get_contents();
+    ob_end_clean();
+    return $returned;
 
-// add best shortcode [best-events]
-function best_events_shortcode(){
-	require ('shortcodes/events.php');
+    //Alternative, that can be tested for possible higher performance:
+    //ob_start();
+    //get_template_part('my_form_template');
+    //return ob_get_clean();
 }
-add_shortcode( 'best-events', 'best_events_shortcode' );
-// add best shortcode [best-lbgs]
-function best_lbgs(){
-	require ('shortcodes/local-best-groups.php');
-}
-add_shortcode( 'best-lbgs', 'best_lbgs' );
 
+/**
+ * Shortcodes for inserting PHP files into any WP page.
+ *
+ * Important points:
+ * - Remember to use return and not echo,
+ * anything that is echoed will be output to the browser, but it won't appear in the correct place on the page.
+ * - Take caution when using hyphens in the name of your shortcodes.
+ *
+ * Reference: <https://codex.wordpress.org/Shortcode_API>
+ */
 
-add_action( 'init', 'wptuts_buttons' );
-function wptuts_buttons() {
-    add_filter( "mce_external_plugins", "wptuts_add_buttons" );
-    add_filter( 'mce_buttons', 'wptuts_register_buttons' );
+//Shortcode [best_events]
+function best_events_shortcode() {
+    return run_php_file_for_html( 'shortcodes/events.php' );
 }
+
+add_shortcode( 'best_events', 'best_events_shortcode' );
+
+//Shortcode [best_lbgs]
+function best_lbgs_shortcode() {
+    return run_php_file_for_html( 'shortcodes/local-best-groups.php' );
+}
+
+add_shortcode( 'best_lbgs', 'best_lbgs_shortcode' );
+
 function wptuts_add_buttons( $plugin_array ) {
-    $plugin_array['wptuts'] = wp_best_courses_lbgs()->assets_url.'js/shortcode.js';
+    $plugin_array['wptuts'] = wp_best_courses_lbgs()->assets_url . 'js/shortcode.js';
     return $plugin_array;
 }
+
 function wptuts_register_buttons( $buttons ) {
     array_push( $buttons, 'dropcap', 'showrecent' ); // dropcap', 'recentposts
     return $buttons;
 }
+
+function wptuts_buttons() {
+    add_filter( "mce_external_plugins", "wptuts_add_buttons" );
+    add_filter( 'mce_buttons', 'wptuts_register_buttons' );
+}
+
+add_action( 'init', 'wptuts_buttons' );
