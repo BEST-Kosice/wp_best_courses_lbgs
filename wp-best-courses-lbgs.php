@@ -24,10 +24,8 @@ require_once( 'includes/class-wp-best-courses-lbgs.php' );
 require_once( 'includes/class-wp-best-courses-lbgs-settings.php' );
 
 // Load plugin libraries
-require_once( 'includes/lib/class-wp-best-courses-lbgs-admin-api.php' );
-require_once( 'includes/lib/class-wp-best-courses-lbgs-post-type.php' );
-require_once( 'includes/lib/class-wp-best-courses-lbgs-taxonomy.php'  );
-require_once( 'includes/lib/class-wp-best-courses-lbgs-parser.php'    );
+require_once( 'includes/class-wp-best-courses-lbgs-admin-api.php' );
+require_once( 'includes/class-wp-best-courses-lbgs-parser.php'    );
 
 /**
  * Creates (or upgrades) all custom tables in the database.
@@ -387,7 +385,7 @@ function run_php_file_for_html( $php_file ) {
 
 //Shortcode [best_events]
 function best_events_shortcode() {
-    return run_php_file_for_html( 'shortcodes/events.php' );
+    return run_php_file_for_html( 'includes/shortcodes/events.php' );
 }
 add_shortcode( 'best_events', 'best_events_shortcode' );
 
@@ -396,7 +394,7 @@ add_shortcode( 'best_events', 'best_events_shortcode' );
  * @return [type] [description]
  */
 function best_lbgs_shortcode() {
-    return run_php_file_for_html( 'shortcodes/local-best-groups.php' );
+    return run_php_file_for_html( 'includes/shortcodes/local-best-groups.php' );
 }
 add_shortcode( 'best_lbgs', 'best_lbgs_shortcode' );
 
