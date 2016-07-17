@@ -8,139 +8,124 @@ if (!defined('ABSPATH')) {
 
 wp_best_courses_lbgs()->enqueue_styles();
 wp_best_courses_lbgs()->enqueue_scripts();
+
+// TODO add translation string
+// TODO podmienka ak niesú žiadne kurzy nezobraz žiadne
 ?>
-
-<table id="courses_table">
-    <colgroup>
-        <col span="4" style="width:135px">
-        <col span="3" style="width:70px">
-    </colgroup>
-    <thead>
-        <tr>
-            <th>
-                Nazov kurzu
-                <a href="#">
-                    <span ng-click="sortType = 'meno'; sortReverse = false" ng-show="sortType != 'meno'" class="fa fa-sort ng-hide"></span>
-                </a>
-                <a href="#" ng-click="sortReverse = !sortReverse">
-                    <span ng-show="sortType == 'meno' &amp;&amp; sortReverse == true" class="fa fa-caret-up ng-hide"></span>
-                    <span ng-show="sortType == 'meno' &amp;&amp; sortReverse == false" class="fa fa-caret-down"></span>
-                </a>
-
-            </th>
-            <th>
-                Miesto konania
-                <a href="#">
-                    <span ng-click="sortType = 'miesto'; sortReverse = false" ng-show="sortType != 'miesto'" class="fa fa-sort"></span>
-                </a>
-                <a href="#" ng-click="sortReverse = !sortReverse">
-                    <span ng-show="sortType == 'miesto' &amp;&amp; sortReverse == true" class="fa fa-caret-up ng-hide"></span>
-                    <span ng-show="sortType == 'miesto' &amp;&amp; sortReverse == false" class="fa fa-caret-down ng-hide"></span>
-                </a>
-
-            </th>
-            <th>
-                Zameranie kurzu
-                <a href="#">
-                    <span ng-click="sortType = 'zameranie'; sortReverse = false" ng-show="sortType != 'zameranie'" class="fa fa-sort"></span>
-                </a>
-                <a href="#" ng-click="sortReverse = !sortReverse">
-                    <span ng-show="sortType == 'zameranie' &amp;&amp; sortReverse == true" class="fa fa-caret-up ng-hide"></span>
-                    <span ng-show="sortType == 'zameranie' &amp;&amp; sortReverse == false" class="fa fa-caret-down ng-hide"></span>
-                </a>
-
-            </th>
-            <th>
-                Deadline podania prihlášky
-                <a href="#">
-                    <span ng-click="sortType = 'deadline'; sortReverse = false" ng-show="sortType != 'deadline'" class="fa fa-sort"></span>
-                </a>
-                <a href="#" ng-click="sortReverse = !sortReverse">
-                    <span ng-show="sortType == 'deadline' &amp;&amp; sortReverse == true" class="fa fa-caret-up ng-hide"></span>
-                    <span ng-show="sortType == 'deadline' &amp;&amp; sortReverse == false" class="fa fa-caret-down ng-hide"></span>
-                </a>
-
-            </th>
-            <th>
-                Cena
-                <a href="#">
-                    <span ng-click="sortType = 'cena'; sortReverse = false" ng-show="sortType != 'cena'" class="fa fa-sort"></span>
-                </a>
-                <a href="#" ng-click="sortReverse = !sortReverse">
-                    <span ng-show="sortType == 'cena' &amp;&amp; sortReverse == true" class="fa fa-caret-up ng-hide"></span>
-                    <span ng-show="sortType == 'cena' &amp;&amp; sortReverse == false" class="fa fa-caret-down ng-hide"></span>
-                </a>
-
-            </th>
-            <th>
-                Od-do
-                <a href="#">
-                    <span ng-click="sortType = 'trvanie.startdate'; sortReverse = false" ng-show="sortType != 'trvanie.startdate'" class="fa fa-sort"></span>
-                </a>
-                <a href="#" ng-click="sortReverse = !sortReverse">
-                    <span ng-show="sortType == 'trvanie.startdate' &amp;&amp; sortReverse == true" class="fa fa-caret-up ng-hide"></span>
-                    <span ng-show="sortType == 'trvanie.startdate' &amp;&amp; sortReverse == false" class="fa fa-caret-down ng-hide"></span>
-                </a>
-
-            </th>
-            <th>
-                Hĺbka**
-                <a href="#">
-                    <span ng-click="sortType = 'hlbka'; sortReverse = false" ng-show="sortType != 'hlbka'" class="fa fa-sort"></span>
-                </a>
-                <a href="#" ng-click="sortReverse = !sortReverse">
-                    <span ng-show="sortType == 'hlbka' &amp;&amp; sortReverse == true" class="fa fa-caret-up ng-hide"></span>
-                    <span ng-show="sortType == 'hlbka' &amp;&amp; sortReverse == false" class="fa fa-caret-down ng-hide"></span>
-                </a>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr ng-repeat="course in courses | orderBy:sortType:sortReverse" class="ng-scope">
-            <td><a ng-href="http://www.best.tuke.sk/wic15ke/" class="ng-binding" href="http://www.best.tuke.sk/wic15ke/">Android</a></td>
-            <td class="ng-binding">Kosice</td>
-            <td class="ng-binding">Technology</td>
-            <td class="ng-binding">1. december 2014</td>
-            <td class="ng-binding">32 €</td>
-            <td class="ng-binding">12.12.2014
-                <br>-
-                <br>17.12.2014</td>
-            <td class="ng-binding">B</td>
-        </tr>
-
-        <tr ng-repeat="course in courses | orderBy:sortType:sortReverse" class="ng-scope">
-            <td><a ng-href="http://www.xilinx.com/training/fpga/fpga-field-programmable-gate-array.htm" class="ng-binding" href="http://www.xilinx.com/training/fpga/fpga-field-programmable-gate-array.htm">FPGA</a></td>
-            <td class="ng-binding">Bratislava</td>
-            <td class="ng-binding">Technology</td>
-            <td class="ng-binding">20. marec 2015</td>
-            <td class="ng-binding">30 €</td>
-            <td class="ng-binding">3.4.2015
-                <br>-
-                <br>8.4.2015</td>
-            <td class="ng-binding">B</td>
-        </tr>
-
-        <tr ng-repeat="course in courses | orderBy:sortType:sortReverse" class="ng-scope">
-            <td><a ng-href="https://www.best.eu.org/student/courses/event.jsp?activity=e6s71vw" class="ng-binding" href="https://www.best.eu.org/student/courses/event.jsp?activity=e6s71vw">Manager for hire</a></td>
-            <td class="ng-binding">Talinn</td>
-            <td class="ng-binding">Career related skills</td>
-            <td class="ng-binding">10. február 2015</td>
-            <td class="ng-binding">36 €</td>
-            <td class="ng-binding">20.2.2015
-                <br>-
-                <br>25.2.2015</td>
-            <td class="ng-binding">N/A</td>
-        </tr>
-        <tr ng-repeat="course in courses | orderBy:sortType:sortReverse" class="ng-scope">
-            <td><a ng-href="http://besttrondheim.no/ac15/" class="ng-binding" href="http://besttrondheim.no/ac15/">Solar fun</a></td>
-            <td class="ng-binding">Budapest</td>
-            <td class="ng-binding">Applied engineering</td>
-            <td class="ng-binding">9. január 2015</td>
-            <td class="ng-binding">48 €</td>
-            <td class="ng-binding">20.1.2015
-                <br>-
-                <br>25.1.2015</td>
-            <td class="ng-binding">A</td>
-        </tr>
-    </tbody>
-</table>
+    <p>Pre zobrazenie stránky prihlásenia na daný kurz klikni na názov kurzu.</p>
+    <table id="courses_table" data-sortable>
+        <thead>
+            <tr>
+                <th width="10%">
+                    <div><span>Názov</span></div>
+                    <div class="fa fa-fw fa-sort"></div>
+                    <div class="fa fa-caret-down"></div>
+                    <div class="fa fa-caret-up"></div>
+                </th>
+                <th width="15%">
+                    <div><span>Zameranie</span></div>
+                    <div class="fa fa-fw fa-sort"></div>
+                    <div class="fa fa-caret-down"></div>
+                    <div class="fa fa-caret-up"></div>
+                </th>
+                <th width="10%">
+                    <div><span>Mesto</span></div>
+                    <div class="fa fa-fw fa-sort"></div>
+                    <div class="fa fa-caret-down"></div>
+                    <div class="fa fa-caret-up"></div>
+                </th>
+                <th width="10%">
+                    <div><span>Štát</span></div>
+                    <div class="fa fa-fw fa-sort"></div>
+                    <div class="fa fa-caret-down"></div>
+                    <div class="fa fa-caret-up"></div>
+                </th>
+                <th width="15%">
+                    <div><span>Deadline prihlásenia</span></div>
+                    <div class="fa fa-fw fa-sort"></div>
+                    <div class="fa fa-caret-down"></div>
+                    <div class="fa fa-caret-up"></div>
+                </th>
+                <th width="10%">
+                    <div><span>Cena</span></div>
+                    <div class="fa fa-fw fa-sort"></div>
+                    <div class="fa fa-caret-down"></div>
+                    <div class="fa fa-caret-up"></div>
+                </th>
+                <th width="10%">
+                    <div><span>Trvanie</span></div>
+                    <div class="fa fa-fw fa-sort"></div>
+                    <div class="fa fa-caret-down"></div>
+                    <div class="fa fa-caret-up"></div>
+                </th>
+                <th width="10%">
+                    <div><span>Od-do</span></div>
+                    <div class="fa fa-fw fa-sort"></div>
+                    <div class="fa fa-caret-down"></div>
+                    <div class="fa fa-caret-up"></div>
+                </th>
+                <th width="10%">
+                    <div><span>Úroveň*</span></div>
+                    <div class="fa fa-fw fa-sort"></div>
+                    <div class="fa fa-caret-down"></div>
+                    <div class="fa fa-caret-up"></div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            // TODO SPRAVIŤ wp QUERY LOOP PRE VÝPIS TABUĽKY
+             ?>
+            <tr>
+                <td><a href="http://www.best.tuke.sk/wic15ke/" target="_blank">Android</a></td>
+                <td>Technology</td>
+                <td>Košice</td>
+                <td>Slovensko</td>
+                <td>1. december 2014</td>
+                <td>32 €</td>
+                <td>5 dní</td>
+                <td>12.12.2014 - 17.12.2014</td>
+                <td>B</td>
+            </tr>
+            <tr>
+                <td><a href="http://besttrondheim.no/ac15/" target="_blank">Solar fun</a></td>
+                <td>Applied engineering</td>
+                <td>Budapešť</td>
+                <td>Maďarsko</td>
+                <td>9. január 2015</td>
+                <td>48 €</td>
+                <td>7 dní</td>
+                <td>20.1.2015 - 27.1.2015</td>
+                <td>A</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.best.eu.org/student/courses/event.jsp?activity=e6s71vw" target="_blank">Manager for hire</a></td>
+                <td>Career related skills</td>
+                <td>Talinn</td>
+                <td>Estónsko</td>
+                <td>10. február 2015</td>
+                <td>36 €</td>
+                <td>8 dní</td>
+                <td>20.2.2015 - 28.2.2015</td>
+                <td>N/A</td>
+            </tr>
+            <tr>
+                <td><a href="http://www.xilinx.com/training/fpga/fpga-field-programmable-gate-array.htm" target="_blank">FPGA</a></td>
+                <td>Technology</td>
+                <td>Bratislava</td>
+                <td>Slovensko</td>
+                <td>20. marec 2015</td>
+                <td>30 €</td>
+                <td>5 dní</td>
+                <td>3.4.2015 - 8.4.2015</td>
+                <td>B</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="9">*Úroveň kurzu označuje mieru špecializácie daného kurzu na uvedenú tému.
+                    <br> Rozoznávajú sa úrovne základná (Basic, B) čo je všeobecný úvod k danej téme (viac interdisciplinárne) a pokročilá (Advanced, A) ktorá poskytuje užšie a hlbšie zameranie na danú tému.
+                    <br> N/A (not available) znamená, že úroveň nie je uvedená.</th>
+            </tr>
+        </tfoot>
+    </table>

@@ -389,23 +389,24 @@ function run_php_file_for_html( $php_file ) {
 function best_events_shortcode() {
     return run_php_file_for_html( 'shortcodes/events.php' );
 }
-
 add_shortcode( 'best_events', 'best_events_shortcode' );
 
-//Shortcode [best_lbgs]
+/**
+ * REGISTER [best_lbgs]
+ * @return [type] [description]
+ */
 function best_lbgs_shortcode() {
     return run_php_file_for_html( 'shortcodes/local-best-groups.php' );
 }
-
 add_shortcode( 'best_lbgs', 'best_lbgs_shortcode' );
 
 function wptuts_add_buttons( $plugin_array ) {
-    $plugin_array['wptuts'] = wp_best_courses_lbgs()->assets_url . 'js/shortcode.js';
+    $plugin_array['wptuts'] = wp_best_courses_lbgs()->assets_url . 'js/shortcode.min.js';
     return $plugin_array;
 }
 
 function wptuts_register_buttons( $buttons ) {
-    array_push( $buttons, 'dropcap', 'showrecent' ); // dropcap', 'recentposts
+    array_push( $buttons, 'events', 'lbgs' ); // dropcap', 'recentposts
     return $buttons;
 }
 

@@ -3,36 +3,131 @@
  * Plugin Name: wp_best_courses_lbgs
  * Version: 1.0
  */
-@import 'mixins';
-@import 'variables';
 
-#courses_table {
-    text-align: center;
+ @import 'mixins';
+ @import 'variables';
 
-    td {
-        height     : 40px;
-        line-height: 15px;
+/* general style of table (screens greater than xs) */
+.large-only {
+    width : 100%;
+    border: none;
+
+    thead {
+        background-color: $color-best-yellow;
+        color           : #FFFFFF;
     }
-
+    /* table striping (screens greater than xs) */
     tbody tr:nth-child(odd) {
         background-color: #FFF0BE;
     }
-
-    td,
-    th {
-        border-width   : 2px 1px 2px 1px;
-        border-color   : #fff;
+    /* text and border styles for all table cells (screens greater than xs) */
+    .large-only tbody td,
+    thead th {
+        border-width   : 3px 1px 3px 1px;
+        border-color   : #FFFFFF;
         border-style   : solid;
         border-collapse: collapse;
     }
 
-    thead {
-        font-size       : 14px;
-        background-color: $color-best-yellow;
+    tfoot th {
+        font-size  : 14px;
+        font-weight: 300;
+        font-style : italic;
+    }
 
-        &,
-        & a {
-            color: #fff;
-        }
+    td {
+        text-align: center;
+    }
+
+    th {
+        text-align: left;
+    }
+
+    th .fa {
+        padding: 20px 6px 0 0;
+        width  : 10px;
+        float  : right;
+    }
+
+    th div:not(.fa) {
+        display   : table;
+        float     : left;
+        min-height: 50px;
+        width     : 80%;
+    }
+
+    th div:not(.fa) span {
+        display       : table-cell;
+        vertical-align: middle;
+        padding       : 0 0 0 6px;
+    }
+}
+/* css rules for when to display which arrow */
+.fa-caret-up,
+.large-only .fa-caret-down {
+    display: none;
+}
+
+th[data-sorted-direction="descending"] .fa-caret-down {
+    display: block;
+}
+
+th[data-sorted-direction="ascending"] .fa-caret-up {
+    display: block;
+}
+
+th[data-sorted="true"] .fa-sort {
+    display: none;
+}
+/* mobile devices related stuff (using Stacktable) */
+.stacktable {
+    width: 100%;
+}
+
+.small-only {
+    display: none;
+}
+
+.st-head-row {
+    background-color: #FFF0BE;
+    color           : $color-best-blue;
+}
+
+.st-head-row-main {
+    background-color: $color-best-yellow;
+    color           : #FFFFFF;
+}
+
+.small-only tr:last-child th {
+    padding-top     : 20px;
+    background-color: #FFFFFF;
+    color           : #000000;
+    text-align      : justify;
+    font-size       : 1em;
+    font-weight     : 300;
+    font-style      : italic;
+}
+
+.st-head-row,
+.st-head-row-main {
+    font-size     : 1.2em;
+    padding-bottom: 12px;
+}
+
+.st-key,
+.st-val {
+    font-size: 1.1em;
+}
+
+.small-only .fa {
+    display: none;
+}
+@media (max-width: 767px) {
+    .large-only {
+        display: none;
+    }
+
+    .small-only {
+        display: table;
     }
 }
