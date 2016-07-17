@@ -5,11 +5,10 @@
  * ->lbgs
  * on error return false
  * ->error_id  1 - can't download file
- * 			   2 - changed structure of file
+ * 			   2 - changed structure of file.
  **/
 
 // basic usage example
-
 
 // use best\kosice\datalib as BST_data;
 //
@@ -23,7 +22,6 @@
 
 
 
-
 /*
   TODO refactor to static class
   php parser for courses  data
@@ -34,38 +32,41 @@
 namespace best\kosice\datalib;
 
 
+use Sunra\PhpSimple\HtmlDomParser;
+
 // security
-if ( ! defined( 'ABSPATH' ) ) exit;
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 // load lib for parsing
-require 'vendor/simple_html_dom.php';
-
-
-
-
+//require 'vendor/simple_html_dom.php';
 
 class best_kosice_data
 {
-    private $coursesurl         = 'https://best.eu.org/localWeb/eventListJS.jsp';
-    private $lbgsurl            = 'https://best.eu.org/localWeb/lbgChooser.jsp';
-    private $season_events_url  = 'https://best.eu.org/student/courses/coursesList.jsp';
+    private $coursesurl = 'https://best.eu.org/localWeb/eventListJS.jsp';
+    private $lbgsurl = 'https://best.eu.org/localWeb/lbgChooser.jsp';
+    private $season_events_url = 'https://best.eu.org/student/courses/coursesList.jsp';
     private $parsed_link_prefix = 'https://best.eu.org';
-    private $userAgent          = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)';
-    private $timeout            = 5;
+    private $userAgent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)';
+    private $timeout = 5;
 
-    public $conection_info      = false;
-    public $error_id            = false;
+    public $conection_info = false;
+    public $error_id = false;
 
     private static $_instance;
 
-    public function __construct(){
+    public function __construct()
+    {
     }
 
     //TODO convert singleton to static class
-    public static function instance () {
-        if ( is_null( self::$_instance ) ) {
+    public static function instance()
+    {
+        if (is_null(self::$_instance)) {
             self::$_instance = new self();
         }
+
         return self::$_instance;
     }
 
@@ -80,8 +81,9 @@ class best_kosice_data
         $data = $this->download_doc($this->coursesurl);
 
         // cant donwload
-        if (!$data | $this->conection_info['http_code']!=200 ) {
+        if (!$data | $this->conection_info['http_code'] != 200) {
             $this->error_id = 1;
+
             return false;
         }
 
@@ -90,6 +92,7 @@ class best_kosice_data
         // changed structure not document write
         if (!$data) {
             $this->error_id = 2;
+
             return false;
         }
 
@@ -98,6 +101,7 @@ class best_kosice_data
         // can't parse changed structure
         if (!$data) {
             $this->errorID = 2;
+
             return false;
         }
 
@@ -114,8 +118,9 @@ class best_kosice_data
         $data = $this->download_doc($this->lbgsurl);
 
         // cant donwload
-        if (!$data | $this->conection_info['http_code']!=200) {
+        if (!$data | $this->conection_info['http_code'] != 200) {
             $this->error_id = 1;
+
             return false;
         }
 
@@ -124,6 +129,7 @@ class best_kosice_data
         // changed structure
         if (!$data) {
             $this->error_id = 2;
+
             return false;
         }
 
@@ -131,6 +137,7 @@ class best_kosice_data
 
         if (!$data) {
             $this->error_id = 2;
+
             return false;
         }
 
@@ -140,19 +147,15 @@ class best_kosice_data
     // TODO
     // NOTE NOT DONE
     /**
-     * [season_dates description]
+     * [season_dates description].
+     *
      * @return [type] [description]
      */
     public function season_dates()
     {
-
         $data = $this->download_doc($this->season_events_url);
-
         //contentBar
-
         $data = $this->parse_dates($data);
-
-
     }
 
     /**
@@ -190,15 +193,17 @@ class best_kosice_data
 
         $data = curl_exec($ch);
 
-        if ( curl_errno($ch) )
+        if (curl_errno($ch)) {
             $data = false;
-        else
+        } else {
             $this->conection_info = curl_getinfo($ch);
+        }
 
         curl_close($ch);
 
         // convert from ISO-8859-1  to uft8
-        $data  = utf8_decode($data);
+        $data = utf8_decode($data);
+
         return $data;
     }
 
@@ -229,13 +234,12 @@ class best_kosice_data
      */
     private function parse_courses($html)
     {
-        $html = str_get_html($html);
+        $html = HtmlDomParser::str_get_html($html);
 
         $theData = array();
 
         foreach ($html->find('table') as $onetable) {
             foreach ($onetable->find('tr') as $row) {
-
                 $rowData = $row->find('td') ? array() : false;
 
                 foreach ($row->find('td') as $cell) {
@@ -244,22 +248,21 @@ class best_kosice_data
                             $rowData[] = trim($element->src);
                         }
                     } elseif (substr_count($cell->innertext, 'href') > 0) {
-
-                            foreach ($cell->find('a') as $element) {
-                                //title
+                        foreach ($cell->find('a') as $element) {
+                            //title
                                 $rowData[] = addslashes(html_entity_decode(trim($element->innertext)));
 
                                 //link
                                 $rowData[] = addslashes(html_entity_decode(trim($this->parsed_link_prefix.$element->href)));
-                            }
+                        }
                     } else {
                         $rowData[] = addslashes(html_entity_decode(strip_tags(trim($cell->innertext))));
                     }
                 }
 
-                if ($rowData)
+                if ($rowData) {
                     $theData[] = $rowData;
-
+                }
             }
         }
 
@@ -289,25 +292,24 @@ class best_kosice_data
                 }
             }
 
-            if ($rowData)
+            if ($rowData) {
                 $theData[] = $rowData;
-
+            }
         }
 
         return $theData;
     }
 
-    private function parse_dates($html){
+    private function parse_dates($html)
+    {
         $theData = false;
-        $html = str_get_html($html);
+        $html = HtmlDomParser::str_get_html($html);
+
         foreach ($html->find('#contentBar') as $element) {
 
             //var_dump($element->nodes);
 
-
             //
-
-
 
             //
             // while ($element->hasChildNodes()){
@@ -318,12 +320,8 @@ class best_kosice_data
 
             $parentNode = $element->innertext();
 
-
                 // $regex = '/<[^>]*>[^<]*<[^>]*>/';
            // preg_replace($regex, '', $element->innertext);
-
-
-
         }
     }
 // end of class
