@@ -19,6 +19,9 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+// Load composer
+require_once( 'vendor/autoload.php' );
+
 // Load plugin class files
 require_once( 'includes/class-wp-best-courses-lbgs.php' );
 require_once( 'includes/class-wp-best-courses-lbgs-settings.php' );
