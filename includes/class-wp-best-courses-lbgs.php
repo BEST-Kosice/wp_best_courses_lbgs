@@ -171,12 +171,15 @@ class wp_best_courses_lbgs {
 	 */
 	public function enqueue_scripts () {
 	    wp_register_script( $this->_token . '-sortable', esc_url( $this->assets_url ) . 'js/lib/sortable.min.js');
-		// TODO if wordpress loaded jquery
-		wp_register_script( $this->_token . '-jquery', esc_url( $this->assets_url ) . 'js/lib/jquery-1.7.min.js');
+
+		if ( !wp_script_is( 'jquery', 'registered' ) ) {
+			wp_register_script( $this->_token . '-jquery', esc_url( $this->assets_url ) . 'js/lib/jquery-1.7.min.js');
+			wp_enqueue_script( $this->_token . '-jquery' );
+	 	}
+
 		wp_register_script( $this->_token . '-stackable', esc_url( $this->assets_url ) . 'js/lib//stackable.min.js');
 		wp_register_script( $this->_token . '-frontend', esc_url( $this->assets_url ) . 'js/frontend' . $this->script_suffix . '.js');
 		wp_enqueue_script( $this->_token . '-sortable' );
-		wp_enqueue_script( $this->_token . '-jquery' );
 		wp_enqueue_script( $this->_token . '-stackable' );
 		wp_enqueue_script( $this->_token . '-frontend' );
 	} // End enqueue_scripts ()

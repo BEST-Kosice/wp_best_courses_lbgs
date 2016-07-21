@@ -14,17 +14,20 @@
 
     thead {
         background-color: $color-best-yellow;
-        color           : #FFFFFF;
+        color           : #fff;
     }
     /* table striping (screens greater than xs) */
     tbody tr:nth-child(odd) {
-        background-color: #FFF0BE;
+        background-color: lighten($color-best-yellow, 45% );;
+    }
+    tbody tr:nth-child(even) {
+        background-color: lighten($color-best-yellow, 35% );;
     }
     /* text and border styles for all table cells (screens greater than xs) */
     .large-only tbody td,
     thead th {
         border-width   : 3px 1px 3px 1px;
-        border-color   : #FFFFFF;
+        border-color   : #fff;
         border-style   : solid;
         border-collapse: collapse;
     }
@@ -89,19 +92,19 @@ th[data-sorted="true"] .fa-sort {
 }
 
 .st-head-row {
-    background-color: #FFF0BE;
+    background-color: lighten($color-best-yellow, 35% );
     color           : $color-best-blue;
 }
 
 .st-head-row-main {
     background-color: $color-best-yellow;
-    color           : #FFFFFF;
+    color           : #fff;
 }
 
 .small-only tr:last-child th {
     padding-top     : 20px;
-    background-color: #FFFFFF;
-    color           : #000000;
+    background-color: #fff;
+    color           : #000;
     text-align      : justify;
     font-size       : 1em;
     font-weight     : 300;

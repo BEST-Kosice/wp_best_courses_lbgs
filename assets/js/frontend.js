@@ -1,7 +1,15 @@
 /* initialize a stacktable (creates a mobile-friendly version of the table,
  * so basically creates a second table, but without sorting options).
  */
-$('#courses_table').stacktable();
+
+ (function($) {
+
+ 	// $ Works! You can test it with next line if you like
+ 	// console.log($);
+    $('#courses_table').stacktable();
+
+ })( jQuery );
+
 
 
 /* for mobile devices, the default date interval styling within
@@ -46,4 +54,10 @@ window.Sortable.setupTypes([
  * TODO: What next should we try to do with that table (add sorting options,
  * change layout or style in ways not possible with CSS, ...).
  */
-//$('.small-only')[0].tBodies[0]);
+ // (function($) {
+ //
+ //    // $ Works! You can test it with next line if you like
+ //    // console.log($);;
+ //    $('.small-only')[0].tBodies[0]);
+ //
+ // })( jQuery );
