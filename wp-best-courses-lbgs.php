@@ -78,6 +78,58 @@ SQL;
 }
 
 /**
+ * Debug by scsc. Creates a new row entry in a debug file. Remember to delete the created file afterwards.
+ * Will be removed in later release; used for testing cron functionality.
+ */
+function scsc_log($input1, $input2 = null) {
+    if (defined('WP_DEBUG') && true === WP_DEBUG) {
+        //File location: < Ampps/www/wp/scsc_log.txt >
+        $myfile_path = "../scsc_log.txt";
+        $myfile_number_limit = 6;
+
+        //Creates an empty file if none exists
+        fclose(fopen($myfile_path, "a+", $myfile_number_limit));
+
+        $myfile_size = filesize($myfile_path);
+        $myfile = fopen($myfile_path, "a+") or die("Unable to open file!");
+
+        //Reads the first $myfile_number_limit characters and uses them as a counter, then saves the remaining data
+        $number = fread($myfile, $myfile_number_limit);
+        if ($myfile_size - $myfile_number_limit > 0) {
+            $data = fread($myfile, $myfile_size - $myfile_number_limit);
+        } else {
+            $data = '';
+        }
+        rewind($myfile);
+        ftruncate($myfile, 0);
+
+        //Increases the counter
+        $myfile_powered = 1;
+        for ($i = 1; $i < $myfile_number_limit; $i++) {
+            $myfile_powered *= 10;
+        }
+        for ($i = ((int)$number) + 1; $i / $myfile_powered < 1; $i *= 10) {
+            fwrite($myfile, "0");
+        }
+
+        //Writes the data back, appending a new line with the current timestamp
+        fwrite($myfile, ((int)$number) + 1);
+        fwrite($myfile, $data);
+        fwrite($myfile, "\n");
+        fwrite($myfile, date("h:i:sa"));
+        fwrite($myfile, " - $input1.");
+
+        //If the second parameter is present, prints it as a boolean
+        if ($input2 == true) {
+            fwrite($myfile, " true");
+        } else if (!is_null($input2)) {
+            fwrite($myfile, ' false');
+        }
+        fclose($myfile);
+    }
+}
+
+/**
  * This function removes registered WP Cron events by a specified event name.
  * Source: <https://wordpress.org/support/topic/wp_unschedule_event-and-wp_clear_scheduled_hook-do-not-clear-events>
  *
