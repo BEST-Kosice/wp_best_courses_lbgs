@@ -239,7 +239,7 @@ class wp_best_courses_lbgs {
 	 * @since 1.0.0
 	 * @static
 	 * @see wp_best_courses_lbgs()
-	 * @return Main wp_best_courses_lbgs instance
+	 * @return wp_best_courses_lbgs main instance
 	 */
 	public static function instance ( $file = '', $version = '1.0.0' ) {
 		if ( is_null( self::$_instance ) ) {

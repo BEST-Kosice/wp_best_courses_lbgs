@@ -73,14 +73,14 @@ class best_kosice_data
     /**
      * return list of courses and details.
      *
-     * @return array false on error
+     * @return array|false on error
      */
     public function courses()
     {
         //$raw = file_get_contents($this->coursesurl);
         $data = $this->download_doc($this->coursesurl);
 
-        // cant donwload
+        // can't download
         if (!$data | $this->conection_info['http_code'] != 200) {
             $this->error_id = 1;
 
@@ -111,13 +111,13 @@ class best_kosice_data
     /**
      * return list of Local BEST Groups.
      *
-     * @return array
+     * @return array|false on error
      */
     public function lbgs()
     {
         $data = $this->download_doc($this->lbgsurl);
 
-        // cant donwload
+        // can't download
         if (!$data | $this->conection_info['http_code'] != 200) {
             $this->error_id = 1;
 
@@ -201,7 +201,7 @@ class best_kosice_data
 
         curl_close($ch);
 
-        // convert from ISO-8859-1  to uft8
+        // convert from ISO-8859-1 to UTF8
         $data = utf8_decode($data);
 
         return $data;
@@ -212,11 +212,11 @@ class best_kosice_data
      *
      * @param string $raw raw html doc with js html comments
      *
-     * @return array or false      array that matches
+     * @return array|false      array that matches
      */
     private function prepare_data($raw)
     {
-        // removing js  coments
+        // removing js comments
         $raw = preg_replace('/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\)\/\/[^"\'].*))/', '', $raw);
 
         // getting document write content
@@ -230,7 +230,7 @@ class best_kosice_data
      *
      * @param string $html [description]
      *
-     * @return array or false       [description]
+     * @return array|false       [description]
      */
     private function parse_courses($html)
     {

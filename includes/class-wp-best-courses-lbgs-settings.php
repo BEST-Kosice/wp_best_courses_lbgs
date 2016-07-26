@@ -348,7 +348,7 @@ class wp_best_courses_lbgs_Settings {
 	 * @since 1.0.0
 	 * @static
 	 * @see wp_best_courses_lbgs()
-	 * @return Main wp_best_courses_lbgs_Settings instance
+	 * @return wp_best_courses_lbgs_Settings main instance
 	 */
 	public static function instance ( $parent ) {
 		if ( is_null( self::$_instance ) ) {

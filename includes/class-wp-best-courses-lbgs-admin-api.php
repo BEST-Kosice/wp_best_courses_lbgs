@@ -279,7 +279,7 @@ wp_best_create_tables_events_lbgs();
 	}
 
 	/**
-	 * Dispay field in metabox
+	 * Display field in metabox
 	 * @param  array  $field Field data
 	 * @param  object $post  Post object
 	 * @return void
