@@ -10,8 +10,6 @@
 
  })( jQuery );
 
-
-
 /* for mobile devices, the default date interval styling within
  * the table cell 'od-do' ([date] - [date]) is asked for, but
  * for larger screens, a styling of ([date]<br>-<br>[date]) is more appropriate.

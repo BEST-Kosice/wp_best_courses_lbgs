@@ -16,10 +16,15 @@ class ComposerStaticInite658008a4f40a5cc71f4348e1d0e57fc
         ),
     );
 
+    public static $classMap = array (
+        'Sunra\\PhpSimple\\HtmlDomParser' => __DIR__ . '/..' . '/sunra/php-simple-html-dom-parser/Src/Sunra/PhpSimple/HtmlDomParser.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixesPsr0 = ComposerStaticInite658008a4f40a5cc71f4348e1d0e57fc::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInite658008a4f40a5cc71f4348e1d0e57fc::$classMap;
 
         }, null, ClassLoader::class);
     }
