@@ -1,0 +1,901 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="800"
+   height="600"
+   id="svg3336"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   viewBox="0 0 800 600"
+   sodipodi:docname="events.svg">
+  <defs
+     id="defs3338" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="11.313709"
+     inkscape:cx="207.79522"
+     inkscape:cy="280.33153"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     showguides="false"
+     inkscape:guide-bbox="true"
+     guidetolerance="20">
+    <sodipodi:guide
+       position="10.606602,485.54666"
+       orientation="1,0"
+       id="guide4264" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata3341">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Background"
+     inkscape:groupmode="layer">
+    <rect
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="rect3344"
+       width="200"
+       height="575"
+       x="0"
+       y="25" />
+    <rect
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="rect3344-2"
+       width="800"
+       height="25"
+       x="0"
+       y="0" />
+    <g
+       id="g4218"
+       transform="translate(0,-3.5355339)">
+      <rect
+         y="37.260845"
+         x="40.658649"
+         height="12.963624"
+         width="143.77838"
+         id="rect4186-8"
+         style="fill:#cccccc;fill-opacity:1;stroke:none" />
+      <rect
+         y="31.368301"
+         x="10.606589"
+         height="21.213203"
+         width="24.748739"
+         id="rect4186-8-5"
+         style="fill:#cccccc;fill-opacity:1;stroke:none" />
+    </g>
+    <g
+       transform="translate(0.29462391,26.516496)"
+       id="g4218-7">
+      <rect
+         y="37.260845"
+         x="40.658649"
+         height="12.963624"
+         width="143.77838"
+         id="rect4186-8-8"
+         style="fill:#cccccc;fill-opacity:1;stroke:none" />
+      <rect
+         y="31.368301"
+         x="10.606589"
+         height="21.213203"
+         width="24.748739"
+         id="rect4186-8-5-2"
+         style="fill:#cccccc;fill-opacity:1;stroke:none" />
+    </g>
+    <g
+       transform="translate(0.29463175,57.157798)"
+       id="g4218-7-4">
+      <rect
+         y="37.260845"
+         x="40.658649"
+         height="12.963624"
+         width="143.77838"
+         id="rect4186-8-8-5"
+         style="fill:#cccccc;fill-opacity:1;stroke:none" />
+      <rect
+         y="31.368301"
+         x="10.606589"
+         height="21.213203"
+         width="24.748739"
+         id="rect4186-8-5-2-4"
+         style="fill:#cccccc;fill-opacity:1;stroke:none" />
+    </g>
+    <g
+       transform="translate(4.7058481e-7,86.9152)"
+       id="g4218-7-4-5">
+      <rect
+         y="37.260845"
+         x="40.658649"
+         height="12.963624"
+         width="143.77838"
+         id="rect4186-8-8-5-5"
+         style="fill:#cccccc;fill-opacity:1;stroke:none" />
+      <rect
+         y="31.368301"
+         x="10.606589"
+         height="21.213203"
+         width="24.748739"
+         id="rect4186-8-5-2-4-8"
+         style="fill:#cccccc;fill-opacity:1;stroke:none" />
+    </g>
+    <g
+       transform="translate(0.29462326,143.18912)"
+       id="g4218-7-4-5-9">
+      <rect
+         y="37.260845"
+         x="40.658649"
+         height="12.963624"
+         width="143.77838"
+         id="rect4186-8-8-5-5-0"
+         style="fill:#cccccc;fill-opacity:1;stroke:none" />
+      <rect
+         y="31.368301"
+         x="10.606589"
+         height="21.213203"
+         width="24.748739"
+         id="rect4186-8-5-2-4-8-3"
+         style="fill:#cccccc;fill-opacity:1;stroke:none" />
+    </g>
+    <g
+       transform="translate(0.2946278,173.53579)"
+       id="g4218-7-4-5-9-8">
+      <rect
+         y="37.260845"
+         x="40.658649"
+         height="12.963624"
+         width="143.77838"
+         id="rect4186-8-8-5-5-0-8"
+         style="fill:#cccccc;fill-opacity:1;stroke:none" />
+      <rect
+         y="31.368301"
+         x="10.606589"
+         height="21.213203"
+         width="24.748739"
+         id="rect4186-8-5-2-4-8-3-5"
+         style="fill:#cccccc;fill-opacity:1;stroke:none" />
+    </g>
+    <g
+       transform="translate(0.2946277,204.47171)"
+       id="g4218-7-4-5-9-8-5">
+      <rect
+         y="37.260845"
+         x="40.658649"
+         height="12.963624"
+         width="143.77838"
+         id="rect4186-8-8-5-5-0-8-5"
+         style="fill:#cccccc;fill-opacity:1;stroke:none" />
+      <rect
+         y="31.368301"
+         x="10.606589"
+         height="21.213203"
+         width="24.748739"
+         id="rect4186-8-5-2-4-8-3-5-6"
+         style="fill:#cccccc;fill-opacity:1;stroke:none" />
+    </g>
+    <g
+       transform="translate(-5.5298214e-8,232.46135)"
+       id="g4218-7-4-5-9-8-5-8">
+      <rect
+         y="37.260845"
+         x="40.658649"
+         height="12.963624"
+         width="143.77838"
+         id="rect4186-8-8-5-5-0-8-5-8"
+         style="fill:#cccccc;fill-opacity:1;stroke:none" />
+      <rect
+         y="31.368301"
+         x="10.606589"
+         height="21.213203"
+         width="24.748739"
+         id="rect4186-8-5-2-4-8-3-5-6-1"
+         style="fill:#cccccc;fill-opacity:1;stroke:none" />
+    </g>
+    <g
+       transform="translate(0.29462819,261.62951)"
+       id="g4218-7-4-5-9-8-5-8-4">
+      <rect
+         y="37.260845"
+         x="40.658649"
+         height="12.963624"
+         width="143.77838"
+         id="rect4186-8-8-5-5-0-8-5-8-4"
+         style="fill:#cccccc;fill-opacity:1;stroke:none" />
+      <rect
+         y="31.368301"
+         x="10.606589"
+         height="21.213203"
+         width="24.748739"
+         id="rect4186-8-5-2-4-8-3-5-6-1-6"
+         style="fill:#cccccc;fill-opacity:1;stroke:none" />
+    </g>
+    <rect
+       style="fill:#cccccc;fill-opacity:1;stroke:none"
+       id="rect4186"
+       width="168.52711"
+       height="12.963624"
+       x="624.61096"
+       y="4.8517923" />
+    <rect
+       style="fill:#cccccc;fill-opacity:1;stroke:none"
+       id="rect4186-9"
+       width="168.52711"
+       height="12.963624"
+       x="10.929998"
+       y="7.0450492" />
+    <rect
+       style="fill:#0080b2;fill-opacity:1;stroke:none;stroke-width:1.05251908;stroke-opacity:1"
+       id="rect4212"
+       width="200"
+       height="25.285475"
+       x="0"
+       y="317.71454" />
+    <g
+       id="g4203"
+       transform="translate(0.99999994,-4.9999999)">
+      <ellipse
+         ry="5.0240431"
+         rx="12.024043"
+         cy="339.5"
+         cx="22.5"
+         id="path3369"
+         style="fill:#cccccc;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.95191371px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <ellipse
+         ry="5.0240431"
+         rx="12.024043"
+         cy="334.41699"
+         cx="22.5"
+         id="path3369-3"
+         style="fill:#cccccc;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.95191371px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <ellipse
+         ry="5.0240431"
+         rx="12.024043"
+         cy="329.5"
+         cx="22.5"
+         id="path3369-3-6"
+         style="fill:#cccccc;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.95191371px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:12.5px;line-height:125%;font-family:sans-serif;letter-spacing:1.54000008px;word-spacing:0px;fill:#cccccc;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="47.671257"
+       y="282.72681"
+       id="text4208"
+       sodipodi:linespacing="125%"
+       transform="scale(0.84735907,1.1801372)"><tspan
+         sodipodi:role="line"
+         id="tspan4210"
+         x="47.671257"
+         y="282.72681"
+         style="font-size:12.5px;letter-spacing:1.54000008px;fill:#cccccc;fill-opacity:1">Správa BEST databázy</tspan></text>
+    <path
+       sodipodi:type="star"
+       style="fill:#ececec;fill-opacity:1;stroke:none;stroke-opacity:1"
+       id="path4216"
+       sodipodi:sides="3"
+       sodipodi:cx="251.88461"
+       sodipodi:cy="256.46396"
+       sodipodi:r1="51.884621"
+       sodipodi:r2="25.94231"
+       sodipodi:arg1="-3.1415927"
+       sodipodi:arg2="-2.0943951"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 199.99999,256.46396 38.91347,-22.4667 38.91346,-22.4667 0,44.9334 1e-5,44.9334 -38.91347,-22.4667 z"
+       inkscape:transform-center-x="1.6666661"
+       transform="matrix(0.12849022,0,0,0.1112758,164.30196,301.46177)" />
+    <rect
+       style="fill:#ececec;fill-opacity:1;stroke:none"
+       id="rect4163"
+       width="600"
+       height="575"
+       x="200"
+       y="25" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-opacity:1"
+       id="rect4226"
+       width="580"
+       height="90"
+       x="210"
+       y="70" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="222.79189"
+       y="194.47382"
+       id="text4280"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="222.79189"
+         y="194.47382"
+         id="tspan4284">Eventy</tspan></text>
+    <rect
+       style="fill:#b3b3b3;fill-opacity:1;stroke:none;stroke-opacity:1"
+       id="rect4216"
+       width="160"
+       height="20"
+       x="285"
+       y="180" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12.5px;line-height:125%;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="296.98428"
+       y="194.12027"
+       id="text4288"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="296.98428"
+         y="194.12027"
+         id="tspan4292"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif">Lokálne BEST skupiny</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 210,200 10,0 0,-20 55,0 0,20 10,0 0,-20 160,0 0,20 345,0 -345,0"
+       id="path4298"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccccccccc" />
+    <rect
+       style="fill:#0080b2;fill-opacity:1;stroke:none;stroke-opacity:1"
+       id="rect4209"
+       width="140"
+       height="15"
+       x="215"
+       y="215"
+       rx="1.4999235" />
+    <rect
+       style="fill:#0080b2;fill-opacity:1;stroke:none;stroke-opacity:1"
+       id="rect4209-6"
+       width="140"
+       height="15"
+       x="215"
+       y="555"
+       rx="1.4999235" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:20px;line-height:125%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="208.68164"
+       y="60.839844"
+       id="text4356"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4358"
+         x="208.68164"
+         y="60.839844">Správa BEST databázy</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Forms">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4272"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:20px;line-height:125%;letter-spacing:0px;word-spacing:0px"><flowRegion
+         id="flowRegion4274"><rect
+           id="rect4276"
+           width="47.729706"
+           height="20.506096"
+           x="222.38509"
+           y="180.15535" /></flowRegion><flowPara
+         id="flowPara4278" /></flowRoot>    <rect
+       style="fill:#008000;fill-opacity:1;stroke:none;stroke-opacity:1"
+       id="rect4302"
+       width="5"
+       height="90"
+       x="210"
+       y="70" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 285,200 160,0 z"
+       id="path4214"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4228"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:20px;line-height:125%;letter-spacing:0px;word-spacing:0px"><flowRegion
+         id="flowRegion4230"><rect
+           id="rect4232"
+           width="148.49243"
+           height="27.577164"
+           x="373.35239"
+           y="215.33391" /></flowRegion><flowPara
+         id="flowPara4234" /></flowRoot>    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 210,250 580,0 z"
+       id="path4244"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4661"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:11.25px;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;text-align:start"><flowRegion
+         id="flowRegion4663"><rect
+           id="rect4665"
+           width="150.5"
+           height="68.25"
+           x="217.25"
+           y="443.25" /></flowRegion><flowPara
+         id="flowPara4667" /></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4722"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:20px;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;text-align:start;"><flowRegion
+         id="flowRegion4724"><rect
+           id="rect4726"
+           width="548"
+           height="81"
+           x="222"
+           y="73"
+           style="font-size:20px;" /></flowRegion><flowPara
+         id="flowPara4728" /></flowRoot>    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-opacity:1"
+       id="rect4246-3-9"
+       width="192"
+       height="16"
+       x="215"
+       y="386.67435"
+       rx="1.4971776" />
+    <g
+       style=""
+       id="g4600"
+       transform="translate(-2,1)">
+      <rect
+         y="388"
+         x="395"
+         height="5"
+         width="11"
+         id="rect4566"
+         style="fill:#e6e6e6;fill-opacity:1;stroke:none;stroke-opacity:1" />
+      <rect
+         y="394"
+         x="395"
+         height="5"
+         width="11"
+         id="rect4566-2"
+         style="fill:#e6e6e6;fill-opacity:1;stroke:none;stroke-opacity:1" />
+      <path
+         transform="matrix(1.0920941,0,0,0.75662496,-36.409595,96.541035)"
+         inkscape:transform-center-y="0.49999965"
+         d="m 400.06589,398.42588 -1.14459,-1.98249 -1.14459,-1.98249 2.28918,0 2.28918,0 -1.14459,1.98249 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="2.6179939"
+         sodipodi:arg1="1.5707963"
+         sodipodi:r2="1.3216587"
+         sodipodi:r1="2.6433175"
+         sodipodi:cy="395.78256"
+         sodipodi:cx="400.06589"
+         sodipodi:sides="3"
+         id="path4583"
+         style="fill:#999999;fill-opacity:1;stroke:none;stroke-opacity:1"
+         sodipodi:type="star" />
+      <path
+         transform="matrix(1.0920941,0,0,-0.75662496,-36.193729,95.02985)"
+         inkscape:transform-center-y="-0.49999722"
+         d="m 399.86823,-388.52822 -1.14459,-1.98249 -1.1446,-1.98249 2.28919,0 2.28918,0 -1.14459,1.98249 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="2.6179939"
+         sodipodi:arg1="1.5707963"
+         sodipodi:r2="1.3216587"
+         sodipodi:r1="2.6433175"
+         sodipodi:cy="-391.17154"
+         sodipodi:cx="399.86823"
+         sodipodi:sides="3"
+         id="path4583-9"
+         style="fill:#999999;fill-opacity:1;stroke:none;stroke-opacity:1"
+         sodipodi:type="star" />
+    </g>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-opacity:1"
+       id="rect4246"
+       width="192"
+       height="16"
+       x="215"
+       y="264"
+       rx="1.4971776" />
+    <g
+       style=""
+       id="g4408">
+      <rect
+         rx="0.70180202"
+         y="299"
+         x="215"
+         height="16"
+         width="90"
+         id="rect4246-3"
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-opacity:1" />
+      <rect
+         rx="0.70180202"
+         y="299"
+         x="317"
+         height="16"
+         width="90"
+         id="rect4246-3-7"
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-opacity:1" />
+    </g>
+    <g
+       style=""
+       id="g4404"
+       transform="translate(-4.3672943,-72.867157)">
+      <rect
+         rx="0.70180202"
+         y="404.86716"
+         x="219.36729"
+         height="16"
+         width="90"
+         id="rect4246-3-0"
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-opacity:1" />
+      <rect
+         rx="0.70180202"
+         y="404.86716"
+         x="321.36728"
+         height="16"
+         width="90"
+         id="rect4246-3-7-6"
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-opacity:1" />
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Text">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="251.48145"
+       y="275.68613"
+       id="text4296"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4298"
+         x="251.48145"
+         y="275.68613">Názov eventu</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="215.01855"
+       y="293.8584"
+       id="text4296-1"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4298-2"
+         x="215.01855"
+         y="293.8584">Miesto konania</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="217.0918"
+       y="311.47247"
+       id="text4333"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4335"
+         x="217.0918"
+         y="311.47247">mesto</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="318.45801"
+       y="311.18466"
+       id="text4333-3"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4335-6"
+         x="318.45801"
+         y="311.18466">štát</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:11.25px;line-height:125%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#0080b2;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="362.49463"
+       y="226.9563"
+       id="text4382"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4384"
+         x="362.49463"
+         y="226.9563">Zobraziť/editovať tabuľku eventov (pokročilé)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="230.58496"
+       y="328.24432"
+       id="text4296-1-2"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4298-2-6"
+         x="230.58496"
+         y="328.24432">Od-do</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="217.57031"
+       y="345.8584"
+       id="text4333-1"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4335-8"
+         x="217.57031"
+         y="345.8584">začiatok</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="318.45801"
+       y="345.8584"
+       id="text4333-3-7"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4335-6-9"
+         x="318.45801"
+         y="345.8584">koniec</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="215.92188"
+       y="363.15231"
+       id="text4296-1-20"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4298-2-2"
+         x="215.92188"
+         y="363.15231">Akademická komplexnosť (úroveň):</tspan></text>
+    <g
+       id="g4335">
+      <g
+         id="g4466">
+        <circle
+           style="fill:#cccccc;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+           id="path4460"
+           cx="-421.5"
+           cy="359.5"
+           r="5"
+           transform="scale(-1,1)" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:11.25px;line-height:125%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           x="429.89587"
+           y="362.8407"
+           id="text4462"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan4464"
+             x="429.89587"
+             y="362.8407">Basic</tspan></text>
+      </g>
+      <g
+         id="g4466-3"
+         transform="translate(47,0)">
+        <circle
+           style="fill:#cccccc;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+           id="path4460-7"
+           cx="-421.5"
+           cy="359.5"
+           r="5"
+           transform="scale(-1,1)" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:11.25px;line-height:125%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           x="429.89587"
+           y="362.8407"
+           id="text4462-5"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan4464-9"
+             x="429.89587"
+             y="362.8407">Advanced</tspan></text>
+      </g>
+      <g
+         id="g4541">
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:11.25px;line-height:125%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           x="549.89587"
+           y="362.8407"
+           id="text4462-8"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan4464-97"
+             x="549.89587"
+             y="362.8407">Neuvedené</tspan></text>
+        <g
+           id="g4537">
+          <circle
+             transform="scale(-1,1)"
+             r="5"
+             cy="359.5"
+             cx="-541.5"
+             id="path4460-2"
+             style="fill:#cccccc;fill-opacity:1;stroke:#000000;stroke-opacity:1" />
+          <circle
+             style="fill:#0080b2;fill-opacity:1;stroke:none;stroke-opacity:1"
+             id="path4460-2-3"
+             cx="-541.45087"
+             cy="359.51303"
+             r="3.5"
+             transform="scale(-1,1)" />
+        </g>
+      </g>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="215.43848"
+       y="383.91992"
+       id="text4296-1-20-6"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4298-2-2-1"
+         x="215.43848"
+         y="383.91992">Cena v €</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="216.90137"
+       y="399.42822"
+       id="text4333-1-3"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4335-8-6"
+         x="216.90137"
+         y="399.42822">10</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:11.25px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="286.27484"
+       y="226.65991"
+       id="text4211"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4213"
+         x="286.27484"
+         y="226.65991">Aktualizovať eventy</tspan></text>
+    <g
+       id="g4277"
+       transform="translate(0.4999873,20.500051)">
+      <rect
+         rx="1.8628044"
+         y="421.79831"
+         x="215.05579"
+         height="15.888453"
+         width="238.88846"
+         id="rect4246-3-9-3"
+         style="fill:#ffffff;fill-opacity:1;stroke:#0080b2;stroke-width:1.11154687;stroke-opacity:1" />
+      <path
+         transform="matrix(1.0920941,0,0,1.2610416,10.590405,-69.431626)"
+         inkscape:transform-center-y="0.8333221"
+         d="m 400.06589,398.42588 -1.14459,-1.98249 -1.14459,-1.98249 2.28918,0 2.28918,0 -1.14459,1.98249 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="false"
+         sodipodi:arg2="2.6179939"
+         sodipodi:arg1="1.5707963"
+         sodipodi:r2="1.3216587"
+         sodipodi:r1="2.6433175"
+         sodipodi:cy="395.78256"
+         sodipodi:cx="400.06589"
+         sodipodi:sides="3"
+         id="path4583-7"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-opacity:1"
+         sodipodi:type="star" />
+      <rect
+         y="438.53796"
+         x="215.29269"
+         height="86.669281"
+         width="238.4146"
+         id="rect4658"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.58540756;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text4296-1-20-6-4"
+         y="432.3584"
+         x="217.0293"
+         style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           y="432.3584"
+           x="217.0293"
+           id="tspan4298-2-2-1-5"
+           sodipodi:role="line">Typ eventu</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text4321"
+         y="449.34741"
+         x="216.91211"
+         style="font-style:normal;font-weight:normal;font-size:11.25px;line-height:125%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           y="449.34741"
+           x="216.91211"
+           id="tspan4323"
+           sodipodi:role="line">Course (Technology)</tspan><tspan
+           id="tspan4325"
+           y="463.40991"
+           x="216.91211"
+           sodipodi:role="line">Course (Applied engineering)</tspan><tspan
+           id="tspan4327"
+           y="477.47241"
+           x="216.91211"
+           sodipodi:role="line">Course (Career related skills)</tspan><tspan
+           id="tspan4329"
+           y="491.53491"
+           x="216.91211"
+           sodipodi:role="line">Leisure event</tspan><tspan
+           id="tspan4331"
+           y="505.59741"
+           x="216.91211"
+           sodipodi:role="line">Academics and companies forum (BACo)</tspan><tspan
+           id="tspan4333"
+           y="519.65991"
+           x="216.91211"
+           sodipodi:role="line">Symposium on education (BSoE)</tspan></text>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:11.25px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="286.27484"
+       y="566.65991"
+       id="text4211-7"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4213-5"
+         x="286.27484"
+         y="566.65991">Pridať event</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="220"
+       y="95"
+       id="text4730"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4732"
+         x="220"
+         y="95">Aktualizácia databázy prebehla úspešne</tspan></text>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-opacity:1"
+       id="rect4246-36"
+       width="192"
+       height="16"
+       x="215"
+       y="412.655"
+       rx="1.4971776" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10px;line-height:125%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="217.01851"
+       y="424.34113"
+       id="text4296-7"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4298-5"
+         x="217.01851"
+         y="424.34113">Stranka pre prihlásenie</tspan></text>
+  </g>
+</svg>
