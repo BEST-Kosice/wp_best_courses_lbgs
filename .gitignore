@@ -4,5 +4,5 @@ dist
 bower_components
 
 #IntelliJ specific
-.idea
+.idea/*
 !.idea/codeStyleSettings.xml
