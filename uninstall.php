@@ -11,20 +11,25 @@
 
 // If plugin is not being uninstalled, exit (do nothing)
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-	exit;
+    exit;
 }
 
 // Do something here if plugin is being uninstalled.
 
 /**
- * Deletes a table from the database.
- * Should be run at the time of plugin deactivation on all custom tables.
+ * Deletes all plugin tables from the database.
  */
 function wp_best_courses_lbgs_drop_tables() {
     //Global instance of the WordPress Database
     global $wpdb;
 
-    $wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'best_events, ' . $wpdb->prefix . 'best_lbg' );
+    $wpdb->query( 'DROP TABLE IF EXISTS '
+                  . $wpdb->prefix . 'best_events'
+                  . ', '
+                  . $wpdb->prefix . 'best_lbg'
+                  . ', '
+                  . $wpdb->prefix . 'best_history'
+    );
 }
 
 wp_best_courses_lbgs_drop_tables();

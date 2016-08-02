@@ -15,9 +15,9 @@ class wp_best_courses_lbgs_Admin_API {
 
 	/**
 	 * Generate HTML for displaying fields
-	 * @param  array   $field Field data
-	 * @param  boolean $echo  Whether to echo the field HTML or return it
-	 * @return void
+	 * @param  $data array   $field Field
+	 * @param  $echo boolean  Whether to echo the field HTML or return it
+	 * @return void|string when echo = false
 	 */
 	public function display_field ( $data = array(), $post = false, $echo = true ) {
 
@@ -230,7 +230,7 @@ wp_best_create_tables_events_lbgs();
 	 * @param array  $post_types    Post types to which this metabox applies
 	 * @param string $context       Context in which to display this metabox ('advanced' or 'side')
 	 * @param string $priority      Priority of this metabox ('default', 'low' or 'high')
-	 * @param array  $callback_args Any axtra arguments that will be passed to the display function for this metabox
+	 * @param array  $callback_args Any extra arguments that will be passed to the display function for this metabox
 	 * @return void
 	 */
 	public function add_meta_box ( $id = '', $title = '', $post_types = array(), $context = 'advanced', $priority = 'default', $callback_args = null ) {

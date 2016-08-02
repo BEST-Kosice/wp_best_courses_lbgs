@@ -356,10 +356,70 @@ class wp_best_courses_lbgs_Settings {
 					$html .= '<input name="Submit" type="submit" class="button-primary" value="' . esc_attr( __( 'Save Settings' , 'wp-best-courses-lbgs' ) ) . '" />' . "\n";
 				$html .= '</p>' . "\n";
 			$html .= '</form>' . "\n";
+
+        $html .= '<hr />';
+        $html .= $this->updates_history_table();
+
 		$html .= '</div>' . "\n";
 
 		echo $html;
 	}
+
+    /**
+     * A table consisting of history of recent updates.
+     *
+     * @param $number_of_rows int maximum number of displayed rows
+     * @param $html_class string class used for the <table> tag
+     *
+     * @return string HTML code of <table> tag
+     */
+    private function updates_history_table( $number_of_rows = 50, $html_class = null ) {
+        global $wpdb;
+        $tableName   = esc_sql( $wpdb->prefix . 'best_history' );
+        $historyRows = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM $tableName ORDER BY time DESC LIMIT %d"
+                , $number_of_rows
+            ), ARRAY_A
+        );
+
+        //TODO consider logging error of the table select query in the table itself?
+        $html = '';
+        if ( $historyRows == null ) {
+            $html .= '<p>Problem with history table: ' . $wpdb->last_error . '</p>';
+        }
+
+        $html .= '<table';
+        if ( $html_class != null ) {
+            $html .= " class=\"$html_class\"";
+        } else {
+            //Default table if no class is used
+            $html .= " border=\"1\" align=\"center\"";
+        }
+        $html .= '><tr>';
+        //TODO translate later on
+        $html .= '<th>Čas aktualizácie</th>';
+        $html .= '<th>Typ aktualizácie</th>';
+        $html .= '<th>Cieľ operácie</th>';
+        $html .= '<th>Výsledok</th>';
+        $html .= '<th>Akcia</th>';
+        $html .= '</tr>';
+
+        foreach ( $historyRows as $history ) {
+            $html .= '<tr>';
+            $html .= '<td>' . $history['time'] . '</td>';
+            $html .= '<td>' . $history['type'] . '</td>';
+            $html .= '<td>' . $history['target'] . '</td>';
+            $error_message = $history['error_message'];
+            $html .= '<td>' . ( $error_message == null ? 'OK' : $history['error_message'] ) . '</td>';
+            $html .= '<td>' . $history['attempted_action'] . '</td>';
+            $html .= '</tr>';
+        }
+
+        $html .= '</table>';
+        wp_best_courses_log_error( 'automatic', 'meta', 'Testing the log.', 'nothing');
+        return $html;
+    }
 
 	/**
 	 * Main wp_best_courses_lbgs_Settings Instance

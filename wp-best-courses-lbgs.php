@@ -59,7 +59,8 @@ PRIMARY KEY (id_event)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 SQL;
 
-    $sql_lbg = <<< SQL
+    //TODO rename lbg to lbgs for consistency (but I don't want to ruin current dbs of developers, maybe some patch?)
+    $sql_lbgs = <<< SQL
 CREATE TABLE IF NOT EXISTS {$wpdb->prefix}best_lbg (
 id_lbg int(11) NOT NULL AUTO_INCREMENT,
 city varchar(50) NOT NULL,
@@ -69,12 +70,54 @@ PRIMARY KEY (id_lbg)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 SQL;
 
-  // TODO error handling
+    //TODO possibly decide on a better name (and purpose) for this table
+    $sql_history = <<< SQL
+CREATE TABLE IF NOT EXISTS {$wpdb->prefix}best_history (
+id_history int(11) NOT NULL AUTO_INCREMENT,
+time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+type varchar(50) NOT NULL CHECK(type IN('automatic', 'manual')),
+target varchar(50) NOT NULL CHECK(target IN('events_db', 'lbgs_db', 'meta')),
+error_message varchar(200) DEFAULT NULL,
+attempted_action varchar(200) DEFAULT NULL,
+PRIMARY KEY (id_history)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+SQL;
 
-  $wpdb->query($sql_events);
+    //Querying and error handling
+    $error_message = 'Error during table creation: ';
+    if ( ! $wpdb->query( $sql_events ) ) {
+        wp_best_courses_log_error( 'automatic', 'events_db', $error_message . $wpdb->last_error, $sql_events );
+    }
+    if ( ! $wpdb->query( $sql_lbgs ) ) {
+        wp_best_courses_log_error( 'automatic', 'lbgs_db', $error_message . $wpdb->last_error, $sql_lbgs );
+    }
+    if ( ! $wpdb->query( $sql_history ) ) {
+        wp_best_courses_log_error( 'automatic', 'meta', $error_message . $wpdb->last_error, $sql_history );
+    }
+}
 
-  $wpdb->query($sql_lbg);
-
+/**
+ * Logs an error into the database in order to be displayed to the administrator.
+ * (If it becomes useful, it may even get its own class with enum like $target...)
+ *
+ * @param $target string the event where the error occurred
+ * @param $error_message string explanation of the problem that happened
+ * @param $attempted_action string request that caused the error
+ */
+function wp_best_courses_log_error( $type, $target, $error_message, $attempted_action ) {
+    global $wpdb;
+    $tableName = esc_sql( $wpdb->prefix . 'best_history' );
+    $wpdb->query(
+        $wpdb->prepare(
+            "INSERT INTO $tableName"
+            . "(type, target, error_message, attempted_action)"
+            . "VALUES (%s, %s, %s, %s)"
+            , $type
+            , $target
+            , $error_message
+            , $attempted_action
+        )
+    );
 }
 
 /**
@@ -115,44 +158,42 @@ function refresh_db_best_events() {
 
     if ($courses) {
         global $wpdb;
-        $tableName = $wpdb->prefix . 'best_events';
+        $tableName = esc_sql( $wpdb->prefix . 'best_events' );
 
         //If the DB supports it, we will offer transaction rollback on error
         $wpdb->query( 'START TRANSACTION' );
 
         //Deletes all old entries
-        $wpdb->query( "TRUNCATE TABLE " . $tableName );
+        $wpdb->query( "TRUNCATE TABLE $tableName" );
 
-        $insert = 'INSERT INTO ' . $tableName . ' (event_name, login_url, place, dates, event_type, acad_compl, fee) VALUES ';
-        $insertFirst = true;
+        $insert = "INSERT INTO $tableName (event_name, login_url, place, dates, event_type, acad_compl, fee) VALUES ";
 
         //Inserts new entries
-        foreach ($courses as $course) {
+        foreach ( $courses as $course ) {
 
             //Next row
-            $insert =
-                $insert . '(' .
-                //event_name
-                "'" . $course[0] . "'," .
-                //login_url
-                "'" . $course[1] . "'," .
-                //place
-                "'" . $course[2] . "'," .
-                //dates
-                "'" . $course[3] . "'," .
-                //event_type
-                "'" . $course[4] . "'," .
-                //acad_compl
-                "'" . $course[5] . "'," .
-                //fee
-                "'" . $course[6] . "'" .
-                '),';
+            $insert .= '(' .
+                       //event_name
+                       "'" . $course[0] . "'," .
+                       //login_url
+                       "'" . $course[1] . "'," .
+                       //place
+                       "'" . $course[2] . "'," .
+                       //dates
+                       "'" . $course[3] . "'," .
+                       //event_type
+                       "'" . $course[4] . "'," .
+                       //acad_compl
+                       "'" . $course[5] . "'," .
+                       //fee
+                       "'" . $course[6] . "'" .
+                       '),';
         }
 
-        $insert = rtrim ( $insert , ',');
+        $insert = rtrim( $insert, ',' );
 
         //Running the query and problem handling
-        if (!$wpdb->query( $insert )) {
+        if ( ! $wpdb->query( esc_sql( $insert ) ) ) {
             $wpdb->query( 'ROLLBACK' );
             return;
         }
@@ -172,35 +213,34 @@ function refresh_db_best_lbgs() {
 
     if ($lbgs) {
         global $wpdb;
-        $tableName = $wpdb->prefix . 'best_lbg';
+        $tableName = esc_sql( $wpdb->prefix . 'best_lbg' );
 
         //If the DB supports it, we will offer transaction rollback on error
         $wpdb->query( 'START TRANSACTION' );
 
         //Deletes all old entries
-        $wpdb->query( "TRUNCATE TABLE " . $tableName );
+        $wpdb->query( "TRUNCATE TABLE $tableName" );
 
-        $insert = 'INSERT INTO ' . $tableName . ' (web_page, city, state) VALUES ';
+        $insert = "INSERT INTO $tableName (web_page, city, state) VALUES ";
 
         //Inserts new entries
-        foreach ($lbgs as $lbg) {
+        foreach ( $lbgs as $lbg ) {
 
             //Next row
-            $insert =
-                $insert . '(' .
-                //web_page
-                "'" . $lbg[0] . "'," .
-                //city
-                "'" . $lbg[2] . "'," .
-                //state
-                "'" . $lbg[1] . "'" .
-                '),';
+            $insert .= '(' .
+                       //web_page
+                       "'" . $lbg[0] . "'," .
+                       //city
+                       "'" . $lbg[2] . "'," .
+                       //state
+                       "'" . $lbg[1] . "'" .
+                       '),';
         }
 
         $insert = rtrim( $insert, ',' );
 
         //Running the query and problem handling
-        if (!$wpdb->query( $insert )) {
+        if ( ! $wpdb->query( esc_sql( $insert ) ) ) {
             $wpdb->query( 'ROLLBACK' );
             return;
         }
