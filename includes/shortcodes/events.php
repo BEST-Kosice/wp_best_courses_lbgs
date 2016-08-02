@@ -74,7 +74,55 @@ wp_best_courses_lbgs()->enqueue_scripts();
         </thead>
         <tbody>
             <?php
-            // TODO SPRAVIŤ wp QUERY LOOP PRE VÝPIS TABUĽKY
+                global $wpdb;
+                $data = $wpdb->get_results("SELECT * FROM wp_best_events", ARRAY_A);
+                $num_rows = $wpdb->num_rows;
+                if ($data){
+                    $months_short = array('Jan', 'F', 'Mar', 'Ap', 'May', 'Jun', 'Jul', 'Au', 'S', 'O', 'N', 'D');
+                    $month_numbers = array('1.','2.','3.','4.','5.','6.','7.','8.','9.','10.','11.','12.');
+                    for ($i = 0; $i < $num_rows; $i++){
+                        //data parsing                        
+                        //academic complexity
+                        $first_char = ( substr($data[$i]['acad_compl'], 0, 1));
+                        //place of event - $place[0] = city, $place[1] = state
+                        $place = explode(',', $data[$i]['place']);
+                        //startdate = $dates[0] and enddate = $dates[1]
+                        $dates = explode('- ', $data[$i]['dates']);
+                        $startdate; $enddate; $year;
+                        for ($j = 0; $j < 12; $j++){
+                            $position = strpos($dates[1], $months_short[$j], 0);
+                            if ($position){
+                                $enddate = substr($dates[1], 0, strpos($dates[1], ' ', 0)) . '.' 
+                                        . $month_numbers[$j];
+                                $startdate = substr($dates[0], 0, strpos($dates[0], ' ', 0)) . '.';
+                                if (strlen($dates[0]) > 2)
+                                    $startdate .= $month_numbers[$j-1];
+                                else
+                                    $startdate .= $month_numbers[$j];
+                                preg_match('/2[0-9]{3}/', $dates[1], $year);
+                                break;
+                            }
+                        }
+                        //event duration in days
+                        $date1 = new DateTime(preg_replace('/([0-9]+)-([0-9]+)\.([0-9]+)/', '$1-$3-$2', $year[0] . '-' . $startdate));
+                        $date2 = new DateTime(preg_replace('/([0-9]+)-([0-9]+)\.([0-9]+)/', '$1-$3-$2', $year[0] . '-' . $enddate));
+                        $diff = $date1->diff($date2);
+                        
+                        //echo the table row
+                        echo '<tr>';
+                            echo '<td><a href="' . $data[$i]['login_url'] . '">' . str_replace('\\' ,'', $data[$i]['event_name']) . '</a></td>';
+                            echo '<td>' . $data[$i]['event_type'] . '</td>';
+                            echo '<td>' . $place[0] . '</td>';
+                            echo '<td>' . $place[1] . '</td>';
+                            echo '<td>' . $data[$i]['app_deadline'] . '</td>';
+                            echo '<td>' . $data[$i]['fee'] . '</td>';
+                            echo '<td>' . $diff->days . ' dní</td>';
+                            echo '<td>' . $startdate . $year[0] . ' - ' . $enddate . $year[0] . '</td>';
+                            echo '<td>' . ($first_char === 'N' ? 'N/A' : $first_char) . '</td>';
+                        echo '</tr>';
+                    }
+                }
+            // Fake data kept for now (in case we want to discuss how to change data format displayed in table)
              ?>
             <tr>
                 <td><a href="http://www.best.tuke.sk/wic15ke/" target="_blank">Android</a></td>

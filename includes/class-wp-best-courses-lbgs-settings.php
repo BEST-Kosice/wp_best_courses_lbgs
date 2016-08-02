@@ -48,7 +48,7 @@ class wp_best_courses_lbgs_Settings {
 		add_action( 'admin_init' , array( $this, 'register_settings' ) );
 
 		// Add settings page to menu
-		add_action( 'admin_menu' , array( $this, 'add_menu_item' ) );
+		add_action( 'admin_menu' , array( $this, 'add_best_db_settings_page' ) );
 
 		// Add settings link to plugins page
 		add_filter( 'plugin_action_links_' . plugin_basename( $this->parent->file ) , array( $this, 'add_settings_link' ) );
@@ -61,15 +61,36 @@ class wp_best_courses_lbgs_Settings {
 	public function init_settings () {
 		$this->settings = $this->settings_fields();
 	}
+	
+	public function add_best_db_settings_page(){
+	    $page = add_menu_page(
+		    __( 'Správa BEST databázy', 'wp-best-courses-lbgs' ) , 
+			__( 'BEST DB admin', 'wp-best-courses-lbgs' ) , 
+			'manage_options' , 
+			'best_db_settings',
+			array( $this, 'settings_page' ),
+			plugins_url( 'images/BEST_DB_icon.png', __FILE__ ),
+			110
+		);
+	}
 
 	/**
 	 * Add settings page to admin menu
 	 * @return void
 	 */
-	public function add_menu_item () {
-		$page = add_options_page( __( 'Plugin Settings', 'wp-best-courses-lbgs' ) , __( 'Plugin Settings', 'wp-best-courses-lbgs' ) , 'manage_options' , $this->parent->_token . '_settings' ,  array( $this, 'settings_page' ) );
+/*	public function add_menu_item () {
+		$page = add_options_page( 
+			__( 'Správa BEST databázy', 'wp-best-courses-lbgs' ) , 
+			__( 'BEST DB admin', 'wp-best-courses-lbgs' ) , 
+			'manage_options' , 
+			'best_db_settings',
+			array( $this, 'settings_page' ),
+			'dashicons-admin-customizer',
+			110
+		);
 		add_action( 'admin_print_styles-' . $page, array( $this, 'settings_assets' ) );
 	}
+*/
 
 	/**
 	 * Load settings JS & CSS
@@ -109,8 +130,8 @@ class wp_best_courses_lbgs_Settings {
 	 */
 	private function settings_fields () {
 
-		$settings['standard'] = array(
-			'title'					=> __( 'Season Events', 'wp-best-courses-lbgs' ),
+		$settings['events'] = array(
+			'title'					=> __( 'BEST eventy', 'wp-best-courses-lbgs' ),
 			'description'			=> __( 'These are fairly standard form input fields.', 'wp-best-courses-lbgs' ),
 			'fields'				=> array(
 				array(
@@ -179,8 +200,8 @@ class wp_best_courses_lbgs_Settings {
 			)
 		);
 
-		$settings['extra'] = array(
-			'title'					=> __( 'Extra', 'wp-best-courses-lbgs' ),
+		$settings['lbgs'] = array(
+			'title'					=> __( 'Lokálne BEST skupiny', 'wp-best-courses-lbgs' ),
 			'description'			=> __( 'These are some extra input fields that maybe aren\'t as common as the others.', 'wp-best-courses-lbgs' ),
 			'fields'				=> array(
 				array(
@@ -280,7 +301,7 @@ class wp_best_courses_lbgs_Settings {
 
 		// Build page HTML
 		$html = '<div class="wrap" id="' . $this->parent->_token . '_settings">' . "\n";
-			$html .= '<h2>' . __( 'Plugin Settings' , 'wp-best-courses-lbgs' ) . '</h2>' . "\n";
+			$html .= '<h2>' . __( 'Správa BEST databázy' , 'wp-best-courses-lbgs' ) . '</h2>' . "\n";
 
 			$tab = '';
 			if ( isset( $_GET['tab'] ) && $_GET['tab'] ) {
