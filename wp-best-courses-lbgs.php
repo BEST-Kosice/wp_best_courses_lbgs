@@ -389,6 +389,12 @@ function best_lbgs_shortcode() {
 }
 add_shortcode( 'best_lbgs', 'best_lbgs_shortcode' );
 
+//shortcode [lbgs_clickable_map]
+function best_lbgs_map_shortcode() {
+    return run_php_file_for_html( 'includes/shortcodes/lbgs-clickable-map.php' );
+}
+add_shortcode( 'lbgs_clickable_map', 'best_lbgs_map_shortcode' );
+
 function wptuts_add_buttons( $plugin_array ) {
     $plugin_array['wptuts'] = wp_best_courses_lbgs()->assets_url . 'js/shortcode.min.js';
     return $plugin_array;
