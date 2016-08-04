@@ -26,6 +26,19 @@
                 return_text = '[best_lbgs]';
                 ed.execCommand('mceInsertContent', 0, return_text);
             });
+
+            ed.addButton('lbgs_map', {
+                text: '+ BEST LBGS MAP',
+                icon: false,
+                cmd : 'lbgs_map',
+            });
+
+            ed.addCommand('lbgs_map', function() {
+                var selected_text = ed.selection.getContent();
+                var return_text = '';
+                return_text = '[best_lbgs_map]';
+                ed.execCommand('mceInsertContent', 0, return_text);
+            });
         },
         // ... Hidden code
     });

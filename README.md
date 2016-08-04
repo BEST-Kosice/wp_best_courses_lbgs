@@ -13,6 +13,10 @@ Create a Post or (preferably) Page with the following shortcode tag as its text 
 
 `[best_lbgs]` - Displays Local Best Groups.
 
+`[best_lbgs_map]` - Displays Local Best Groups as a Map.
+
+There are also relevant buttons for adding them in the default TinyMCE editor.
+
 
 Plugin dependencies:
 -

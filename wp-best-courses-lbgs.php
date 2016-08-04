@@ -100,7 +100,8 @@ SQL;
  * Logs an error into the database in order to be displayed to the administrator.
  * (If it becomes useful, it may even get its own class with enum like $target...)
  *
- * @param $target string the event where the error occurred
+ * @param $type string type of the operation, can be 'automatic' or 'manual'
+ * @param $target string the event where the error occurred, can be 'events_db', 'lbgs_db' or 'meta'
  * @param $error_message string explanation of the problem that happened
  * @param $attempted_action string request that caused the error
  */
@@ -156,7 +157,7 @@ function refresh_db_best_events() {
     $parser = best\kosice\datalib\best_kosice_data::instance();
     $courses = $parser->courses();
 
-    if ($courses) {
+    if ( $courses ) {
         global $wpdb;
         $tableName = esc_sql( $wpdb->prefix . 'best_events' );
 
@@ -374,40 +375,51 @@ function run_php_file_for_html( $php_file ) {
  * Reference: <https://codex.wordpress.org/Shortcode_API>
  */
 
-//Shortcode [best_events]
+/**
+ * Register shortcode [best_events]
+ */
 function best_events_shortcode() {
     return run_php_file_for_html( 'includes/shortcodes/events.php' );
 }
 add_shortcode( 'best_events', 'best_events_shortcode' );
 
 /**
- * REGISTER [best_lbgs]
- * @return [type] [description]
+ * Register shortcode [best_lbgs]
  */
 function best_lbgs_shortcode() {
     return run_php_file_for_html( 'includes/shortcodes/local-best-groups.php' );
 }
 add_shortcode( 'best_lbgs', 'best_lbgs_shortcode' );
 
-//shortcode [lbgs_clickable_map]
+/**
+ * Register shortcode [best_lbgs_map]
+ */
 function best_lbgs_map_shortcode() {
     return run_php_file_for_html( 'includes/shortcodes/lbgs-clickable-map.php' );
 }
-add_shortcode( 'lbgs_clickable_map', 'best_lbgs_map_shortcode' );
+add_shortcode( 'best_lbgs_map', 'best_lbgs_map_shortcode' );
 
+/**
+ * Add custom buttons to the TinyMCE editor using javascript.
+ */
 function wptuts_add_buttons( $plugin_array ) {
     $plugin_array['wptuts'] = wp_best_courses_lbgs()->assets_url . 'js/shortcode.min.js';
     return $plugin_array;
 }
 
+/**
+ * Register custom buttons in the TinyMCE editor.
+ */
 function wptuts_register_buttons( $buttons ) {
-    array_push( $buttons, 'events', 'lbgs' ); // dropcap', 'recentposts
+    array_push( $buttons, 'events', 'lbgs', 'lbgs_map' );
     return $buttons;
 }
 
+/**
+ * Applying TinyMCE filters to add new buttons.
+ */
 function wptuts_buttons() {
     add_filter( "mce_external_plugins", "wptuts_add_buttons" );
     add_filter( 'mce_buttons', 'wptuts_register_buttons' );
 }
-
 add_action( 'init', 'wptuts_buttons' );
