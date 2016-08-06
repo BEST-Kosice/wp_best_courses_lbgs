@@ -259,7 +259,7 @@ SQL;
         $wpdb->query( "TRUNCATE TABLE $table_name" );
 
         //Running the query and problem handling
-        if ( ! $wpdb->query( esc_sql( $insert_query ) ) ) {
+        if ( ! $wpdb->query( $insert_query ) ) {
             Database::log_error( $request_type, $target, $operation, $wpdb->last_query, $wpdb->last_error );
             $wpdb->query( 'ROLLBACK' );
 
@@ -268,10 +268,7 @@ SQL;
 
         //All went OK
         $last_query = $wpdb->last_query;
-        if ( ! $wpdb->query( 'COMMIT' ) ) {
-            //Fatal error during the commit
-            Database::log_error( $request_type, $target, $operation, $wpdb->last_query, $wpdb->last_error );
-        }
+        $wpdb->query( 'COMMIT' );
         Database::log_success( $request_type, $target, $operation, $last_query );
 
         return true;
@@ -288,6 +285,9 @@ SQL;
         //Reads all courses from the remote db
         $parser  = best_kosice_data::instance();
         $courses = $parser->courses();
+
+        //Fake data for offline testing
+        //$courses = [ ['event', 'login', 'place', 'dates', 'event type', 'acad', 'fee'] ];
 
         //Used logger values
         $target    = 'events_db';
@@ -307,19 +307,19 @@ SQL;
                     //Next row
                     $insert_query .= '(' .
                                      //event_name
-                                     "'" . $course[0] . "'," .
+                                     "'" . esc_sql( $course[0] ) . "'," .
                                      //login_url
-                                     "'" . $course[1] . "'," .
+                                     "'" . esc_sql( $course[1] ) . "'," .
                                      //place
-                                     "'" . $course[2] . "'," .
+                                     "'" . esc_sql( $course[2] ) . "'," .
                                      //dates
-                                     "'" . $course[3] . "'," .
+                                     "'" . esc_sql( $course[3] ) . "'," .
                                      //event_type
-                                     "'" . $course[4] . "'," .
+                                     "'" . esc_sql( $course[4] ) . "'," .
                                      //acad_compl
-                                     "'" . $course[5] . "'," .
+                                     "'" . esc_sql( $course[5] ) . "'," .
                                      //fee
-                                     "'" . $course[6] . "'" .
+                                     "'" . esc_sql( $course[6] ) . "'" .
                                      '),';
                 }
 
@@ -347,6 +347,9 @@ SQL;
         $parser = best_kosice_data::instance();
         $lbgs   = $parser->lbgs();
 
+        //Fake data for offline testing
+        //$lbgs = [ [ 'web', 'city', 'state' ] ];
+
         //Used logger values
         $target    = 'lbgs_db';
         $operation = 'Refreshing table using parser';
@@ -365,11 +368,11 @@ SQL;
                     //Next row
                     $insert_query .= '(' .
                                      //web_page
-                                     "'" . $lbg[0] . "'," .
+                                     "'" . esc_sql( $lbg[0] ) . "'," .
                                      //city
-                                     "'" . $lbg[2] . "'," .
+                                     "'" . esc_sql( $lbg[2] ) . "'," .
                                      //state
-                                     "'" . $lbg[1] . "'" .
+                                     "'" . esc_sql( $lbg[1] ) . "'" .
                                      '),';
                 }
 

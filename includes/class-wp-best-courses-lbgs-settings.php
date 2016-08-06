@@ -326,12 +326,12 @@ class wp_best_courses_lbgs_Settings {
                 do_settings_sections( $this->parent->_token . '_settings' );
                 $html .= ob_get_clean();
 
-                $html .= '<p class="submit">' . "\n";
-                    $html .= '<input type="hidden" name="tab" value="' . esc_attr( $tab ) . '" />' . "\n";
-                    if ( $tab == 'configuration' ) {
+                if ( $tab == 'configuration' ) {
+                    $html .= '<p class="submit">' . "\n";
+                        $html .= '<input type="hidden" name="tab" value="' . esc_attr( $tab ) . '" />' . "\n";
                         $html .= '<input name="Submit" type="submit" class="button-primary" value="' . esc_attr( __( 'Save Settings', 'wp-best-courses-lbgs' ) ) . '" />' . "\n";
-                    }
-                $html .= '</p>' . "\n";
+                    $html .= '</p>' . "\n";
+                }
             $html .= '</form>' . "\n";
 
             // Form for manual database update
