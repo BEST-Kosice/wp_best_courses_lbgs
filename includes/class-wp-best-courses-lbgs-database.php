@@ -259,7 +259,7 @@ SQL;
         $wpdb->query( "TRUNCATE TABLE $table_name" );
 
         //Running the query and problem handling
-        if ( ! $wpdb->query( $insert_query ) ) {
+        if ( ! $wpdb->query(  $insert_query  ) ) {
             Database::log_error( $request_type, $target, $operation, $wpdb->last_query, $wpdb->last_error );
             $wpdb->query( 'ROLLBACK' );
 
@@ -286,14 +286,11 @@ SQL;
         $parser  = best_kosice_data::instance();
         $courses = $parser->courses();
 
-        //Fake data for offline testing
-        //$courses = [ ['event', 'login', 'place', 'dates', 'event type', 'acad', 'fee'] ];
-
         //Used logger values
         $target    = 'events_db';
         $operation = 'Refreshing table using parser';
 
-        if ( $courses ) {
+        if ( $courses['learning']['data'] ) {
             //Replaces the table by new insert data based on the callback using function which logs the result
             return Database::replace_db_table( 'best_events', $request_type, $target, $operation, function ( $table_name ) use ( $courses ) {
                 if ( $table_name == null ) {
@@ -302,8 +299,9 @@ SQL;
 
                 $insert_query = "INSERT INTO $table_name (event_name, login_url, place, dates, event_type, acad_compl, fee) VALUES ";
 
+
                 //Inserts new entries
-                foreach ( $courses as $course ) {
+                foreach ( $courses['learning']['data'] as $course ) {
                     //Next row
                     $insert_query .= '(' .
                                      //event_name
@@ -346,9 +344,6 @@ SQL;
         //Reads all local best groups from the remote db
         $parser = best_kosice_data::instance();
         $lbgs   = $parser->lbgs();
-
-        //Fake data for offline testing
-        //$lbgs = [ [ 'web', 'city', 'state' ] ];
 
         //Used logger values
         $target    = 'lbgs_db';

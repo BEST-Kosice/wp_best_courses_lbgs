@@ -1,5 +1,5 @@
-    var Container = document.getElementById("svg_map");
-    var s = Snap(Container);
+    var map_container = document.getElementById("svg_map");
+    var s = Snap(map_container);
     var base_url = document.getElementById("assets_dir_url").href;
     Snap.load(base_url + "map-optimized.svg", onSVGLoaded ) ;
 
@@ -13,18 +13,18 @@
                 svgElement.animate(mouseoutStyle, animationSpeed);
             };
     }
-    
 
-    function onSVGLoaded( data ){ 
+
+    function onSVGLoaded( data ){
         s.append( data );
         s.svg_map
         var countries = s.selectAll("#Countries > g");
         for (var idx = 0; idx < countries.length; idx++){
             countries[idx].attr({fill: '#1973BE'});
             addMouseoverAnimation(
-              countries[idx], 
-              {fill: "#144173"}, 
-              {fill: '#1973BE'}, 
+              countries[idx],
+              {fill: "#144173"},
+              {fill: '#1973BE'},
               500
             );
         }
@@ -32,18 +32,18 @@
         for (var idx = 0; idx < cities.length; idx++){
             cities[idx].attr({fill: '#faa331'});
             var bbox = cities[idx].getBBox();
-          
+
             console.log(bbox);
             addMouseoverAnimation(
-              cities[idx], 
-              {fill: "#fff0be", transform: 'translate('+(-bbox.cx*(2-1))+','+(-bbox.cy*(2-1))+') scale(2 2)'}, 
-              {fill: "#faa331", transform: 'translate('+(-bbox.cx*(1-1))+','+(-bbox.cy*(1-1))+') scale(1 1)'}, 
+              cities[idx],
+              {fill: "#fff0be", transform: 'translate('+(-bbox.cx*(2-1))+','+(-bbox.cy*(2-1))+') scale(2 2)'},
+              {fill: "#faa331", transform: 'translate('+(-bbox.cx*(1-1))+','+(-bbox.cy*(1-1))+') scale(1 1)'},
               500
             );
         }
     }
 /*
-Scaling algorithm courtesy of http://stackoverflow.com/a/24179513 
+Scaling algorithm courtesy of http://stackoverflow.com/a/24179513
 
 var bbox=elementNode.getBBox();
 var cx=bbox.x+(bbox.width/2),
@@ -51,7 +51,7 @@ var cx=bbox.x+(bbox.width/2),
 var scalex=1.5, scaley=1.5;    // your desired scale
 var saclestr=scalex+','+scaley;
 var tx=-cx*(scalex-1);
-var ty=-cy*(scaley-1);                        
+var ty=-cy*(scaley-1);
 var translatestr=tx+','+ty;
 elementNode.setAttribute('transform','translate('+translatestr+') scale('+saclestr+')');
 */

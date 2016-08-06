@@ -44,7 +44,7 @@ if (!defined('ABSPATH')) {
 
 class best_kosice_data
 {
-    private $coursesurl = 'https://best.eu.org/localWeb/eventListJS.jsp';
+    private $coursesurl = 'https://best.eu.org/courses/list.jsp';
     private $lbgsurl = 'https://best.eu.org/localWeb/lbgChooser.jsp';
     private $season_events_url = 'https://best.eu.org/student/courses/coursesList.jsp';
     private $parsed_link_prefix = 'https://best.eu.org';
@@ -77,7 +77,6 @@ class best_kosice_data
      */
     public function courses()
     {
-        //$raw = file_get_contents($this->coursesurl);
         $data = $this->download_doc($this->coursesurl);
 
         // can't download
@@ -96,7 +95,7 @@ class best_kosice_data
             return false;
         }
 
-        $data = (is_string($data[1][0]) && $data[1][0]) ? $this->parse_courses($data[1][0]) : false;
+        $data = is_string($data) ? $this->parse_courses($data) : false;
 
         // can't parse changed structure
         if (!$data) {
@@ -141,7 +140,7 @@ class best_kosice_data
             return false;
         }
 
-        return $data;
+        return false;
     }
 
     // TODO
@@ -216,13 +215,8 @@ class best_kosice_data
      */
     private function prepare_data($raw)
     {
-        // removing js comments
-        $raw = preg_replace('/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\)\/\/[^"\'].*))/', '', $raw);
-
-        // getting document write content
-        $data = preg_match_all('/document.write\(\'(.*)\'\);/', $raw, $matches) ? $matches : false;
-
-        return $data;
+        preg_match("/<article\s[^>]*([^\" >]*?)\\1[^>]*>(.*)<\/article>/siU", $raw, $matches);
+        return $matches[0];
     }
 
     /**
@@ -236,37 +230,26 @@ class best_kosice_data
     {
         $html = HtmlDomParser::str_get_html($html);
 
-        $theData = array();
+        $returnData = false;
 
-        foreach ($html->find('table') as $onetable) {
-            foreach ($onetable->find('tr') as $row) {
-                $rowData = $row->find('td') ? array() : false;
+        // leisure events
+        $learning_events_table = $html->find('table',0);
 
-                foreach ($row->find('td') as $cell) {
-                    if (substr_count($cell->innertext, 'src') > 0) {
-                        foreach ($cell->find('img') as $element) {
-                            $rowData[] = trim($element->src);
-                        }
-                    } elseif (substr_count($cell->innertext, 'href') > 0) {
-                        foreach ($cell->find('a') as $element) {
-                            //title
-                                $rowData[] = addslashes(html_entity_decode(trim($element->innertext)));
+        $learning_events = $this->parse_table($learning_events_table);
 
-                                //link
-                                $rowData[] = addslashes(html_entity_decode(trim($this->parsed_link_prefix.$element->href)));
-                        }
-                    } else {
-                        $rowData[] = addslashes(html_entity_decode(strip_tags(trim($cell->innertext))));
-                    }
-                }
-
-                if ($rowData) {
-                    $theData[] = $rowData;
-                }
-            }
+        if ($learning_events) {
+            $returnData['learning']['data'] = $learning_events;
         }
 
-        return $theData;
+        $leisure_events_table = $html->find('table',1);
+
+        $leisure_events = $this->parse_table($leisure_events_table);
+
+        if ($leisure_events) {
+            $returnData['leisure']['data'] = $leisure_events;
+        }
+
+        return $returnData;
     }
 
     /**
@@ -298,6 +281,46 @@ class best_kosice_data
         }
 
         return $theData;
+    }
+
+    private function parse_table($table) {
+
+
+        $theData = array();
+
+        foreach ($table->find('tr') as $row) {
+            $rowData = $row->find('td') ? array() : false;
+
+            foreach ($row->find('td') as $cell) {
+                if (substr_count($cell->innertext, 'src') > 0) {
+                    foreach ($cell->find('img') as $element) {
+                        $rowData[] = trim($element->src);
+                    }
+                } elseif (substr_count($cell->innertext, 'href') > 0) {
+                    foreach ($cell->find('a') as $element) {
+                        //title
+                            $rowData[] = addslashes(html_entity_decode(trim($element->innertext)));
+
+                            //link
+                            $rowData[] = addslashes(html_entity_decode(trim($this->parsed_link_prefix.$element->href)));
+                    }
+                } else {
+                    $rowData[] = addslashes(html_entity_decode(strip_tags(trim($cell->innertext))));
+                }
+            }
+
+            if ($rowData) {
+                $theData[] = $rowData;
+            }
+        }
+
+
+        return $theData;
+
+
+
+
+
     }
 
     private function parse_dates($html)
