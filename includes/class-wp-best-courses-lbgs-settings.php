@@ -134,121 +134,70 @@ class wp_best_courses_lbgs_Settings {
 
 		$settings['events'] = array(
 			'title'					=> __( 'BEST eventy', 'wp-best-courses-lbgs' ),
-			'description'			=> __( 'These are fairly standard form input fields.', 'wp-best-courses-lbgs' ),
-			'fields'				=> array(
-				array(
-					'id' 			=> 'text_field',
-					'label'			=> __( 'Some Text' , 'wp-best-courses-lbgs' ),
-					'description'	=> __( 'This is a standard text field.', 'wp-best-courses-lbgs' ),
-					'type'			=> 'text',
-					'default'		=> '',
-					'placeholder'	=> __( 'Placeholder text', 'wp-best-courses-lbgs' )
-				),
-				array(
-					'id' 			=> 'password_field',
-					'label'			=> __( 'A Password' , 'wp-best-courses-lbgs' ),
-					'description'	=> __( 'This is a standard password field.', 'wp-best-courses-lbgs' ),
-					'type'			=> 'password',
-					'default'		=> '',
-					'placeholder'	=> __( 'Placeholder text', 'wp-best-courses-lbgs' )
-				),
-				array(
-					'id' 			=> 'secret_text_field',
-					'label'			=> __( 'Some Secret Text' , 'wp-best-courses-lbgs' ),
-					'description'	=> __( 'This is a secret text field - any data saved here will not be displayed after the page has reloaded, but it will be saved.', 'wp-best-courses-lbgs' ),
-					'type'			=> 'text_secret',
-					'default'		=> '',
-					'placeholder'	=> __( 'Placeholder text', 'wp-best-courses-lbgs' )
-				),
-				array(
-					'id' 			=> 'text_block',
-					'label'			=> __( 'A Text Block' , 'wp-best-courses-lbgs' ),
-					'description'	=> __( 'This is a standard text area.', 'wp-best-courses-lbgs' ),
-					'type'			=> 'textarea',
-					'default'		=> '',
-					'placeholder'	=> __( 'Placeholder text for this textarea', 'wp-best-courses-lbgs' )
-				),
-				array(
-					'id' 			=> 'single_checkbox',
-					'label'			=> __( 'An Option', 'wp-best-courses-lbgs' ),
-					'description'	=> __( 'A standard checkbox - if you save this option as checked then it will store the option as \'on\', otherwise it will be an empty string.', 'wp-best-courses-lbgs' ),
-					'type'			=> 'checkbox',
-					'default'		=> ''
-				),
-				array(
-					'id' 			=> 'select_box',
-					'label'			=> __( 'A Select Box', 'wp-best-courses-lbgs' ),
-					'description'	=> __( 'A standard select box.', 'wp-best-courses-lbgs' ),
-					'type'			=> 'select',
-					'options'		=> array( 'drupal' => 'Drupal', 'joomla' => 'Joomla', 'wordpress' => 'WordPress' ),
-					'default'		=> 'wordpress'
-				),
-				array(
-					'id' 			=> 'radio_buttons',
-					'label'			=> __( 'Some Options', 'wp-best-courses-lbgs' ),
-					'description'	=> __( 'A standard set of radio buttons.', 'wp-best-courses-lbgs' ),
-					'type'			=> 'radio',
-					'options'		=> array( 'superman' => 'Superman', 'batman' => 'Batman', 'ironman' => 'Iron Man' ),
-					'default'		=> 'batman'
-				),
-				array(
-					'id' 			=> 'multiple_checkboxes',
-					'label'			=> __( 'Some Items', 'wp-best-courses-lbgs' ),
-					'description'	=> __( 'You can select multiple items and they will be stored as an array.', 'wp-best-courses-lbgs' ),
-					'type'			=> 'checkbox_multi',
-					'options'		=> array( 'square' => 'Square', 'circle' => 'Circle', 'rectangle' => 'Rectangle', 'triangle' => 'Triangle' ),
-					'default'		=> array( 'circle', 'triangle' )
-				)
-			)
+			'description'			=> __( 'Our events.', 'wp-best-courses-lbgs' ),
+            'fields'                => array(
+                array(
+                    'id' 			=> 'removeme',
+                    'label'			=> __( 'Delete me', 'wp-best-courses-lbgs' ),
+                    'description'	=> __( 'Please delete me - if you can, that is. It breaks the WordPress.', 'wp-best-courses-lbgs' ),
+                    'type'			=> 'checkbox',
+                    'default'		=> ''
+                )
+            ),
 		);
 
 		$settings['lbgs'] = array(
 			'title'					=> __( 'Lokálne BEST skupiny', 'wp-best-courses-lbgs' ),
-			'description'			=> __( 'These are some extra input fields that maybe aren\'t as common as the others.', 'wp-best-courses-lbgs' ),
+			'description'			=> __( 'Our groups.', 'wp-best-courses-lbgs' ),
 			'fields'				=> array(
-				array(
-					'id' 			=> 'number_field',
-					'label'			=> __( 'A Number' , 'wp-best-courses-lbgs' ),
-					'description'	=> __( 'This is a standard number field - if this field contains anything other than numbers then the form will not be submitted.', 'wp-best-courses-lbgs' ),
-					'type'			=> 'number',
-					'default'		=> '',
-					'placeholder'	=> __( '42', 'wp-best-courses-lbgs' )
-				),
-				array(
-					'id' 			=> 'colour_picker',
-					'label'			=> __( 'Pick a colour', 'wp-best-courses-lbgs' ),
-					'description'	=> __( 'This uses WordPress\' built-in colour picker - the option is stored as the colour\'s hex code.', 'wp-best-courses-lbgs' ),
-					'type'			=> 'color',
-					'default'		=> '#21759B'
-				),
-				array(
-					'id' 			=> 'an_image',
-					'label'			=> __( 'An Image' , 'wp-best-courses-lbgs' ),
-					'description'	=> __( 'This will upload an image to your media library and store the attachment ID in the option field. Once you have uploaded an imge the thumbnail will display above these buttons.', 'wp-best-courses-lbgs' ),
-					'type'			=> 'image',
-					'default'		=> '',
-					'placeholder'	=> ''
-				),
-				array(
-					'id' 			=> 'multi_select_box',
-					'label'			=> __( 'A Multi-Select Box', 'wp-best-courses-lbgs' ),
-					'description'	=> __( 'A standard multi-select box - the saved data is stored as an array.', 'wp-best-courses-lbgs' ),
-					'type'			=> 'select_multi',
-					'options'		=> array( 'linux' => 'Linux', 'mac' => 'Mac', 'windows' => 'Windows' ),
-					'default'		=> array( 'linux' )
-				)
+                array(
+                    'id' 			=> 'removeme',
+                    'label'			=> __( 'Delete me', 'wp-best-courses-lbgs' ),
+                    'description'	=> __( 'Please delete me - if you can, that is. It breaks the WordPress.', 'wp-best-courses-lbgs' ),
+                    'type'			=> 'checkbox',
+                    'default'		=> ''
+                )
 			)
 		);
+
+        $settings['configuration'] = array(
+            'title'					=> __( 'Konfigurácia', 'wp-best-courses-lbgs' ),
+            'description'			=> null,
+            'fields'				=> array(
+                array(
+                    'id' 			=> 'history_max_displayed_rows',
+                    'label'			=> __( 'Displayed rows' , 'wp-best-courses-lbgs' ),
+                    'description'	=> __( 'Maximum number of rows in the history (under all tabs) to be displayed at once.', 'wp-best-courses-lbgs' ),
+                    'type'			=> 'number',
+                    'default'		=> '',
+                    'placeholder'	=> __( '42', 'wp-best-courses-lbgs' )
+                ),
+                array(
+                    'id' 			=> 'display_history_success',
+                    'label'			=> __( 'Display success', 'wp-best-courses-lbgs' ),
+                    'description'	=> __( 'Shows successful operations in the history table.', 'wp-best-courses-lbgs' ),
+                    'type'			=> 'checkbox',
+                    'default'		=> ''
+                ),
+                array(
+                    'id' 			=> 'automatic_refresh',
+                    'label'			=> __( 'Automatic refresh', 'wp-best-courses-lbgs' ),
+                    'description'	=> __( 'Allows database to be updated in regular intervals.', 'wp-best-courses-lbgs' ),
+                    'type'			=> 'checkbox',
+                    'default'		=> ''
+                ),
+            )
+        );
 
 		$settings = apply_filters( $this->parent->_token . '_settings_fields', $settings );
 
 		return $settings;
 	}
 
-	/**
-	 * Register plugin settings
-	 * @return void
-	 */
+    /**
+     * Register plugin settings
+     * @return void
+     */
 	public function register_settings () {
 		if ( is_array( $this->settings ) ) {
 
@@ -290,12 +239,12 @@ class wp_best_courses_lbgs_Settings {
 		}
 	}
 
-	public function settings_section ( $section ) {
-		$html = '<p> ' . $this->settings[ $section['id'] ]['description'] . '</p>' . "\n";
-		echo $html;
-	}
+    public function settings_section ( $section ) {
+        $html = '<p> ' . $this->settings[ $section['id'] ]['description'] . '</p>' . "\n";
+        echo $html;
+    }
 
-	/**
+    /**
      * Load settings page content
      * @return void
      */
@@ -305,15 +254,27 @@ class wp_best_courses_lbgs_Settings {
             $tab .= $_GET['tab'];
         }
 
+        //Set the correct history table $target based on a current tab
         switch ( $tab ) {
             // By default, the events tab is active
             //TODO: find in the code below where this default is defined and use that condition instead
             default:
             case 'events':
+                //Checks for the request for manually updating table
+                if ( isset( $_POST['manually_update'] ) ) {
+                    Database::refresh_db_best_events( 'manual' );
+                }
                 $target = 'events_db';
                 break;
             case 'lbgs':
+                //Checks for the request for manually updating table
+                if ( isset( $_POST['manually_update'] ) ) {
+                    Database::refresh_db_best_lbgs( 'manual' );
+                }
                 $target = 'lbgs_db';
+                break;
+            case 'configuration':
+                $target = 'meta';
                 break;
         }
 
@@ -356,51 +317,60 @@ class wp_best_courses_lbgs_Settings {
 				$html .= '</h2>' . "\n";
 			}
 
-			// HTML form with submit buttons
-			$html .= '<form method="post" action="options.php" enctype="multipart/form-data">' . "\n";
+            // Setting fields and submit button
+            $html .= '<form method="post" action="options.php" enctype="multipart/form-data">' . "\n";
 
-				// Get settings fields
-				ob_start();
-				settings_fields( $this->parent->_token . '_settings' );
-				do_settings_sections( $this->parent->_token . '_settings' );
-				$html .= ob_get_clean();
+                // Get settings fields
+                ob_start();
+                settings_fields( $this->parent->_token . '_settings' );
+                do_settings_sections( $this->parent->_token . '_settings' );
+                $html .= ob_get_clean();
 
-				$html .= '<p class="submit">' . "\n";
-					$html .= '<input type="hidden" name="tab" value="' . esc_attr( $tab ) . '" />' . "\n";
-					$html .= '<input name="Submit" type="submit" class="button-primary" value="' . esc_attr( __( 'Save Settings' , 'wp-best-courses-lbgs' ) ) . '" />' . "\n";
-				$html .= '</p>' . "\n";
-			$html .= '</form>' . "\n";
+                $html .= '<p class="submit">' . "\n";
+                    $html .= '<input type="hidden" name="tab" value="' . esc_attr( $tab ) . '" />' . "\n";
+                    if ( $tab == 'configuration' ) {
+                        $html .= '<input name="Submit" type="submit" class="button-primary" value="' . esc_attr( __( 'Save Settings', 'wp-best-courses-lbgs' ) ) . '" />' . "\n";
+                    }
+                $html .= '</p>' . "\n";
+            $html .= '</form>' . "\n";
+
+            // Form for manual database update
+            if($tab != 'configuration') {
+                $html .= '<form method="post">' . "\n";
+                    $html .= '<p class="submit">' . "\n";
+                        $html .= '<input type="hidden" name="tab" value="' . esc_attr( $tab ) . '" />' . "\n";
+                        $html .= '<input name="manually_update" type="submit" class="button-primary" value="' . esc_attr( __( 'Manually update database', 'wp-best-courses-lbgs' ) ) . '" />' . "\n";
+                    $html .= '</p>' . "\n";
+                $html .= '</form>' . "\n";
+            }
 
         // Displays a history updates table
         $html .= '<hr />';
         $html .= $this->updates_history_table( $target );
 
-        //TODO remove: for debugging purposes we are also displaying meta table here
-        $html .= '<hr />';
-        $html .= $this->updates_history_table( 'meta' );
-
         $html .= '</div>' . "\n";
 
         echo $html;
-	}
+    }
 
     /**
      * A table consisting of history of recent updates.
      *
      * @param $target string|null operation target that should be displayed in the table, null for all targets
-     * @param $number_of_rows int maximum number of displayed rows
      * @param $html_class string class used for the <table> tag
      *
      * @return string HTML code of <table> tag
      */
-    private function updates_history_table( $target = null, $number_of_rows = 50, $html_class = null ) {
+    private function updates_history_table( $target = null, $html_class = null ) {
         global $wpdb;
-        $table_name  = esc_sql( "{$wpdb->prefix}best_history" );
+        $history_max_displayed_rows = get_option( 'number_of_displayed_rows', 50 );
+        $table_name                 = esc_sql( "{$wpdb->prefix}best_history" );
+
         $historyRows = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT * FROM $table_name WHERE target LIKE %s ORDER BY time DESC LIMIT %d"
                 , $target == null ? '%' : $target
-                , $number_of_rows
+                , $history_max_displayed_rows
             ), ARRAY_A
         );
 
@@ -424,7 +394,7 @@ class wp_best_courses_lbgs_Settings {
         $html .= '<th>Typ aktualizácie</th>';
         $html .= '<th>Cieľ operácie</th>';
         $html .= '<th>Operácia</th>';
-        $html .= '<th>Akcia</th>';
+        $html .= '<th>Požiadavka</th>';
         $html .= '<th>Výsledok</th>';
         $html .= '</tr>';
 
@@ -436,7 +406,7 @@ class wp_best_courses_lbgs_Settings {
             $html .= '<td>' . $history['operation'] . '</td>';
             $html .= '<td>' . $history['attempted_request'] . '</td>';
             $error_message = $history['error_message'];
-            $html .= '<td>' . ( $error_message == null ? 'OK' : $history['error_message'] ) . '</td>';
+            $html .= '<td>' . ( $error_message == null ? 'OK' : $error_message ) . '</td>';
             $html .= '</tr>';
         }
 
@@ -478,5 +448,4 @@ class wp_best_courses_lbgs_Settings {
 	public function __wakeup () {
 		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?' ), $this->parent->_version );
 	} // End __wakeup()
-
 }

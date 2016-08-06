@@ -17,12 +17,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Database {
     /**
      * Database version upgrading with the least destructive effect.
+     * Usage:
+     * When increasing the DB version, increase the constant variable and add a new switch case for the version.
+     * Database of all users will go through the required steps based on their currently installed version.
+     *
+     * @return void
      */
     public static function upgrade_database() {
         //Plugin version of the database
-        $target_version_db =
-            1
-        ;
+        $target_version_db = 1;
 
         $log = function ( $attempted_request ) {
             Database::log_success( 'automatic', 'meta', 'Database upgrade', $attempted_request );
@@ -38,7 +41,7 @@ class Database {
                 switch ( $current_version_db ) {
                     case 0:
                         //default: //Uncomment when testing
-                        //If the database is being upgraded from unknown version, drops and recreates everything
+                        //If the database is being upgraded from an unknown version, drops and recreates everything
                         Database::drop_all_tables();
                         Database::create_all_tables();
                         $log( 'Upgrading version from 0 to 1' );
@@ -163,16 +166,16 @@ SQL;
         }
 
         //If the request type is explicitly unknown, we use the relevant column value
-        if($request_type == null) {
+        if ( $request_type == null ) {
             $request_type = 'unknown';
         }
 
         global $wpdb;
-        $tableName = esc_sql( $wpdb->prefix . 'best_history' );
+        $table_name = esc_sql( $wpdb->prefix . 'best_history' );
 
         return $wpdb->query(
             $wpdb->prepare(
-                "INSERT INTO $tableName"
+                "INSERT INTO $table_name"
                 . "(request_type, target, operation, attempted_request, error_message) "
                 . "VALUES (%s, %s, %s, %s, %s)"
                 , $request_type
@@ -203,10 +206,11 @@ SQL;
         }
 
         global $wpdb;
-        $tableName = esc_sql( $wpdb->prefix . 'best_history' );
+        $table_name = esc_sql( $wpdb->prefix . 'best_history' );
+
         $result = $wpdb->query(
             $wpdb->prepare(
-                "INSERT INTO $tableName"
+                "INSERT INTO $table_name"
                 . "(request_type, target, operation, attempted_request) "
                 . "VALUES (%s, %s, %s, %s)"
                 , $request_type
@@ -232,11 +236,11 @@ SQL;
      * @param $request_type string type of the operation request, can be 'automatic' or 'manual'
      * @param $target string the event where the operation was performed, can be 'events_db', 'lbgs_db' or 'meta'
      * @param $operation string description of the action that is being performed
-     * @param callable $insert {@param $table_name @return string insert query} returns the insert query to be run
+     * @param $insert callable {@param $table_name string @return string insert query} returns the insert query to be run
      *
      * @return bool true on success, false on failure
      */
-    public static function replace_db_table( $table_name, $request_type, $target, $operation, callback $insert ) {
+    public static function replace_db_table( $table_name, $request_type, $target, $operation, callable $insert ) {
         global $wpdb;
         $table_name = esc_sql( $wpdb->prefix . $table_name );
 
@@ -322,7 +326,10 @@ SQL;
                 return rtrim( $insert_query, ',' );
             } );
         } else {
-            Database::log_error( $request_type, $target, $operation, 'Requesting courses from parser', 'Returned null' );
+            Database::log_error( $request_type, $target, $operation
+                , 'Requesting courses from parser'
+                , 'Returned no data: ' . $parser->error_message()
+            );
 
             return false;
         }
@@ -369,7 +376,10 @@ SQL;
                 return rtrim( $insert_query, ',' );
             } );
         } else {
-            Database::log_error( $request_type, $target, $operation, 'Requesting courses from parser', 'Returned null' );
+            Database::log_error( $request_type, $target, $operation
+                , 'Requesting courses from parser'
+                , 'Returned no data: ' . $parser->error_message()
+            );
 
             return false;
         }

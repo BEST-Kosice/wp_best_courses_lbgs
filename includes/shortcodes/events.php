@@ -75,7 +75,8 @@ wp_best_courses_lbgs()->enqueue_scripts();
         <tbody>
             <?php
                 global $wpdb;
-                $data = $wpdb->get_results("SELECT * FROM wp_best_events", ARRAY_A);
+                $table_name = esc_sql( $wpdb->prefix . 'best_events' );
+                $data = $wpdb->get_results("SELECT * FROM $table_name", ARRAY_A);
                 $num_rows = $wpdb->num_rows;
                 if ($data){
                     $months_short = array('Jan', 'F', 'Mar', 'Ap', 'May', 'Jun',
