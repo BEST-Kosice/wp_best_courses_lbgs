@@ -1,5 +1,7 @@
 <?php
 
+use best\kosice\Database;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 class wp_best_courses_lbgs_Settings {
@@ -294,19 +296,30 @@ class wp_best_courses_lbgs_Settings {
 	}
 
 	/**
-	 * Load settings page content
-	 * @return void
-	 */
-	public function settings_page () {
+     * Load settings page content
+     * @return void
+     */
+    public function settings_page() {
+        $tab = '';
+        if ( isset( $_GET['tab'] ) && $_GET['tab'] ) {
+            $tab .= $_GET['tab'];
+        }
+
+        switch ( $tab ) {
+            // By default, the events tab is active
+            //TODO: find in the code below where this default is defined and use that condition instead
+            default:
+            case 'events':
+                $target = 'events_db';
+                break;
+            case 'lbgs':
+                $target = 'lbgs_db';
+                break;
+        }
 
 		// Build page HTML
 		$html = '<div class="wrap" id="' . $this->parent->_token . '_settings">' . "\n";
 			$html .= '<h2>' . __( 'Správa BEST databázy' , 'wp-best-courses-lbgs' ) . '</h2>' . "\n";
-
-			$tab = '';
-			if ( isset( $_GET['tab'] ) && $_GET['tab'] ) {
-				$tab .= $_GET['tab'];
-			}
 
 			// Show page tabs
 			if ( is_array( $this->settings ) && 1 < count( $this->settings ) ) {
@@ -343,6 +356,7 @@ class wp_best_courses_lbgs_Settings {
 				$html .= '</h2>' . "\n";
 			}
 
+			// HTML form with submit buttons
 			$html .= '<form method="post" action="options.php" enctype="multipart/form-data">' . "\n";
 
 				// Get settings fields
@@ -357,36 +371,44 @@ class wp_best_courses_lbgs_Settings {
 				$html .= '</p>' . "\n";
 			$html .= '</form>' . "\n";
 
+        // Displays a history updates table
         $html .= '<hr />';
-        $html .= $this->updates_history_table();
+        $html .= $this->updates_history_table( $target );
 
-		$html .= '</div>' . "\n";
+        //TODO remove: for debugging purposes we are also displaying meta table here
+        $html .= '<hr />';
+        $html .= $this->updates_history_table( 'meta' );
 
-		echo $html;
+        $html .= '</div>' . "\n";
+
+        echo $html;
 	}
 
     /**
      * A table consisting of history of recent updates.
      *
+     * @param $target string|null operation target that should be displayed in the table, null for all targets
      * @param $number_of_rows int maximum number of displayed rows
      * @param $html_class string class used for the <table> tag
      *
      * @return string HTML code of <table> tag
      */
-    private function updates_history_table( $number_of_rows = 50, $html_class = null ) {
+    private function updates_history_table( $target = null, $number_of_rows = 50, $html_class = null ) {
         global $wpdb;
-        $tableName   = esc_sql( $wpdb->prefix . 'best_history' );
+        $table_name  = esc_sql( "{$wpdb->prefix}best_history" );
         $historyRows = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT * FROM $tableName ORDER BY time DESC LIMIT %d"
+                "SELECT * FROM $table_name WHERE target LIKE %s ORDER BY time DESC LIMIT %d"
+                , $target == null ? '%' : $target
                 , $number_of_rows
             ), ARRAY_A
         );
 
         //TODO consider logging error of the table select query in the table itself?
         $html = '';
-        if ( $historyRows == null ) {
-            $html .= '<p>Problem with history table: ' . $wpdb->last_error . '</p>';
+        if ( $historyRows === null ) {
+            $html .= "<p>Problem with history table: {$wpdb->last_error}".
+                     "<br/>The requested query was: {$wpdb->last_query}</p>";
         }
 
         $html .= '<table';
@@ -401,23 +423,24 @@ class wp_best_courses_lbgs_Settings {
         $html .= '<th>Čas aktualizácie</th>';
         $html .= '<th>Typ aktualizácie</th>';
         $html .= '<th>Cieľ operácie</th>';
-        $html .= '<th>Výsledok</th>';
+        $html .= '<th>Operácia</th>';
         $html .= '<th>Akcia</th>';
+        $html .= '<th>Výsledok</th>';
         $html .= '</tr>';
 
         foreach ( $historyRows as $history ) {
             $html .= '<tr>';
             $html .= '<td>' . $history['time'] . '</td>';
-            $html .= '<td>' . $history['type'] . '</td>';
+            $html .= '<td>' . $history['request_type'] . '</td>';
             $html .= '<td>' . $history['target'] . '</td>';
+            $html .= '<td>' . $history['operation'] . '</td>';
+            $html .= '<td>' . $history['attempted_request'] . '</td>';
             $error_message = $history['error_message'];
             $html .= '<td>' . ( $error_message == null ? 'OK' : $history['error_message'] ) . '</td>';
-            $html .= '<td>' . $history['attempted_action'] . '</td>';
             $html .= '</tr>';
         }
 
         $html .= '</table>';
-        wp_best_courses_log_error( 'automatic', 'meta', 'Testing the log.', 'nothing');
         return $html;
     }
 

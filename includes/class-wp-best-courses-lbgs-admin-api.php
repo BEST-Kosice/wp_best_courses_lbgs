@@ -2,6 +2,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+use best\kosice\Database;
 use best\kosice\datalib as BST_data;
 
 class wp_best_courses_lbgs_Admin_API {
@@ -17,7 +18,7 @@ class wp_best_courses_lbgs_Admin_API {
 	 * Generate HTML for displaying fields
 	 * @param  $data array   $field Field
 	 * @param  $echo boolean  Whether to echo the field HTML or return it
-	 * @return void|string when echo = false
+	 * @return null|string when echo = false
 	 */
 	public function display_field ( $data = array(), $post = false, $echo = true ) {
 
@@ -199,11 +200,7 @@ class wp_best_courses_lbgs_Admin_API {
 		}
 
 		echo $html;
-
-
-
-wp_best_create_tables_events_lbgs();
-
+		return null;
 	}
 
 	/**
@@ -275,7 +272,6 @@ wp_best_create_tables_events_lbgs();
 		}
 
 		echo '</div>' . "\n";
-
 	}
 
 	/**
@@ -316,5 +312,4 @@ wp_best_create_tables_events_lbgs();
 			}
 		}
 	}
-
 }

@@ -14,22 +14,5 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
     exit;
 }
 
-// Do something here if plugin is being uninstalled.
-
-/**
- * Deletes all plugin tables from the database.
- */
-function wp_best_courses_lbgs_drop_tables() {
-    //Global instance of the WordPress Database
-    global $wpdb;
-
-    $wpdb->query( 'DROP TABLE IF EXISTS '
-                  . $wpdb->prefix . 'best_events'
-                  . ', '
-                  . $wpdb->prefix . 'best_lbg'
-                  . ', '
-                  . $wpdb->prefix . 'best_history'
-    );
-}
-
-wp_best_courses_lbgs_drop_tables();
+// This gets executed when the plugin is being uninstalled.
+best\kosice\Database::drop_all_tables();

@@ -23,103 +23,15 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 require_once( 'vendor/autoload.php' );
 
 // Load plugin class files
-require_once( 'includes/class-wp-best-courses-lbgs.php' );
-require_once( 'includes/class-wp-best-courses-lbgs-settings.php' );
+require_once( 'includes/class-wp-best-courses-lbgs.php'           );
+require_once( 'includes/class-wp-best-courses-lbgs-settings.php'  );
+require_once( 'includes/class-wp-best-courses-lbgs-database.php'  );
 
 // Load plugin libraries
 require_once( 'includes/class-wp-best-courses-lbgs-admin-api.php' );
 require_once( 'includes/class-wp-best-courses-lbgs-parser.php'    );
 
-/**
- * Creates (or upgrades) all custom tables in the database.
- * Should be run at the time of the plugin activation.
- *
- * Studying references:
- * <https://codex.wordpress.org/Function_Reference/wpdb_Class>
- * <https://codex.wordpress.org/Creating_Tables_with_Plugins>
- */
-function wp_best_create_tables_events_lbgs() {
-    //Global instance of the WordPress Database
-    global $wpdb;
-
-    // sql for creating tables in heredoc
-
-    $sql_events = <<< SQL
-CREATE TABLE IF NOT EXISTS {$wpdb->prefix}best_events (
-id_event int(11) NOT NULL AUTO_INCREMENT,
-event_name varchar(100) NOT NULL,
-place varchar(40) NOT NULL,
-dates varchar(40) NOT NULL,
-event_type varchar(100) NOT NULL,
-acad_compl varchar(20) DEFAULT NULL,
-fee varchar(10) NOT NULL,
-app_deadline varchar(30) DEFAULT NULL,
-login_url varchar(1000) DEFAULT NULL,
-PRIMARY KEY (id_event)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-SQL;
-
-    //TODO rename lbg to lbgs for consistency (but I don't want to ruin current dbs of developers, maybe some patch?)
-    $sql_lbgs = <<< SQL
-CREATE TABLE IF NOT EXISTS {$wpdb->prefix}best_lbg (
-id_lbg int(11) NOT NULL AUTO_INCREMENT,
-city varchar(50) NOT NULL,
-state varchar(50) NOT NULL,
-web_page varchar(200) DEFAULT NULL,
-PRIMARY KEY (id_lbg)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-SQL;
-
-    //TODO possibly decide on a better name (and purpose) for this table
-    $sql_history = <<< SQL
-CREATE TABLE IF NOT EXISTS {$wpdb->prefix}best_history (
-id_history int(11) NOT NULL AUTO_INCREMENT,
-time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-type varchar(50) NOT NULL CHECK(type IN('automatic', 'manual')),
-target varchar(50) NOT NULL CHECK(target IN('events_db', 'lbgs_db', 'meta')),
-error_message varchar(200) DEFAULT NULL,
-attempted_action varchar(200) DEFAULT NULL,
-PRIMARY KEY (id_history)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-SQL;
-
-    //Querying and error handling
-    $error_message = 'Error during table creation: ';
-    if ( ! $wpdb->query( $sql_events ) ) {
-        wp_best_courses_log_error( 'automatic', 'events_db', $error_message . $wpdb->last_error, $sql_events );
-    }
-    if ( ! $wpdb->query( $sql_lbgs ) ) {
-        wp_best_courses_log_error( 'automatic', 'lbgs_db', $error_message . $wpdb->last_error, $sql_lbgs );
-    }
-    if ( ! $wpdb->query( $sql_history ) ) {
-        wp_best_courses_log_error( 'automatic', 'meta', $error_message . $wpdb->last_error, $sql_history );
-    }
-}
-
-/**
- * Logs an error into the database in order to be displayed to the administrator.
- * (If it becomes useful, it may even get its own class with enum like $target...)
- *
- * @param $type string type of the operation, can be 'automatic' or 'manual'
- * @param $target string the event where the error occurred, can be 'events_db', 'lbgs_db' or 'meta'
- * @param $error_message string explanation of the problem that happened
- * @param $attempted_action string request that caused the error
- */
-function wp_best_courses_log_error( $type, $target, $error_message, $attempted_action ) {
-    global $wpdb;
-    $tableName = esc_sql( $wpdb->prefix . 'best_history' );
-    $wpdb->query(
-        $wpdb->prepare(
-            "INSERT INTO $tableName"
-            . "(type, target, error_message, attempted_action)"
-            . "VALUES (%s, %s, %s, %s)"
-            , $type
-            , $target
-            , $error_message
-            , $attempted_action
-        )
-    );
-}
+use best\kosice\Database;
 
 /**
  * This function removes registered WP Cron events by a specified event name.
@@ -140,116 +52,14 @@ function WPUnscheduleEventsByName($strEventName) {
  * Cron periodical (hourly) event of this plugin.
  *
  * List of actions:
- * Refreshes BEST databases
+ * Refreshes BEST database tables
  */
 function wp_best_courses_lbgs_cron_task() {
-    refresh_db_best_events();
-    refresh_db_best_lbgs();
+    Database::refresh_db_best_events('automatic');
+    Database::refresh_db_best_lbgs('automatic');
 }
 
 add_action( 'best_courses_lbgs_cron_task', 'wp_best_courses_lbgs_cron_task' );
-
-/**
- * Refreshes the state of the BEST Events database.
- */
-function refresh_db_best_events() {
-    //Reads all courses from the remote db
-    $parser = best\kosice\datalib\best_kosice_data::instance();
-    $courses = $parser->courses();
-
-    if ( $courses ) {
-        global $wpdb;
-        $tableName = esc_sql( $wpdb->prefix . 'best_events' );
-
-        //If the DB supports it, we will offer transaction rollback on error
-        $wpdb->query( 'START TRANSACTION' );
-
-        //Deletes all old entries
-        $wpdb->query( "TRUNCATE TABLE $tableName" );
-
-        $insert = "INSERT INTO $tableName (event_name, login_url, place, dates, event_type, acad_compl, fee) VALUES ";
-
-        //Inserts new entries
-        foreach ( $courses as $course ) {
-
-            //Next row
-            $insert .= '(' .
-                       //event_name
-                       "'" . $course[0] . "'," .
-                       //login_url
-                       "'" . $course[1] . "'," .
-                       //place
-                       "'" . $course[2] . "'," .
-                       //dates
-                       "'" . $course[3] . "'," .
-                       //event_type
-                       "'" . $course[4] . "'," .
-                       //acad_compl
-                       "'" . $course[5] . "'," .
-                       //fee
-                       "'" . $course[6] . "'" .
-                       '),';
-        }
-
-        $insert = rtrim( $insert, ',' );
-
-        //Running the query and problem handling
-        if ( ! $wpdb->query( esc_sql( $insert ) ) ) {
-            $wpdb->query( 'ROLLBACK' );
-            return;
-        }
-
-        //All went OK
-        $wpdb->query( 'COMMIT' );
-    }
-}
-
-/**
- * Refreshes the state of the BEST Local Best Groups database.
- */
-function refresh_db_best_lbgs() {
-    //Reads all local best groups from the remote db
-    $parser = best\kosice\datalib\best_kosice_data::instance();
-    $lbgs = $parser->lbgs();
-
-    if ($lbgs) {
-        global $wpdb;
-        $tableName = esc_sql( $wpdb->prefix . 'best_lbg' );
-
-        //If the DB supports it, we will offer transaction rollback on error
-        $wpdb->query( 'START TRANSACTION' );
-
-        //Deletes all old entries
-        $wpdb->query( "TRUNCATE TABLE $tableName" );
-
-        $insert = "INSERT INTO $tableName (web_page, city, state) VALUES ";
-
-        //Inserts new entries
-        foreach ( $lbgs as $lbg ) {
-
-            //Next row
-            $insert .= '(' .
-                       //web_page
-                       "'" . $lbg[0] . "'," .
-                       //city
-                       "'" . $lbg[2] . "'," .
-                       //state
-                       "'" . $lbg[1] . "'" .
-                       '),';
-        }
-
-        $insert = rtrim( $insert, ',' );
-
-        //Running the query and problem handling
-        if ( ! $wpdb->query( esc_sql( $insert ) ) ) {
-            $wpdb->query( 'ROLLBACK' );
-            return;
-        }
-
-        //All went OK
-        $wpdb->query( 'COMMIT' );
-    }
-}
 
 /**
  * Plugin activation event.
@@ -262,10 +72,10 @@ function refresh_db_best_lbgs() {
 function wp_best_courses_lbgs_activation() {
     wp_schedule_event( time(), 'hourly', 'best_courses_lbgs_cron_task' );
 
-    wp_best_create_tables_events_lbgs();
+    Database::create_all_tables();
 
-    refresh_db_best_events();
-    refresh_db_best_lbgs();
+    Database::refresh_db_best_events('automatic');
+    Database::refresh_db_best_lbgs('automatic');
 }
 
 register_activation_hook( __FILE__, 'wp_best_courses_lbgs_activation' );
@@ -281,50 +91,6 @@ function wp_best_courses_lbgs_deactivation() {
 }
 
 register_deactivation_hook( __FILE__, 'wp_best_courses_lbgs_deactivation' );
-
-/**
- * Plugin initialization event.
- *
- * List of actions:
- * 1. Registers a custom post type for BEST events
- *    Reference: <http://www.wpbeginner.com/wp-tutorials/how-to-create-custom-post-types-in-wordpress/>
- *    (Is not currently being used for anything and may be removed later)
- */
-function wp_best_courses_lbgs_init() {
-    register_post_type( 'best-events',
-        //Custom post type options
-        array(
-            'labels' => array(
-                'name'          => __( 'BEST Events' ),
-                'singular_name' => __( 'BEST Event' )
-            ),
-            'public'          => true,
-            //'has_archive'     => true,
-
-            //Hiding from the user administration view
-            'show_ui'         => false,
-
-            'capability_type' => 'page',
-            'hierarchical'	  => false,
-            //'hierarchical'    => true,
-
-            //Rewriting path in the address bar
-            'rewrite' => array(
-                'slug'		 	=> '/',
-                'with_front'	=> true
-            ),
-
-            'supports'        => array(
-                //'title',
-                //'editor',
-                //'custom-fields',
-            ),
-        )
-    );
-}
-
-//Hooking up initialization function to the theme setup
-add_action( 'init', 'wp_best_courses_lbgs_init' );
 
 /**
  * Returns the main instance of wp_best_courses_lbgs to prevent the need to use globals.
@@ -353,9 +119,9 @@ wp_best_courses_lbgs();
  */
 function run_php_file_for_html( $php_file ) {
     ob_start();
+    /** @noinspection PhpIncludeInspection */
     include( $php_file );
-    $returned = ob_get_contents();
-    ob_end_clean();
+    $returned = ob_get_clean();
     return $returned;
 
     //Alternative, that can be tested for possible higher performance:
@@ -416,10 +182,53 @@ function wptuts_register_buttons( $buttons ) {
 }
 
 /**
- * Applying TinyMCE filters to add new buttons.
+ * Plugin initialization event.
+ *
+ * List of actions:
+ * 1. Upgrades the database to the newest version
+ * 2. Applying TinyMCE filters to add new buttons.
+ * 3. Registers a custom post request_type for BEST events
+ *    Reference: <http://www.wpbeginner.com/wp-tutorials/how-to-create-custom-post-types-in-wordpress/>
+ *    (Is not currently being used for anything and may be removed later)
  */
-function wptuts_buttons() {
+function wp_best_courses_lbgs_init() {
+    //Always attempts to upgrade the database version
+    Database::upgrade_database();
+
     add_filter( "mce_external_plugins", "wptuts_add_buttons" );
     add_filter( 'mce_buttons', 'wptuts_register_buttons' );
+
+    register_post_type( 'best-events',
+        //Custom post request_type options
+        array(
+            'labels' => array(
+                'name'          => __( 'BEST Events' ),
+                'singular_name' => __( 'BEST Event' )
+            ),
+            'public'          => true,
+            //'has_archive'     => true,
+
+            //Hiding from the user administration view
+            'show_ui'         => false,
+
+            'capability_type' => 'page',
+            'hierarchical'	  => false,
+            //'hierarchical'    => true,
+
+            //Rewriting path in the address bar
+            'rewrite' => array(
+                'slug'		 	=> '/',
+                'with_front'	=> true
+            ),
+
+            'supports'        => array(
+                //'title',
+                //'editor',
+                //'custom-fields',
+            ),
+        )
+    );
 }
-add_action( 'init', 'wptuts_buttons' );
+
+//Hooking up initialization function
+add_action( 'init', 'wp_best_courses_lbgs_init' );
