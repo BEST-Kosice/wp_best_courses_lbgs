@@ -63,15 +63,15 @@ class wp_best_courses_lbgs_Settings {
 	public function init_settings () {
 		$this->settings = $this->settings_fields();
 	}
-	
+
 	public function add_best_db_settings_page(){
 	    $page = add_menu_page(
-		    __( 'Správa BEST databázy', 'wp-best-courses-lbgs' ) , 
-			__( 'BEST DB admin', 'wp-best-courses-lbgs' ) , 
-			'manage_options' , 
+		    __( 'Správa BEST databázy', 'wp-best-courses-lbgs' ) ,
+			__( 'BEST DB admin', 'wp-best-courses-lbgs' ) ,
+			'manage_options' ,
 			'best_db_settings',
 			array( $this, 'settings_page' ),
-			plugins_url( 'images/BEST_DB_icon.png', __FILE__ ),
+			plugins_url( '../assets/images/BEST_DB_icon.png', __FILE__ ),
 			110
 		);
 	}
@@ -81,10 +81,10 @@ class wp_best_courses_lbgs_Settings {
 	 * @return void
 	 */
 /*	public function add_menu_item () {
-		$page = add_options_page( 
-			__( 'Správa BEST databázy', 'wp-best-courses-lbgs' ) , 
-			__( 'BEST DB admin', 'wp-best-courses-lbgs' ) , 
-			'manage_options' , 
+		$page = add_options_page(
+			__( 'Správa BEST databázy', 'wp-best-courses-lbgs' ) ,
+			__( 'BEST DB admin', 'wp-best-courses-lbgs' ) ,
+			'manage_options' ,
 			'best_db_settings',
 			array( $this, 'settings_page' ),
 			'dashicons-admin-customizer',
