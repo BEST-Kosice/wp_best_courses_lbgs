@@ -14,13 +14,17 @@
  * the table cell 'od-do' ([date] - [date]) is asked for, but
  * for larger screens, a styling of ([date]<br>-<br>[date]) is more appropriate.
  */
-var rowArray = document.getElementById('courses_table').tBodies[0].rows
-var length = rowArray.length;
-var number_cells = rowArray[0].cells.length;
-var cell;
-for (var i = 0; i < length; i++){
-    cell = rowArray[i].cells[number_cells-1];
-    cell.innerHTML = cell.innerHTML.replace(/ - /, '<br>-<br>');
+var table = document.getElementById('courses_table')
+
+if (table) {
+    var rowArray = table.tBodies[0].rows;
+    var length = rowArray.length;
+    var number_cells = rowArray[0].cells.length;
+    var cell;
+    for (var i = 0; i < length; i++){
+        cell = rowArray[i].cells[number_cells-1];
+        cell.innerHTML = cell.innerHTML.replace(/ - /, '<br>-<br>');
+    }
 }
 
 // sortable - add a custom 'interval' type to properly sort our column 'od-do' (a date interval sorted according to start date).
