@@ -1,7 +1,9 @@
     var map_container = document.getElementById("svg_map");
-    var s = Snap(map_container);
-    var base_url = document.getElementById("assets_dir_url").href;
-    Snap.load(base_url + "map-optimized.svg", onSVGLoaded ) ;
+    if (map_container) {
+        var s = Snap(map_container);
+        var base_url = document.getElementById("assets_dir_url").href;
+        Snap.load(base_url + "map-optimized.svg", onSVGLoaded ) ;
+    }
 
     function addMouseoverAnimation(svgElement, mouseoverStyle, mouseoutStyle, animationSpeed){
         svgElement.node.onmouseover =
