@@ -35,7 +35,8 @@
             cities[idx].attr({fill: '#faa331'});
             var bbox = cities[idx].getBBox();
 
-            console.log(bbox);
+            /* NOTE odstraňuj po sebe console log pre ostatných je potom nemožne odladiť svoje veci */
+            // console.log(bbox);
             addMouseoverAnimation(
               cities[idx],
               {fill: "#fff0be", transform: 'translate('+(-bbox.cx*(2-1))+','+(-bbox.cy*(2-1))+') scale(2 2)'},
