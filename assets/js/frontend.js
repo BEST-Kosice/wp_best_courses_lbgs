@@ -19,10 +19,10 @@ var table = document.getElementById('courses_table')
 if (table) {
     var rowArray = table.tBodies[0].rows;
     var length = rowArray.length;
-    var number_cells = rowArray[0].cells.length;
+    var cellIndex = table.tHead.rows[0].cells['dates'].cellIndex;
     var cell;
     for (var i = 0; i < length; i++){
-        cell = rowArray[i].cells[number_cells-1];
+        cell = rowArray[i].cells[cellIndex];
         cell.innerHTML = cell.innerHTML.replace(/ - /, '<br>-<br>');
     }
 }

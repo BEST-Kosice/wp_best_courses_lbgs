@@ -91,32 +91,32 @@ wp_best_courses_lbgs()->enqueue_scripts();
     <table id="courses_table" data-sortable>
         <thead>
             <tr>
-                <th width="10%">
+                <th id="name" width="10%">
                     <div><span>Názov</span></div>
                     <div class="fa fa-fw fa-sort"></div>
                     <div class="fa fa-caret-down"></div>
                     <div class="fa fa-caret-up"></div>
                 </th>
-                <th width="15%">
+                <th id="type" width="15%">
                     <div><span>Zameranie</span></div>
                     <div class="fa fa-fw fa-sort"></div>
                     <div class="fa fa-caret-down"></div>
                     <div class="fa fa-caret-up"></div>
                 </th>
-                <th width="10%">
+                <th id="place" width="10%">
                     <div><span>Miesto</span></div>
                     <div class="fa fa-fw fa-sort"></div>
                     <div class="fa fa-caret-down"></div>
                     <div class="fa fa-caret-up"></div>
                 </th>
                 <?php /*
-                <th width="10%">
+                <th id="state" width="10%">
                     <div><span>Štát</span></div>
                     <div class="fa fa-fw fa-sort"></div>
                     <div class="fa fa-caret-down"></div>
                     <div class="fa fa-caret-up"></div>
                 </th>
-                <th width="15%">
+                <th id="app_deadline" width="15%">
                     <div><span>Deadline prihlásenia</span></div>
                     <div class="fa fa-fw fa-sort"></div>
                     <div class="fa fa-caret-down"></div>
@@ -124,25 +124,25 @@ wp_best_courses_lbgs()->enqueue_scripts();
                 </th>
                 */
                 ?>
-                <th width="10%">
+                <th id="fee" width="10%" data-sortable-type="numeric">
                     <div><span>Cena</span></div>
                     <div class="fa fa-fw fa-sort"></div>
                     <div class="fa fa-caret-down"></div>
                     <div class="fa fa-caret-up"></div>
                 </th>
-                <th width="10%">
+                <th id="duration" width="10%" data-sortable-type="numeric">
                     <div><span>Trvanie</span></div>
                     <div class="fa fa-fw fa-sort"></div>
                     <div class="fa fa-caret-down"></div>
                     <div class="fa fa-caret-up"></div>
                 </th>
-                <th width="10%">
+                <th id="dates" width="10%" data-sortable-type="interval">
                     <div><span>Od-do</span></div>
                     <div class="fa fa-fw fa-sort"></div>
                     <div class="fa fa-caret-down"></div>
                     <div class="fa fa-caret-up"></div>
                 </th>
-                <th width="10%">
+                <th id="acad_complaxity" width="10%">
                     <div><span>Úroveň*</span></div>
                     <div class="fa fa-fw fa-sort"></div>
                     <div class="fa fa-caret-down"></div>
