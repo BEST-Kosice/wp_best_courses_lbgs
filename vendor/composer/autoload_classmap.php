@@ -6,5 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Sunra\\PhpSimple\\HtmlDomParser' => $vendorDir . '/sunra/php-simple-html-dom-parser/Src/Sunra/PhpSimple/HtmlDomParser.php',
+    'best\\kosice\\Database' => $baseDir . '/includes/class-wp-best-courses-lbgs-database.php',
+    'best\\kosice\\datalib\\best_kosice_data' => $baseDir . '/includes/class-wp-best-courses-lbgs-parser.php',
+    'wp_best_courses_lbgs' => $baseDir . '/includes/class-wp-best-courses-lbgs.php',
+    'wp_best_courses_lbgs_Admin_API' => $baseDir . '/includes/class-wp-best-courses-lbgs-admin-api.php',
+    'wp_best_courses_lbgs_Settings' => $baseDir . '/includes/class-wp-best-courses-lbgs-settings.php',
 );

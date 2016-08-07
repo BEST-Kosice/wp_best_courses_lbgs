@@ -2,7 +2,7 @@
 // echo the shortcode
 // tu príde tabuľka kurzov
 //
-if (!defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
@@ -10,7 +10,6 @@ wp_best_courses_lbgs()->enqueue_styles();
 wp_best_courses_lbgs()->enqueue_scripts();
 
 // TODO add translation string
-// TODO podmienka ak niesú žiadne kurzy nezobraz žiadne
 ?>
 
 <?php
@@ -86,9 +85,9 @@ wp_best_courses_lbgs()->enqueue_scripts();
 
     if ($data) :
     ?>
-
+    <h2>BEST learning events</h2>
     <p>Pre zobrazenie stránky prihlásenia na daný kurz klikni na názov kurzu.</p>
-    <table id="courses_table" data-sortable>
+    <table class="best-events js-best-events" data-sortable>
         <thead>
             <tr>
                 <th id="name" width="10%">

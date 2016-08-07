@@ -69,7 +69,6 @@ module.exports = function (grunt) {
                 sourcemap: false,
                 mergeLonghand: true,
 				autoprefixer: {browsers: 'last 2 versions'},
-				mergeLonghand:true,
             },
             dist: {
                 files: {
@@ -104,9 +103,9 @@ module.exports = function (grunt) {
         watch: {
             sass: {
                 files: [
-                    '<%= dirs.sass %>/*.scss',
+                    '<%= dirs.scss %>/*.scss',
                 ],
-                tasks: ['sass', 'cssmin'],
+                tasks: ['sass'],
             },
             js: {
                 files: [
@@ -159,7 +158,7 @@ module.exports = function (grunt) {
     // Register tasks
     grunt.registerTask('default', [
         'sass',
-        //'less',
+        'cssnano',
         'cssmin',
         'uglify'
     ]);

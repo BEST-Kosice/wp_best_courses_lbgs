@@ -6,7 +6,7 @@
 
  	// $ Works! You can test it with next line if you like
  	// console.log($);
-    $('#courses_table').stacktable();
+    $('.js-best-events').stacktable();
 
  })( jQuery );
 
@@ -14,16 +14,22 @@
  * the table cell 'od-do' ([date] - [date]) is asked for, but
  * for larger screens, a styling of ([date]<br>-<br>[date]) is more appropriate.
  */
-var table = document.getElementById('courses_table')
+var tables = document.getElementsByClassName("js-best-events")
 
-if (table) {
-    var rowArray = table.tBodies[0].rows;
-    var length = rowArray.length;
-    var cellIndex = table.tHead.rows[0].cells['dates'].cellIndex;
-    var cell;
-    for (var i = 0; i < length; i++){
-        cell = rowArray[i].cells[cellIndex];
-        cell.innerHTML = cell.innerHTML.replace(/ - /, '<br>-<br>');
+Object.keys(tables).forEach(function(key) {
+    styling_dates(tables[key]);
+});
+
+function styling_dates(table) {
+    if (table) {
+        var rowArray = table.tBodies[0].rows;
+        var length = rowArray.length;
+        var cellIndex = table.tHead.rows[0].cells['dates'].cellIndex;
+        var cell;
+        for (var i = 0; i < length; i++){
+            cell = rowArray[i].cells[cellIndex];
+            cell.innerHTML = cell.innerHTML.replace(/ - /, '<br>-<br>');
+        }
     }
 }
 

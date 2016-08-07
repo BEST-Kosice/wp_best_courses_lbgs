@@ -73,7 +73,7 @@ class best_kosice_data
     /**
      * return list of courses and details.
      *
-     * @return array|false on error
+     * @return array|false courses, false on error
      */
     public function courses()
     {
@@ -110,7 +110,7 @@ class best_kosice_data
     /**
      * return list of Local BEST Groups.
      *
-     * @return array|false on error
+     * @return array|false lbgs, false on error
      */
     public function lbgs()
     {

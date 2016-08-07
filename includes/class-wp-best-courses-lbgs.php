@@ -1,6 +1,8 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 class wp_best_courses_lbgs {
 
@@ -80,7 +82,6 @@ class wp_best_courses_lbgs {
 	 * Constructor function.
 	 * @access  public
 	 * @since   1.0.0
-	 * @return  void
 	 */
 	public function __construct ( $file = '', $version = '1.0.0' ) {
 		$this->_version = $version;
