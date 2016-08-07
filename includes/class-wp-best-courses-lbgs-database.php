@@ -22,6 +22,7 @@ class Database {
     //Use these constants as table names when possible, be DRY. In future, enums may be created.
     const BEST_EVENTS_TABLE = 'best_events';
     const BEST_LBGS_TABLE = 'best_lbg';
+    const BEST_HISTORY_TABLE = 'best_history';
 
     /**
      * Database version upgrading with the least destructive effect for the end user.
@@ -49,6 +50,7 @@ class Database {
         //it simply gets lowered to prevent anomalies
         if ( get_option( 'plugin_db_version', 0 ) > self::TARGET_PLUGIN_DB_VERSION ) {
             update_option( 'plugin_db_version', self::TARGET_PLUGIN_DB_VERSION );
+            $log( 'Detected too large database version, setting down to ' . self::TARGET_PLUGIN_DB_VERSION );
 
             return;
         }
@@ -61,12 +63,12 @@ class Database {
                 //Initialization - if the database had none or an unknown version, drops and recreates everything
                 //default: //Uncomment when testing to recreate database after any version change
                 case 0:
-                    $log( 'Database initialization: installing version ' . self::TARGET_PLUGIN_DB_VERSION );
                     self::drop_all_tables();
                     self::create_all_tables();
-                    self::refresh_db_best_events('automatic');
-                    self::refresh_db_best_lbgs('automatic');
+                    self::refresh_db_best_events( 'automatic' );
+                    self::refresh_db_best_lbgs( 'automatic' );
                     update_option( 'plugin_db_version', self::TARGET_PLUGIN_DB_VERSION );
+                    $log( 'Database initialization: installed version ' . self::TARGET_PLUGIN_DB_VERSION );
                     break;
             }
 
@@ -75,6 +77,7 @@ class Database {
                  $current_db_version < self::TARGET_PLUGIN_DB_VERSION
             ) {
                 update_option( 'plugin_db_version', ++ $current_db_version );
+                $log( 'Upgraded version from ' . ($current_db_version - 1) . ' to ' . $current_db_version );
             }
         }
     }
@@ -86,8 +89,10 @@ class Database {
      * Studying references:
      * <https://codex.wordpress.org/Function_Reference/wpdb_Class>
      * <https://codex.wordpress.org/Creating_Tables_with_Plugins>
+     *
+     * @param $request_type string type of the operation request, can be 'automatic' or 'manual'
      */
-    public static function create_all_tables() {
+    public static function create_all_tables( $request_type = 'automatic' ) {
         //Global instance of the WordPress Database
         global $wpdb;
 
@@ -134,8 +139,7 @@ PRIMARY KEY (id_history)
 SQL;
 
         //Querying and error handling
-        $request_type = 'automatic';
-        $operation    = 'Table creation';
+        $operation = 'Table creation';
 
         if ( $wpdb->query( $sql_history ) ) {
             self::log_success( $request_type, 'meta', $operation, $wpdb->last_query );
@@ -158,18 +162,26 @@ SQL;
 
     /**
      * Deletes all plugin tables from the database.
+     *
+     * @param $request_type string type of the operation request, can be 'automatic' or 'manual'
      */
-    public static function drop_all_tables() {
+    public static function drop_all_tables( $request_type = 'automatic' ) {
         //Global instance of the WordPress Database
         global $wpdb;
 
-        $wpdb->query( 'DROP TABLE IF EXISTS '
-                      . $wpdb->prefix . 'best_events'
-                      . ', '
-                      . $wpdb->prefix . 'best_lbg'
-                      . ', '
-                      . $wpdb->prefix . 'best_history'
-        );
+        if ( $wpdb->query( 'DROP TABLE IF EXISTS '
+                           . $wpdb->prefix . self::BEST_EVENTS_TABLE
+                           . ', '
+                           . $wpdb->prefix . self::BEST_LBGS_TABLE
+                           . ', '
+                           . $wpdb->prefix . self::BEST_HISTORY_TABLE
+        )
+        ) {
+            //Removes the stored plugin version setting, next time the DB has to be re-initialized
+            update_option( 'plugin_db_version', 0 );
+        } else {
+            self::log_error( $request_type, 'meta', 'Dropping tables', $wpdb->last_query, $wpdb->last_error );
+        }
     }
 
     /**
