@@ -317,6 +317,14 @@ class wp_best_courses_lbgs_Settings {
 				$html .= '</h2>' . "\n";
 			}
 
+            if ( $tab != 'configuration' ) {
+                // Displaying number of entries in the table
+                $table_name        = ( $tab == 'lbgs' ? Database::BEST_LBGS_TABLE : Database::BEST_EVENTS_TABLE );
+                $table_row_entries = Database::count_db_table_rows( $table_name );
+                $table_context     = ( $tab == 'lbgs' ? 'lokálnych BEST skupín' : 'eventov' );
+                $html .= '<p>Aktuálny počet ' . $table_context . ' v tabuľke: ' . $table_row_entries . '</p>';
+            }
+
             // Setting fields and submit button
             $html .= '<form method="post" action="options.php" enctype="multipart/form-data">' . "\n";
 
@@ -334,12 +342,16 @@ class wp_best_courses_lbgs_Settings {
                 }
             $html .= '</form>' . "\n";
 
+            $manual_update_button_text = 'Aktualizovať ' . ( $tab == 'lbgs' ? 'skupiny' : 'eventy' );
+
             // Form for manual database update
             if($tab != 'configuration') {
                 $html .= '<form method="post">' . "\n";
                     $html .= '<p class="submit">' . "\n";
                         $html .= '<input type="hidden" name="tab" value="' . esc_attr( $tab ) . '" />' . "\n";
-                        $html .= '<input name="manually_update" type="submit" class="button-primary" value="' . esc_attr( __( 'Manually update database', 'wp-best-courses-lbgs' ) ) . '" />' . "\n";
+                        $html .= '<input name="manually_update" type="submit" class="button-primary" value="' .
+                                 esc_attr( __( $manual_update_button_text, 'wp-best-courses-lbgs' ) ) .
+                                 '" />' . "\n";
                     $html .= '</p>' . "\n";
                 $html .= '</form>' . "\n";
             }
@@ -357,16 +369,16 @@ class wp_best_courses_lbgs_Settings {
      * A table consisting of history of recent updates.
      *
      * @param $target string|null operation target that should be displayed in the table, null for all targets
-     * @param $html_class string class used for the <table> tag
+     * @param $html_class string class used for the < table > tag
      *
-     * @return string HTML code of <table> tag
+     * @return string HTML code of < table > tag
      */
     private function updates_history_table( $target = null, $html_class = null ) {
         global $wpdb;
         $history_max_displayed_rows = get_option( 'number_of_displayed_rows', 50 );
         $table_name                 = esc_sql( "{$wpdb->prefix}best_history" );
 
-        $historyRows = $wpdb->get_results(
+        $history_rows = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT * FROM $table_name WHERE target LIKE %s ORDER BY time DESC LIMIT %d"
                 , $target == null ? '%' : $target
@@ -376,7 +388,7 @@ class wp_best_courses_lbgs_Settings {
 
         //TODO consider logging error of the table select query in the table itself?
         $html = '';
-        if ( $historyRows === null ) {
+        if ( $history_rows === null ) {
             $html .= "<p>Problem with history table: {$wpdb->last_error}".
                      "<br/>The requested query was: {$wpdb->last_query}</p>";
         }
@@ -398,12 +410,14 @@ class wp_best_courses_lbgs_Settings {
         $html .= '<th>Výsledok</th>';
         $html .= '</tr>';
 
-        foreach ( $historyRows as $history ) {
+        foreach ( $history_rows as $history ) {
             $html .= '<tr>';
             $html .= '<td>' . $history['time'] . '</td>';
             $html .= '<td>' . $history['request_type'] . '</td>';
             $html .= '<td>' . $history['target'] . '</td>';
             $html .= '<td>' . $history['operation'] . '</td>';
+            //TODO: hide attempted_request under something like modal window -
+            //it has to be accessible, but is too large to be displayed by default
             $html .= '<td>' . $history['attempted_request'] . '</td>';
             $error_message = $history['error_message'];
             $html .= '<td>' . ( $error_message == null ? 'OK' : $error_message ) . '</td>';

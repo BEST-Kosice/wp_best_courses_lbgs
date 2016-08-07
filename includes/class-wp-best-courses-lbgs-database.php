@@ -6,6 +6,7 @@
  * Time: 18:35
  */
 
+//TODO reconsider namespace
 namespace best\kosice;
 
 use best\kosice\datalib\best_kosice_data;
@@ -15,39 +16,65 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Database {
+    //Plugin version of the database, any change here immediately upgrades database of all plugin users
+    const TARGET_PLUGIN_DB_VERSION = 1;
+
+    //Use these constants as table names when possible, be DRY. In future, enums may be created.
+    const BEST_EVENTS_TABLE = 'best_events';
+    const BEST_LBGS_TABLE = 'best_lbg';
+
     /**
-     * Database version upgrading with the least destructive effect.
+     * Database version upgrading with the least destructive effect for the end user.
+     *
      * Usage:
-     * When increasing the DB version, increase the constant variable and add a new switch case for the version.
+     * When increasing the DB version, increase the class constant TARGET_PLUGIN_DB_VERSION and add a new
+     * switch case for the previous version.
+     *
      * Database of all users will go through the required steps based on their currently installed version.
      *
      * @return void
      */
     public static function upgrade_database() {
-        //Plugin version of the database
-        $target_version_db = 1;
+        //Thinking about the future: if at any point we add this "feature" and then user rolls back to old version,
+        //we don't want to break his entire database
+        if ( get_option( 'plugin_db_upgrade_disabled', false ) ) {
+            return;
+        }
 
         $log = function ( $attempted_request ) {
-            Database::log_success( 'automatic', 'meta', 'Database upgrade', $attempted_request );
+            self::log_success( 'automatic', 'meta', 'Database upgrade', $attempted_request );
         };
 
-        //If current version is already higher, it simply gets lowered
-        $current_version_db = get_option( 'version_db', 0 );
-        if ( $current_version_db > $target_version_db ) {
-            update_option( 'version_db', $target_version_db );
-        } else {
-            //Upgrades the database towards the currently installed plugin version
-            while ( $current_version_db < $target_version_db ) {
-                switch ( $current_version_db ) {
-                    case 0:
-                        //default: //Uncomment when testing
-                        //If the database is being upgraded from an unknown version, drops and recreates everything
-                        Database::drop_all_tables();
-                        Database::create_all_tables();
-                        $log( 'Upgrading version from 0 to 1' );
-                        break;
-                }
-                update_option( 'version_db', ++ $current_version_db );
+        //If the current version is already higher (mostly after development),
+        //it simply gets lowered to prevent anomalies
+        if ( get_option( 'plugin_db_version', 0 ) > self::TARGET_PLUGIN_DB_VERSION ) {
+            update_option( 'plugin_db_version', self::TARGET_PLUGIN_DB_VERSION );
+
+            return;
+        }
+
+        //Upgrades the database towards the currently installed plugin version
+        while ( ( $current_db_version = get_option( 'plugin_db_version', 0 ) )
+                < self::TARGET_PLUGIN_DB_VERSION
+        ) {
+            switch ( $current_db_version ) {
+                //Initialization - if the database had none or an unknown version, drops and recreates everything
+                //default: //Uncomment when testing to recreate database after any version change
+                case 0:
+                    $log( 'Database initialization: installing version ' . self::TARGET_PLUGIN_DB_VERSION );
+                    self::drop_all_tables();
+                    self::create_all_tables();
+                    self::refresh_db_best_events('automatic');
+                    self::refresh_db_best_lbgs('automatic');
+                    update_option( 'plugin_db_version', self::TARGET_PLUGIN_DB_VERSION );
+                    break;
+            }
+
+            //Implicitly increases version by 1 after each step, unless there was an explicit external change
+            if ( $current_db_version == get_option( 'plugin_db_version', 0 ) &&
+                 $current_db_version < self::TARGET_PLUGIN_DB_VERSION
+            ) {
+                update_option( 'plugin_db_version', ++ $current_db_version );
             }
         }
     }
@@ -111,21 +138,21 @@ SQL;
         $operation    = 'Table creation';
 
         if ( $wpdb->query( $sql_history ) ) {
-            Database::log_success( $request_type, 'meta', $operation, $wpdb->last_query );
+            self::log_success( $request_type, 'meta', $operation, $wpdb->last_query );
         } else {
-            Database::log_error( $request_type, 'meta', $operation, $wpdb->last_query, $wpdb->last_error );
+            self::log_error( $request_type, 'meta', $operation, $wpdb->last_query, $wpdb->last_error );
         }
 
         if ( $wpdb->query( $sql_events ) ) {
-            Database::log_success( $request_type, 'events_db', $operation, $wpdb->last_query );
+            self::log_success( $request_type, 'events_db', $operation, $wpdb->last_query );
         } else {
-            Database::log_error( $request_type, 'events_db', $operation, $wpdb->last_query, $wpdb->last_error );
+            self::log_error( $request_type, 'events_db', $operation, $wpdb->last_query, $wpdb->last_error );
         }
 
         if ( $wpdb->query( $sql_lbgs ) ) {
-            Database::log_success( $request_type, 'lbgs_db', $operation, $wpdb->last_query );
+            self::log_success( $request_type, 'lbgs_db', $operation, $wpdb->last_query );
         } else {
-            Database::log_error( $request_type, 'lbgs_db', $operation, $wpdb->last_query, $wpdb->last_error );
+            self::log_error( $request_type, 'lbgs_db', $operation, $wpdb->last_query, $wpdb->last_error );
         }
     }
 
@@ -222,7 +249,7 @@ SQL;
 
         //Logging the error
         if ( $result === false ) {
-            Database::log_error( $request_type, 'meta', 'Logging success', $wpdb->last_query, $wpdb->last_error );
+            self::log_error( $request_type, 'meta', 'Logging success', $wpdb->last_query, $wpdb->last_error );
             //Error during logging the error of logging success will not be logged or returned. Is this too meta?
         }
 
@@ -236,18 +263,19 @@ SQL;
      * @param $request_type string type of the operation request, can be 'automatic' or 'manual'
      * @param $target string the event where the operation was performed, can be 'events_db', 'lbgs_db' or 'meta'
      * @param $operation string description of the action that is being performed
-     * @param $insert callable {@param $table_name string @return string insert query} returns the insert query to be run
+     * @param $insert callable {@param $table_name string @return string insert query}
+     *        returns the sql-safe insert query to be run
      *
      * @return bool true on success, false on failure
      */
     public static function replace_db_table( $table_name, $request_type, $target, $operation, callable $insert ) {
         global $wpdb;
-        $table_name = esc_sql( $wpdb->prefix . $table_name );
+        $table_name = esc_sql( "{$wpdb->prefix}$table_name" );
 
         //Runs the callback for insert query
         $insert_query = $insert( $table_name );
         if ( $insert_query == null ) {
-            Database::log_error( $request_type, $target, $operation, 'Requested insert query', 'Returned null' );
+            self::log_error( $request_type, $target, $operation, 'Requested insert query', 'Returned no data' );
 
             return false;
         }
@@ -259,8 +287,8 @@ SQL;
         $wpdb->query( "TRUNCATE TABLE $table_name" );
 
         //Running the query and problem handling
-        if ( ! $wpdb->query(  $insert_query  ) ) {
-            Database::log_error( $request_type, $target, $operation, $wpdb->last_query, $wpdb->last_error );
+        if ( ! $wpdb->query( $insert_query ) ) {
+            self::log_error( $request_type, $target, $operation, $wpdb->last_query, $wpdb->last_error );
             $wpdb->query( 'ROLLBACK' );
 
             return false;
@@ -269,7 +297,7 @@ SQL;
         //All went OK
         $last_query = $wpdb->last_query;
         $wpdb->query( 'COMMIT' );
-        Database::log_success( $request_type, $target, $operation, $last_query );
+        self::log_success( $request_type, $target, $operation, $last_query );
 
         return true;
     }
@@ -292,13 +320,12 @@ SQL;
 
         if ( $courses['learning']['data'] ) {
             //Replaces the table by new insert data based on the callback using function which logs the result
-            return Database::replace_db_table( 'best_events', $request_type, $target, $operation, function ( $table_name ) use ( $courses ) {
+            return self::replace_db_table( 'best_events', $request_type, $target, $operation, function ( $table_name ) use ( $courses ) {
                 if ( $table_name == null ) {
                     return null;
                 }
 
                 $insert_query = "INSERT INTO $table_name (event_name, login_url, place, dates, event_type, acad_compl, fee) VALUES ";
-
 
                 //Inserts new entries
                 foreach ( $courses['learning']['data'] as $course ) {
@@ -324,7 +351,7 @@ SQL;
                 return rtrim( $insert_query, ',' );
             } );
         } else {
-            Database::log_error( $request_type, $target, $operation
+            self::log_error( $request_type, $target, $operation
                 , 'Requesting courses from parser'
                 , 'Returned no data: ' . $parser->error_message()
             );
@@ -351,7 +378,7 @@ SQL;
 
         if ( $lbgs ) {
             //Replaces the table by new insert data based on the callback using function which logs the result
-            return Database::replace_db_table( 'best_lbg', $request_type, $target, $operation, function ( $table_name ) use ( $lbgs ) {
+            return self::replace_db_table( 'best_lbg', $request_type, $target, $operation, function ( $table_name ) use ( $lbgs ) {
                 if ( $table_name == null ) {
                     return null;
                 }
@@ -374,12 +401,27 @@ SQL;
                 return rtrim( $insert_query, ',' );
             } );
         } else {
-            Database::log_error( $request_type, $target, $operation
+            self::log_error( $request_type, $target, $operation
                 , 'Requesting courses from parser'
                 , 'Returned no data: ' . $parser->error_message()
             );
 
             return false;
         }
+    }
+
+    /**
+     * Counts the number of rows of a table in the database.
+     *
+     * @param $table_name_no_prefix string table name without prefix
+     *
+     * @return null|string number of rows, null on error
+     */
+    public static function count_db_table_rows( $table_name_no_prefix ) {
+        global $wpdb;
+        $table_name = esc_sql( "{$wpdb->prefix}$table_name_no_prefix" );
+        return $wpdb->get_var(
+            "SELECT count(*) FROM $table_name"
+        );
     }
 }

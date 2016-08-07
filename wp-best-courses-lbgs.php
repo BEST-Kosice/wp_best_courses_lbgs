@@ -66,12 +66,14 @@ add_action( 'best_courses_lbgs_cron_task', 'wp_best_courses_lbgs_cron_task' );
  *
  * List of actions:
  * 1. Schedules cron events
- * 2. Creates all SQL tables
+ * 2. Attempts to upgrade the database and then creates any missing SQL tables
  * 3. Refreshes BEST databases
  */
 function wp_best_courses_lbgs_activation() {
     wp_schedule_event( time(), 'hourly', 'best_courses_lbgs_cron_task' );
 
+    //Attempts to upgrade the database version before creating any missing tables
+    Database::upgrade_database();
     Database::create_all_tables();
 
     Database::refresh_db_best_events('automatic');
