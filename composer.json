@@ -1,10 +1,10 @@
 {
-    "repositories": [{
-        "type": "git",
-        "url": "https://github.com/thomasgriffin/TGM-Updater"
-    }],
     "require": {
-        "sunra/php-simple-html-dom-parser": "^1.5",
-        "thomasgriffin/TGM-Updater": "master"
+        "sunra/php-simple-html-dom-parser": "^1.5"
+    },
+    "autoload": {
+        "classmap": [
+            "includes"
+        ]
     }
 }

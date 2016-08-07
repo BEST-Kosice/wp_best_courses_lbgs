@@ -22,15 +22,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 // Load composer
 require_once( 'vendor/autoload.php' );
 
-// Load plugin class files
-require_once( 'includes/class-wp-best-courses-lbgs.php'           );
-require_once( 'includes/class-wp-best-courses-lbgs-settings.php'  );
-require_once( 'includes/class-wp-best-courses-lbgs-database.php'  );
-
-// Load plugin libraries
-require_once( 'includes/class-wp-best-courses-lbgs-admin-api.php' );
-require_once( 'includes/class-wp-best-courses-lbgs-parser.php'    );
-
 use best\kosice\Database;
 
 /**

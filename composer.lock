@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d42b9d5b7d823c3d60957c56b924cc63",
-    "content-hash": "aeac483b28c6b52080d474df74be7208",
+    "hash": "6f0e2751ae680176e0fd4a255cae7ca4",
+    "content-hash": "a2cd1f6c42569c6325acb5f532ecc95e",
     "packages": [
         {
             "name": "sunra/php-simple-html-dom-parser",
