@@ -14,7 +14,7 @@
  * the table cell 'od-do' ([date] - [date]) is asked for, but
  * for larger screens, a styling of ([date]<br>-<br>[date]) is more appropriate.
  */
-var tables = document.getElementsByClassName("js-best-events")
+var tables = document.getElementsByClassName("large-only")
 
 Object.keys(tables).forEach(function(key) {
     styling_dates(tables[key]);
