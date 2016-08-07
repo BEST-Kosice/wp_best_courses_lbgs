@@ -17,7 +17,9 @@
  * @since 1.0.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 // Load composer
 require_once( 'vendor/autoload.php' );
@@ -32,10 +34,13 @@ use best\kosice\Database;
  * wp_clear_scheduled_hook('best_courses_lbgs_cron_task');
  * wp_unschedule_event(wp_next_scheduled('best_courses_lbgs_cron_task'),'best_courses_lbgs_cron_task');
  */
-function WPUnscheduleEventsByName($strEventName) {
+function WPUnscheduleEventsByName( $strEventName ) {
     $arrCronEvents = _get_cron_array();
-    foreach ($arrCronEvents as $nTimeStamp => $arrEvent)
-        if (isset($arrCronEvents[$nTimeStamp][$strEventName])) unset( $arrCronEvents[$nTimeStamp] );
+    foreach ( $arrCronEvents as $nTimeStamp => $arrEvent ) {
+        if ( isset( $arrCronEvents[ $nTimeStamp ][ $strEventName ] ) ) {
+            unset( $arrCronEvents[ $nTimeStamp ] );
+        }
+    }
     _set_cron_array( $arrCronEvents );
 }
 
@@ -46,8 +51,8 @@ function WPUnscheduleEventsByName($strEventName) {
  * Refreshes BEST database tables
  */
 function wp_best_courses_lbgs_cron_task() {
-    Database::refresh_db_best_events('automatic');
-    Database::refresh_db_best_lbgs('automatic');
+    Database::refresh_db_best_events( 'automatic' );
+    Database::refresh_db_best_lbgs( 'automatic' );
 }
 
 add_action( 'best_courses_lbgs_cron_task', 'wp_best_courses_lbgs_cron_task' );
@@ -67,8 +72,8 @@ function wp_best_courses_lbgs_activation() {
     Database::upgrade_database();
     Database::create_all_tables();
 
-    Database::refresh_db_best_events('automatic');
-    Database::refresh_db_best_lbgs('automatic');
+    Database::refresh_db_best_events( 'automatic' );
+    Database::refresh_db_best_lbgs( 'automatic' );
 }
 
 register_activation_hook( __FILE__, 'wp_best_courses_lbgs_activation' );
@@ -91,7 +96,7 @@ register_deactivation_hook( __FILE__, 'wp_best_courses_lbgs_deactivation' );
  * @since  1.0.0
  * @return object wp_best_courses_lbgs
  */
-function wp_best_courses_lbgs () {
+function wp_best_courses_lbgs() {
     $instance = wp_best_courses_lbgs::instance( __FILE__, '1.0.0' );
 
     if ( is_null( $instance->settings ) ) {
@@ -115,6 +120,7 @@ function run_php_file_for_html( $php_file ) {
     /** @noinspection PhpIncludeInspection */
     include( $php_file );
     $returned = ob_get_clean();
+
     return $returned;
 
     //Alternative, that can be tested for possible higher performance:
@@ -163,6 +169,7 @@ add_shortcode( 'best_lbgs_map', 'best_lbgs_map_shortcode' );
  */
 function wptuts_add_buttons( $plugin_array ) {
     $plugin_array['wptuts'] = wp_best_courses_lbgs()->assets_url . 'js/shortcode.min.js';
+
     return $plugin_array;
 }
 
@@ -171,6 +178,7 @@ function wptuts_add_buttons( $plugin_array ) {
  */
 function wptuts_register_buttons( $buttons ) {
     array_push( $buttons, 'events', 'lbgs', 'lbgs_map' );
+
     return $buttons;
 }
 

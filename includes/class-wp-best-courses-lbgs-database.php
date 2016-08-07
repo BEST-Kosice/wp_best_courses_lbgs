@@ -19,7 +19,14 @@ class Database {
     //Plugin version of the database, any change here immediately upgrades database of all plugin users
     const TARGET_PLUGIN_DB_VERSION = 1;
 
-    //Use these constants as table names when possible, be DRY. In future, enums may be created.
+    //Prefix for all plugin options
+    const OPTION_BASE_PREFIX = 'best_courses_lbgs_';
+
+    //Plugin options
+    const OPTION_NAME_PLUGIN_DB_VERSION = 'best_courses_lbgs_plugin_db_version';
+    const OPTION_NAME_PLUGIN_DB_UPGRADE_DISABLED = 'best_courses_lbgs_plugin_db_upgrade_disabled';
+
+    //Use these constants as table names when possible, be DRY. Add table prefix. In future, enums may be created.
     const BEST_EVENTS_TABLE = 'best_events';
     const BEST_LBGS_TABLE = 'best_lbg';
     const BEST_HISTORY_TABLE = 'best_history';
@@ -32,13 +39,11 @@ class Database {
      * switch case for the previous version.
      *
      * Database of all users will go through the required steps based on their currently installed version.
-     *
-     * @return void
      */
     public static function upgrade_database() {
         //Thinking about the future: if at any point we add this "feature" and then user rolls back to old version,
         //we don't want to break his entire database
-        if ( get_option( 'plugin_db_upgrade_disabled', false ) ) {
+        if ( get_option( self::OPTION_NAME_PLUGIN_DB_UPGRADE_DISABLED, false ) ) {
             return;
         }
 
@@ -48,15 +53,15 @@ class Database {
 
         //If the current version is already higher (mostly after development),
         //it simply gets lowered to prevent anomalies
-        if ( get_option( 'plugin_db_version', 0 ) > self::TARGET_PLUGIN_DB_VERSION ) {
-            update_option( 'plugin_db_version', self::TARGET_PLUGIN_DB_VERSION );
+        if ( get_option( self::OPTION_NAME_PLUGIN_DB_VERSION, 0 ) > self::TARGET_PLUGIN_DB_VERSION ) {
+            update_option( self::OPTION_NAME_PLUGIN_DB_VERSION, self::TARGET_PLUGIN_DB_VERSION );
             $log( 'Detected too large database version, setting down to ' . self::TARGET_PLUGIN_DB_VERSION );
 
             return;
         }
 
         //Upgrades the database towards the currently installed plugin version
-        while ( ( $current_db_version = get_option( 'plugin_db_version', 0 ) )
+        while ( ( $current_db_version = get_option( self::OPTION_NAME_PLUGIN_DB_VERSION, 0 ) )
                 < self::TARGET_PLUGIN_DB_VERSION
         ) {
             switch ( $current_db_version ) {
@@ -67,17 +72,17 @@ class Database {
                     self::create_all_tables();
                     self::refresh_db_best_events( 'automatic' );
                     self::refresh_db_best_lbgs( 'automatic' );
-                    update_option( 'plugin_db_version', self::TARGET_PLUGIN_DB_VERSION );
+                    update_option( self::OPTION_NAME_PLUGIN_DB_VERSION, self::TARGET_PLUGIN_DB_VERSION );
                     $log( 'Database initialization: installed version ' . self::TARGET_PLUGIN_DB_VERSION );
                     break;
             }
 
             //Implicitly increases version by 1 after each step, unless there was an explicit external change
-            if ( $current_db_version == get_option( 'plugin_db_version', 0 ) &&
+            if ( $current_db_version == get_option( self::OPTION_NAME_PLUGIN_DB_VERSION, 0 ) &&
                  $current_db_version < self::TARGET_PLUGIN_DB_VERSION
             ) {
-                update_option( 'plugin_db_version', ++ $current_db_version );
-                $log( 'Upgraded version from ' . ($current_db_version - 1) . ' to ' . $current_db_version );
+                update_option( self::OPTION_NAME_PLUGIN_DB_VERSION, ++ $current_db_version );
+                $log( 'Upgraded version from ' . ( $current_db_version - 1 ) . ' to ' . $current_db_version );
             }
         }
     }
@@ -178,7 +183,7 @@ SQL;
         )
         ) {
             //Removes the stored plugin version setting, next time the DB has to be re-initialized
-            update_option( 'plugin_db_version', 0 );
+            update_option( self::OPTION_NAME_PLUGIN_DB_VERSION, 0 );
         } else {
             self::log_error( $request_type, 'meta', 'Dropping tables', $wpdb->last_query, $wpdb->last_error );
         }
@@ -210,7 +215,7 @@ SQL;
         }
 
         global $wpdb;
-        $table_name = esc_sql( $wpdb->prefix . 'best_history' );
+        $table_name = esc_sql( $wpdb->prefix . Database::BEST_HISTORY_TABLE );
 
         return $wpdb->query(
             $wpdb->prepare(
@@ -245,7 +250,7 @@ SQL;
         }
 
         global $wpdb;
-        $table_name = esc_sql( $wpdb->prefix . 'best_history' );
+        $table_name = esc_sql( $wpdb->prefix . Database::BEST_HISTORY_TABLE );
 
         $result = $wpdb->query(
             $wpdb->prepare(
@@ -432,6 +437,7 @@ SQL;
     public static function count_db_table_rows( $table_name_no_prefix ) {
         global $wpdb;
         $table_name = esc_sql( "{$wpdb->prefix}$table_name_no_prefix" );
+
         return $wpdb->get_var(
             "SELECT count(*) FROM $table_name"
         );

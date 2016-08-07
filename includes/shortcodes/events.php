@@ -2,7 +2,7 @@
 // echo the shortcode
 // tu príde tabuľka kurzov
 //
-if (!defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 

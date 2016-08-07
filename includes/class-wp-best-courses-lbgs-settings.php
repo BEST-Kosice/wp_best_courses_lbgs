@@ -2,7 +2,9 @@
 
 use best\kosice\Database;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 class wp_best_courses_lbgs_Settings {
 
@@ -38,23 +40,25 @@ class wp_best_courses_lbgs_Settings {
 	 */
 	public $settings = array();
 
-	public function __construct ( $parent ) {
-		$this->parent = $parent;
+    public function __construct( $parent ) {
+        $this->parent = $parent;
 
-		$this->base = 'wpt_';
+        $this->base = Database::OPTION_BASE_PREFIX;
 
-		// Initialise settings
-		add_action( 'init', array( $this, 'init_settings' ), 11 );
+        // Initialise settings
+        add_action( 'init', array( $this, 'init_settings' ), 11 );
 
-		// Register plugin settings
-		add_action( 'admin_init' , array( $this, 'register_settings' ) );
+        // Register plugin settings
+        add_action( 'admin_init', array( $this, 'register_settings' ) );
 
-		// Add settings page to menu
-		add_action( 'admin_menu' , array( $this, 'add_best_db_settings_page' ) );
+        // Add settings page to menu
+        add_action( 'admin_menu', array( $this, 'add_best_db_settings_page' ) );
 
-		// Add settings link to plugins page
-		add_filter( 'plugin_action_links_' . plugin_basename( $this->parent->file ) , array( $this, 'add_settings_link' ) );
-	}
+        // Add settings link to plugins page
+        add_filter( 'plugin_action_links_' . plugin_basename( $this->parent->file )
+            , array( $this, 'add_settings_link' )
+        );
+    }
 
 	/**
 	 * Initialise settings
@@ -177,7 +181,7 @@ class wp_best_courses_lbgs_Settings {
                     'label'			=> __( 'Display success', 'wp-best-courses-lbgs' ),
                     'description'	=> __( 'Shows successful operations in the history table.', 'wp-best-courses-lbgs' ),
                     'type'			=> 'checkbox',
-                    'default'		=> ''
+                    'default'		=> 'on'
                 ),
                 array(
                     'id' 			=> 'automatic_refresh',
@@ -375,12 +379,15 @@ class wp_best_courses_lbgs_Settings {
      */
     private function updates_history_table( $target = null, $html_class = null ) {
         global $wpdb;
-        $history_max_displayed_rows = get_option( 'number_of_displayed_rows', 50 );
-        $table_name                 = esc_sql( "{$wpdb->prefix}best_history" );
+        $history_max_displayed_rows = get_option( Database::OPTION_BASE_PREFIX . 'history_max_displayed_rows', 50 );
+        $display_history_success    = get_option( Database::OPTION_BASE_PREFIX . 'display_history_success', true );
+        $table_name                 = esc_sql( $wpdb->prefix . Database::BEST_HISTORY_TABLE );
 
         $history_rows = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT * FROM $table_name WHERE target LIKE %s ORDER BY time DESC LIMIT %d"
+                "SELECT * FROM $table_name WHERE target LIKE %s "
+                . ( $display_history_success ? "" : "AND error_message IS NOT null " )
+                . "ORDER BY time DESC LIMIT %d"
                 , $target == null ? '%' : $target
                 , $history_max_displayed_rows
             ), ARRAY_A
@@ -389,8 +396,8 @@ class wp_best_courses_lbgs_Settings {
         //TODO consider logging error of the table select query in the table itself?
         $html = '';
         if ( $history_rows === null ) {
-            $html .= "<p>Problem with history table: {$wpdb->last_error}".
-                     "<br/>The requested query was: {$wpdb->last_query}</p>";
+            $html .= "<p>Problem with history table: {$wpdb->last_error}"
+                     . "<br/>The requested query was: {$wpdb->last_query}</p>";
         }
 
         $html .= '<table';
@@ -404,27 +411,46 @@ class wp_best_courses_lbgs_Settings {
         //TODO translate later on
         $html .= '<th>Čas aktualizácie</th>';
         $html .= '<th>Typ aktualizácie</th>';
-        $html .= '<th>Cieľ operácie</th>';
         $html .= '<th>Operácia</th>';
-        $html .= '<th>Požiadavka</th>';
+        //$html .= '<th>Požiadavka</th>';
         $html .= '<th>Výsledok</th>';
         $html .= '</tr>';
 
         foreach ( $history_rows as $history ) {
             $html .= '<tr>';
+
+            //Time
             $html .= '<td>' . $history['time'] . '</td>';
-            $html .= '<td>' . $history['request_type'] . '</td>';
-            $html .= '<td>' . $history['target'] . '</td>';
+
+            //Request type
+            $request_type = $history['request_type'];
+            switch ( $request_type ) {
+                case 'automatic':
+                    $request_type = 'Automatická';
+                    break;
+                case 'manual':
+                    $request_type = 'Manuálna';
+                    break;
+            }
+            $html .= '<td>' . $request_type . '</td>';
+
+            //Operation
             $html .= '<td>' . $history['operation'] . '</td>';
-            //TODO: hide attempted_request under something like modal window -
-            //it has to be accessible, but is too large to be displayed by default
-            $html .= '<td>' . $history['attempted_request'] . '</td>';
+
+            //Attempted request has to be accessible, but is too large to be displayed by default
+            //$html .= '<td>' . $history['attempted_request'] . '</td>';
+
+            //Result
             $error_message = $history['error_message'];
-            $html .= '<td>' . ( $error_message == null ? 'OK' : $error_message ) . '</td>';
+            $html .= '<td title="' . esc_attr( $history['attempted_request'] ) . '">'
+                     . ( $error_message == null ? 'OK' : $error_message )
+                     . '</td>';
+
             $html .= '</tr>';
         }
 
         $html .= '</table>';
+
         return $html;
     }
 
