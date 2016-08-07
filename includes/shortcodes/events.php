@@ -10,7 +10,6 @@ wp_best_courses_lbgs()->enqueue_styles();
 wp_best_courses_lbgs()->enqueue_scripts();
 
 // TODO add translation string
-// TODO podmienka ak niesú žiadne kurzy nezobraz žiadne
 ?>
 
 <?php
@@ -86,9 +85,9 @@ wp_best_courses_lbgs()->enqueue_scripts();
 
     if ($data) :
     ?>
-
+    <h2>BEST learning events</h2>
     <p>Pre zobrazenie stránky prihlásenia na daný kurz klikni na názov kurzu.</p>
-    <table id="courses_table" data-sortable>
+    <table class="best-events js-best-events" data-sortable>
         <thead>
             <tr>
                 <th width="10%">
@@ -109,21 +108,6 @@ wp_best_courses_lbgs()->enqueue_scripts();
                     <div class="fa fa-caret-down"></div>
                     <div class="fa fa-caret-up"></div>
                 </th>
-                <?php /*
-                <th width="10%">
-                    <div><span>Štát</span></div>
-                    <div class="fa fa-fw fa-sort"></div>
-                    <div class="fa fa-caret-down"></div>
-                    <div class="fa fa-caret-up"></div>
-                </th>
-                <th width="15%">
-                    <div><span>Deadline prihlásenia</span></div>
-                    <div class="fa fa-fw fa-sort"></div>
-                    <div class="fa fa-caret-down"></div>
-                    <div class="fa fa-caret-up"></div>
-                </th>
-                */
-                ?>
                 <th width="10%">
                     <div><span>Cena</span></div>
                     <div class="fa fa-fw fa-sort"></div>
