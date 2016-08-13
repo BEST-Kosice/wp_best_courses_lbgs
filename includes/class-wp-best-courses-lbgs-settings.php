@@ -385,7 +385,7 @@ class wp_best_courses_lbgs_Settings {
 
         // Displays an updates history table
         $html .= '<hr />';
-        $html .= $this->updates_history_table( $target );
+        $html .= $this->updates_history_table( $target, 'history_table' );
 
         $html .= '</div>' . "\n";
 
