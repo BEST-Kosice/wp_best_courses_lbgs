@@ -52,11 +52,10 @@ function wp_unschedule_cron_events_by_name( $event_name ) {
  * Refreshes BEST database tables
  */
 function wp_best_courses_lbgs_cron_task() {
-    $option_name_automatic_refresh =
-        Database::OPTION_BASE_PREFIX . wp_best_courses_lbgs_Settings::OPTION_NAME_AUTOMATIC_REFRESH;
-
     // If the user did not explicitly disable automatic refresh, the database gets refreshed
-    if ( get_option( $option_name_automatic_refresh, true ) ) {
+    if ( get_option( Database::OPTION_BASE_PREFIX . wp_best_courses_lbgs_Settings::OPTION_NAME_AUTOMATIC_REFRESH
+        , wp_best_courses_lbgs_Settings::OPTION_DEFAULT_AUTOMATIC_REFRESH )
+    ) {
         Database::refresh_db_best_events( 'automatic' );
         Database::refresh_db_best_lbgs( 'automatic' );
     }
@@ -198,14 +197,14 @@ function wptuts_register_buttons( $buttons ) {
  *    (Is not currently being used for anything and may be removed later)
  */
 function wp_best_courses_lbgs_init() {
-    //Always attempts to upgrade the database version
+    // Always attempts to upgrade the database version
     Database::upgrade_database();
 
     add_filter( "mce_external_plugins", "wptuts_add_buttons" );
     add_filter( 'mce_buttons', 'wptuts_register_buttons' );
 
     register_post_type( 'best-events',
-        //Custom post request_type options
+        // Custom post request_type options
         array(
             'labels' => array(
                 'name'          => __( 'BEST Events' ),
@@ -214,14 +213,14 @@ function wp_best_courses_lbgs_init() {
             'public'          => true,
             //'has_archive'     => true,
 
-            //Hiding from the user administration view
+            // Hiding from the user administration view
             'show_ui'         => false,
 
             'capability_type' => 'page',
             'hierarchical'	  => false,
             //'hierarchical'    => true,
 
-            //Rewriting path in the address bar
+            // Rewriting path in the address bar
             'rewrite' => array(
                 'slug'		 	=> '/',
                 'with_front'	=> true
@@ -236,7 +235,6 @@ function wp_best_courses_lbgs_init() {
     );
 }
 
-//Hooking up initialization function
 add_action( 'init', 'wp_best_courses_lbgs_init' );
 
 

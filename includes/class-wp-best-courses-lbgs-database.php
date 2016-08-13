@@ -1,21 +1,52 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Steve
+ * User: scscgit
  * Date: 06.08.2016
- * Time: 18:35
  */
 
-//TODO reconsider namespace
+//TODO reconsider namespace, e.g.: best\kosice\best_courses_lbgs for all classes
 namespace best\kosice;
-
-use best\kosice\datalib\best_kosice_data;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+use best\kosice\datalib\best_kosice_data;
+
+/**
+ * Enum for request_type field of Database::log_success() and Database::log_error().
+ * Type of the operation request.
+ *
+ * @package best\kosice
+ * @see Database::log_success, Database::log_error
+ */
+abstract class LogRequestType {
+    const MANUAL = 'manual';
+    const AUTOMATIC = 'automatic';
+}
+
+/**
+ * Enum for target field of Database::log_success() and Database::log_error().
+ * The event where the operation was performed or where the error occurred.
+ *
+ * @package best\kosice
+ * @see Database::log_success, Database::log_error
+ */
+abstract class LogTarget {
+    const EVENTS = 'events_db';
+    const LBGS = 'lbgs_db';
+    const META = 'meta';
+}
+
+/**
+ * Static class for Database operations within the plugin.
+ *
+ * @package best\kosice
+ * @author scscgit
+ */
 class Database {
+
     // Plugin version of the database, any change here immediately upgrades database of all plugin users
     const TARGET_PLUGIN_DB_VERSION = 1;
 
@@ -48,7 +79,7 @@ class Database {
         }
 
         $log = function ( $attempted_request ) {
-            self::log_success( 'automatic', 'meta', 'Database upgrade', $attempted_request );
+            self::log_success( 'automatic', LogTarget::META, 'Database upgrade', $attempted_request );
         };
 
         // If the current version is already higher (mostly after development),
@@ -96,13 +127,18 @@ class Database {
      * <https://codex.wordpress.org/Function_Reference/wpdb_Class>
      * <https://codex.wordpress.org/Creating_Tables_with_Plugins>
      *
-     * @param $request_type string type of the operation request, can be 'automatic' or 'manual'
+     * @param $request_type string type of the operation request, use enum class LogRequestType
+     *
+     * @see LogRequestType
      */
-    public static function create_all_tables( $request_type = 'automatic' ) {
+    public static function create_all_tables( $request_type = LogRequestType::AUTOMATIC ) {
         global $wpdb;
+        $events_table  = self::BEST_EVENTS_TABLE;
+        $lbgs_table    = self::BEST_LBGS_TABLE;
+        $history_table = self::BEST_HISTORY_TABLE;
 
         $sql_events = <<< SQL
-CREATE TABLE IF NOT EXISTS {$wpdb->prefix}best_events (
+CREATE TABLE IF NOT EXISTS {$wpdb->prefix}{$events_table} (
 id_event int(11) NOT NULL AUTO_INCREMENT,
 event_name varchar(100) NOT NULL,
 place varchar(40) NOT NULL,
@@ -118,7 +154,7 @@ SQL;
 
         //TODO rename lbg to lbgs for consistency (but I don't want to ruin current dbs of developers, maybe some patch?)
         $sql_lbgs = <<< SQL
-CREATE TABLE IF NOT EXISTS {$wpdb->prefix}best_lbg (
+CREATE TABLE IF NOT EXISTS {$wpdb->prefix}{$lbgs_table} (
 id_lbg int(11) NOT NULL AUTO_INCREMENT,
 city varchar(50) NOT NULL,
 state varchar(50) NOT NULL,
@@ -129,7 +165,7 @@ SQL;
 
         //TODO possibly decide on a better name (and purpose) for this table
         $sql_history = <<< SQL
-CREATE TABLE IF NOT EXISTS {$wpdb->prefix}best_history (
+CREATE TABLE IF NOT EXISTS {$wpdb->prefix}{$history_table} (
 id_history int(11) NOT NULL AUTO_INCREMENT,
 time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 request_type varchar(50) NOT NULL CHECK(request_type IN('automatic', 'manual', 'unknown')),
@@ -145,30 +181,32 @@ SQL;
         $operation = 'Table creation';
 
         if ( $wpdb->query( $sql_history ) ) {
-            self::log_success( $request_type, 'meta', $operation, $wpdb->last_query );
+            self::log_success( $request_type, LogTarget::META, $operation, $wpdb->last_query );
         } else {
-            self::log_error( $request_type, 'meta', $operation, $wpdb->last_query, $wpdb->last_error );
+            self::log_error( $request_type, LogTarget::META, $operation, $wpdb->last_query, $wpdb->last_error );
         }
 
         if ( $wpdb->query( $sql_events ) ) {
-            self::log_success( $request_type, 'events_db', $operation, $wpdb->last_query );
+            self::log_success( $request_type, LogTarget::EVENTS, $operation, $wpdb->last_query );
         } else {
-            self::log_error( $request_type, 'events_db', $operation, $wpdb->last_query, $wpdb->last_error );
+            self::log_error( $request_type, LogTarget::EVENTS, $operation, $wpdb->last_query, $wpdb->last_error );
         }
 
         if ( $wpdb->query( $sql_lbgs ) ) {
-            self::log_success( $request_type, 'lbgs_db', $operation, $wpdb->last_query );
+            self::log_success( $request_type, LogTarget::LBGS, $operation, $wpdb->last_query );
         } else {
-            self::log_error( $request_type, 'lbgs_db', $operation, $wpdb->last_query, $wpdb->last_error );
+            self::log_error( $request_type, LogTarget::LBGS, $operation, $wpdb->last_query, $wpdb->last_error );
         }
     }
 
     /**
      * Deletes all plugin tables from the database.
      *
-     * @param $request_type string type of the operation request, can be 'automatic' or 'manual'
+     * @param $request_type string type of the operation request, use enum class LogRequestType
+     *
+     * @see LogRequestType
      */
-    public static function drop_all_tables( $request_type = 'automatic' ) {
+    public static function drop_all_tables( $request_type = LogRequestType::AUTOMATIC ) {
         global $wpdb;
 
         if ( $wpdb->query( 'DROP TABLE IF EXISTS '
@@ -182,7 +220,7 @@ SQL;
             // Removes the stored plugin version setting, next time the DB has to be re-initialized
             update_option( self::OPTION_NAME_PLUGIN_DB_VERSION, 0 );
         } else {
-            self::log_error( $request_type, 'meta', 'Dropping tables', $wpdb->last_query, $wpdb->last_error );
+            self::log_error( $request_type, LogTarget::META, 'Dropping tables', $wpdb->last_query, $wpdb->last_error );
         }
     }
 
@@ -191,11 +229,13 @@ SQL;
      * (If it becomes useful, it may even get its own class with enum like $target...)
      * @see wp_best_courses_lbgs_log_success
      *
-     * @param $request_type string type of the operation request, can be 'automatic' or 'manual'
-     * @param $target string the event where the error occurred, can be 'events_db', 'lbgs_db' or 'meta'
+     * @param $request_type string type of the operation request, use enum class LogRequestType
+     * @param $target string the event where the error occurred, use enum class LogTarget
      * @param $operation string description of the action that is being performed
      * @param $attempted_request string request that has caused the error
      * @param $error_message string explanation of the problem that happened
+     *
+     * @see LogRequestType, LogTarget
      *
      * @return int|false false on logging error
      */
@@ -233,10 +273,12 @@ SQL;
      * (If it becomes useful, it may even get its own class with enum like $target...)
      * @see wp_best_courses_lbgs_log_error
      *
-     * @param $request_type string type of the operation request, can be 'automatic' or 'manual'
-     * @param $target string the event where the operation was performed, can be 'events_db', 'lbgs_db' or 'meta'
+     * @param $request_type string type of the operation request, use enum class LogRequestType
+     * @param $target string the event where the operation was performed, use enum class LogTarget
      * @param $operation string description of the action that is being performed
      * @param $attempted_request string the successfully executed request
+     *
+     * @see LogRequestType, LogTarget
      *
      * @return int|false false on logging error, which is also logged (if possible)
      */
@@ -263,7 +305,7 @@ SQL;
 
         // Logging the error
         if ( $result === false ) {
-            self::log_error( $request_type, 'meta', 'Logging success', $wpdb->last_query, $wpdb->last_error );
+            self::log_error( $request_type, LogTarget::META, 'Logging success', $wpdb->last_query, $wpdb->last_error );
             // Error during logging the error of logging success will not be logged or returned. Is this too meta?
         }
 
@@ -271,14 +313,17 @@ SQL;
     }
 
     /**
-     * Replaces table's contents in the database by new content, taking care of anomalies that can happen and logging them.
+     * Replaces table's contents in the database by new content,
+     * taking care of anomalies that can happen and logging them.
      *
      * @param $table_name string name of the table to be replaced
-     * @param $request_type string type of the operation request, can be 'automatic' or 'manual'
-     * @param $target string the event where the operation was performed, can be 'events_db', 'lbgs_db' or 'meta'
+     * @param $request_type string type of the operation request, use enum class LogRequestType
+     * @param $target string the event where the operation was performed, use enum class LogTarget
      * @param $operation string description of the action that is being performed
      * @param $insert callable {@param $table_name string @return string insert query}
      *        returns the sql-safe insert query to be run
+     *
+     * @see LogRequestType, LogTarget
      *
      * @return bool true on success, false on failure
      */
@@ -319,7 +364,9 @@ SQL;
     /**
      * Refreshes the state of the BEST Events database table using parser data.
      *
-     * @param $request_type string type of the operation request, can be 'automatic' or 'manual'
+     * @param $request_type string type of the operation request, use enum class LogRequestType
+     *
+     * @see LogRequestType
      *
      * @return bool true on success, false on failure
      */
@@ -329,12 +376,12 @@ SQL;
         $courses = $parser->courses();
 
         // Used logger values
-        $target    = 'events_db';
+        $target    = LogTarget::EVENTS;
         $operation = 'Refreshing table using parser';
 
         if ( $courses['learning']['data'] ) {
             // Replaces the table by new insert data based on the callback using function which logs the result
-            return self::replace_db_table( 'best_events', $request_type, $target, $operation,
+            return self::replace_db_table( self::BEST_EVENTS_TABLE, $request_type, $target, $operation,
                 function ( $table_name ) use ( $courses ) {
                     if ( $table_name == null ) {
                         return null;
@@ -379,7 +426,9 @@ SQL;
     /**
      * Refreshes the state of the BEST Local Best Groups database table using parser data.
      *
-     * @param $request_type string type of the operation request, can be 'automatic' or 'manual'
+     * @param $request_type string type of the operation request, use enum class LogRequestType
+     *
+     * @see LogRequestType
      *
      * @return bool true on success, false on failure
      */
@@ -389,12 +438,12 @@ SQL;
         $lbgs   = $parser->lbgs();
 
         // Used logger values
-        $target    = 'lbgs_db';
+        $target    = LogTarget::LBGS;
         $operation = 'Refreshing table using parser';
 
         if ( $lbgs ) {
             // Replaces the table by new insert data based on the callback using function which logs the result
-            return self::replace_db_table( 'best_lbg', $request_type, $target, $operation,
+            return self::replace_db_table( self::BEST_LBGS_TABLE, $request_type, $target, $operation,
                 function ( $table_name ) use ( $lbgs ) {
                     if ( $table_name == null ) {
                         return null;
