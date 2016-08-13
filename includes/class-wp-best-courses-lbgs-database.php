@@ -337,36 +337,38 @@ SQL;
 
         if ( $courses['learning']['data'] ) {
             //Replaces the table by new insert data based on the callback using function which logs the result
-            return self::replace_db_table( 'best_events', $request_type, $target, $operation, function ( $table_name ) use ( $courses ) {
-                if ( $table_name == null ) {
-                    return null;
-                }
+            return self::replace_db_table( 'best_events', $request_type, $target, $operation,
+                function ( $table_name ) use ( $courses ) {
+                    if ( $table_name == null ) {
+                        return null;
+                    }
 
-                $insert_query = "INSERT INTO $table_name (event_name, login_url, place, dates, event_type, acad_compl, fee) VALUES ";
+                    $insert_query =
+                        "INSERT INTO $table_name (event_name, login_url, place, dates, event_type, acad_compl, fee) VALUES ";
 
-                //Inserts new entries
-                foreach ( $courses['learning']['data'] as $course ) {
-                    //Next row
-                    $insert_query .= '(' .
-                                     //event_name
-                                     "'" . esc_sql( $course[0] ) . "'," .
-                                     //login_url
-                                     "'" . esc_sql( $course[1] ) . "'," .
-                                     //place
-                                     "'" . esc_sql( $course[2] ) . "'," .
-                                     //dates
-                                     "'" . esc_sql( $course[3] ) . "'," .
-                                     //event_type
-                                     "'" . esc_sql( $course[4] ) . "'," .
-                                     //acad_compl
-                                     "'" . esc_sql( $course[5] ) . "'," .
-                                     //fee
-                                     "'" . esc_sql( $course[6] ) . "'" .
-                                     '),';
-                }
+                    //Inserts new entries
+                    foreach ( $courses['learning']['data'] as $course ) {
+                        //Next row
+                        $insert_query .= '(' .
+                                         //event_name
+                                         "'" . esc_sql( $course[0] ) . "'," .
+                                         //login_url
+                                         "'" . esc_sql( $course[1] ) . "'," .
+                                         //place
+                                         "'" . esc_sql( $course[2] ) . "'," .
+                                         //dates
+                                         "'" . esc_sql( $course[3] ) . "'," .
+                                         //event_type
+                                         "'" . esc_sql( $course[4] ) . "'," .
+                                         //acad_compl
+                                         "'" . esc_sql( $course[5] ) . "'," .
+                                         //fee
+                                         "'" . esc_sql( $course[6] ) . "'" .
+                                         '),';
+                    }
 
-                return rtrim( $insert_query, ',' );
-            } );
+                    return rtrim( $insert_query, ',' );
+                } );
         } else {
             self::log_error( $request_type, $target, $operation
                 , 'Requesting courses from parser'
@@ -395,28 +397,29 @@ SQL;
 
         if ( $lbgs ) {
             //Replaces the table by new insert data based on the callback using function which logs the result
-            return self::replace_db_table( 'best_lbg', $request_type, $target, $operation, function ( $table_name ) use ( $lbgs ) {
-                if ( $table_name == null ) {
-                    return null;
-                }
+            return self::replace_db_table( 'best_lbg', $request_type, $target, $operation,
+                function ( $table_name ) use ( $lbgs ) {
+                    if ( $table_name == null ) {
+                        return null;
+                    }
 
-                $insert_query = "INSERT INTO $table_name (web_page, city, state) VALUES ";
+                    $insert_query = "INSERT INTO $table_name (web_page, city, state) VALUES ";
 
-                //Inserts new entries
-                foreach ( $lbgs as $lbg ) {
-                    //Next row
-                    $insert_query .= '(' .
-                                     //web_page
-                                     "'" . esc_sql( $lbg[0] ) . "'," .
-                                     //city
-                                     "'" . esc_sql( $lbg[2] ) . "'," .
-                                     //state
-                                     "'" . esc_sql( $lbg[1] ) . "'" .
-                                     '),';
-                }
+                    //Inserts new entries
+                    foreach ( $lbgs as $lbg ) {
+                        //Next row
+                        $insert_query .= '(' .
+                                         //web_page
+                                         "'" . esc_sql( $lbg[0] ) . "'," .
+                                         //city
+                                         "'" . esc_sql( $lbg[2] ) . "'," .
+                                         //state
+                                         "'" . esc_sql( $lbg[1] ) . "'" .
+                                         '),';
+                    }
 
-                return rtrim( $insert_query, ',' );
-            } );
+                    return rtrim( $insert_query, ',' );
+                } );
         } else {
             self::log_error( $request_type, $target, $operation
                 , 'Requesting courses from parser'
