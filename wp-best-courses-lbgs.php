@@ -34,25 +34,32 @@ use best\kosice\Database;
  * wp_clear_scheduled_hook('best_courses_lbgs_cron_task');
  * wp_unschedule_event(wp_next_scheduled('best_courses_lbgs_cron_task'),'best_courses_lbgs_cron_task');
  */
-function WPUnscheduleEventsByName( $strEventName ) {
-    $arrCronEvents = _get_cron_array();
-    foreach ( $arrCronEvents as $nTimeStamp => $arrEvent ) {
-        if ( isset( $arrCronEvents[ $nTimeStamp ][ $strEventName ] ) ) {
-            unset( $arrCronEvents[ $nTimeStamp ] );
+function wp_unschedule_cron_events_by_name( $event_name ) {
+    $cron_events = _get_cron_array();
+    foreach ( $cron_events as $nTimeStamp => $arrEvent ) {
+        if ( isset( $cron_events[ $nTimeStamp ][ $event_name ] ) ) {
+            unset( $cron_events[ $nTimeStamp ] );
         }
     }
-    _set_cron_array( $arrCronEvents );
+    _set_cron_array( $cron_events );
 }
 
 /**
  * Cron periodical (hourly) event of this plugin.
+ * Is also run in the plugin activation event.
  *
  * List of actions:
  * Refreshes BEST database tables
  */
 function wp_best_courses_lbgs_cron_task() {
-    Database::refresh_db_best_events( 'automatic' );
-    Database::refresh_db_best_lbgs( 'automatic' );
+    $option_name_automatic_refresh =
+        Database::OPTION_BASE_PREFIX . wp_best_courses_lbgs_Settings::OPTION_NAME_AUTOMATIC_REFRESH;
+
+    // If the user did not explicitly disable automatic refresh, the database gets refreshed
+    if ( get_option( $option_name_automatic_refresh, true ) ) {
+        Database::refresh_db_best_events( 'automatic' );
+        Database::refresh_db_best_lbgs( 'automatic' );
+    }
 }
 
 add_action( 'best_courses_lbgs_cron_task', 'wp_best_courses_lbgs_cron_task' );
@@ -63,17 +70,16 @@ add_action( 'best_courses_lbgs_cron_task', 'wp_best_courses_lbgs_cron_task' );
  * List of actions:
  * 1. Schedules cron events
  * 2. Attempts to upgrade the database and then creates any missing SQL tables
- * 3. Refreshes BEST databases
+ * 3. Runs the cron event to refresh the BEST database
  */
 function wp_best_courses_lbgs_activation() {
     wp_schedule_event( time(), 'hourly', 'best_courses_lbgs_cron_task' );
 
-    //Attempts to upgrade the database version before creating any missing tables
+    // Attempts to upgrade the database version before creating any missing tables
     Database::upgrade_database();
     Database::create_all_tables();
 
-    Database::refresh_db_best_events( 'automatic' );
-    Database::refresh_db_best_lbgs( 'automatic' );
+    wp_best_courses_lbgs_cron_task();
 }
 
 register_activation_hook( __FILE__, 'wp_best_courses_lbgs_activation' );
@@ -85,7 +91,7 @@ register_activation_hook( __FILE__, 'wp_best_courses_lbgs_activation' );
  * 1. Removes cron scheduling
  */
 function wp_best_courses_lbgs_deactivation() {
-    WPUnscheduleEventsByName( 'best_courses_lbgs_cron_task' );
+    wp_unschedule_cron_events_by_name( 'best_courses_lbgs_cron_task' );
 }
 
 register_deactivation_hook( __FILE__, 'wp_best_courses_lbgs_deactivation' );
@@ -98,7 +104,6 @@ register_deactivation_hook( __FILE__, 'wp_best_courses_lbgs_deactivation' );
  */
 function wp_best_courses_lbgs() {
     $instance = wp_best_courses_lbgs::instance( __FILE__, '1.0.0' );
-
     if ( is_null( $instance->settings ) ) {
         $instance->settings = wp_best_courses_lbgs_Settings::instance( $instance );
     }

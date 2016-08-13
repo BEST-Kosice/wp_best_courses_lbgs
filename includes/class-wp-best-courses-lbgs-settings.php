@@ -12,6 +12,11 @@ const PLUGIN_NAME = 'wp-best-courses-lbgs';
 //TODO: consider renaming to Settings and add namespace, should not cause collisions if within namespace
 class wp_best_courses_lbgs_Settings {
 
+    //Plugin option names without prefix
+    const OPTION_NAME_HISTORY_DISPLAY_MAX_ROWS = 'history_max_displayed_rows';
+    const OPTION_NAME_HISTORY_DISPLAY_SUCCESS = 'display_history_success';
+    const OPTION_NAME_AUTOMATIC_REFRESH = 'automatic_refresh';
+
     /**
      * The single instance of wp_best_courses_lbgs_Settings.
      * @var     object
@@ -165,27 +170,27 @@ class wp_best_courses_lbgs_Settings {
             'description' => null,
             'fields'      => array(
                 array(
-                    'id'          => 'history_max_displayed_rows',
+                    'id'          => self::OPTION_NAME_HISTORY_DISPLAY_MAX_ROWS,
                     'label'       => __( 'Displayed rows', PLUGIN_NAME ),
-                    'description' => __( 'Maximum number of rows in the history (under all tabs) to be displayed at once.'
-                        , PLUGIN_NAME ),
+                    'description' => __( 'Maximum number of rows in the history (under all tabs) to be displayed at once' .
+                                         '.', PLUGIN_NAME ),
                     'type'        => 'number',
                     'default'     => '',
                     'placeholder' => __( '42', PLUGIN_NAME )
                 ),
                 array(
-                    'id'          => 'display_history_success',
+                    'id'          => self::OPTION_NAME_HISTORY_DISPLAY_SUCCESS,
                     'label'       => __( 'Display success', PLUGIN_NAME ),
-                    'description' => __( 'Shows successful operations in the history table.', PLUGIN_NAME ),
+                    'description' => __( 'Shows successful operations in the history table', PLUGIN_NAME ) . '.',
                     'type'        => 'checkbox',
                     'default'     => 'on'
                 ),
                 array(
-                    'id'          => 'automatic_refresh',
+                    'id'          => self::OPTION_NAME_AUTOMATIC_REFRESH,
                     'label'       => __( 'Automatic refresh', PLUGIN_NAME ),
-                    'description' => __( 'Allows database to be updated in regular intervals.', PLUGIN_NAME ),
+                    'description' => __( 'Allows database to be updated in regular intervals', PLUGIN_NAME ) . '.',
                     'type'        => 'checkbox',
-                    'default'     => ''
+                    'default'     => 'on'
                 ),
             )
         );
@@ -391,8 +396,10 @@ class wp_best_courses_lbgs_Settings {
      */
     private function updates_history_table( $target = null, $html_class = null ) {
         global $wpdb;
-        $history_max_displayed_rows = get_option( Database::OPTION_BASE_PREFIX . 'history_max_displayed_rows', 50 );
-        $display_history_success    = get_option( Database::OPTION_BASE_PREFIX . 'display_history_success', true );
+        $history_max_displayed_rows = get_option( Database::OPTION_BASE_PREFIX .
+                                                  self::OPTION_NAME_HISTORY_DISPLAY_MAX_ROWS, 50 );
+        $display_history_success    = get_option( Database::OPTION_BASE_PREFIX .
+                                                  self::OPTION_NAME_HISTORY_DISPLAY_SUCCESS, true );
         $table_name                 = esc_sql( $wpdb->prefix . Database::BEST_HISTORY_TABLE );
 
         $history_rows = $wpdb->get_results(
