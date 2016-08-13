@@ -14,7 +14,6 @@ wp_best_courses_lbgs()->enqueue_scripts();
 
 <?php
     global $wpdb;
-
     $data = $wpdb->get_results('SELECT * FROM '.$wpdb->prefix.'best_events', ARRAY_A);
 
     $num_rows = $wpdb->num_rows;
