@@ -3,228 +3,180 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: BEST Košice 1.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/style\n"
-"POT-Creation-Date: 2016-03-20 23:43:31+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-best-courses-"
+"lbgs\n"
+"POT-Creation-Date: 2016-08-14 13:19+0200\n"
+"PO-Revision-Date: 2016-08-14 13:22+0200\n"
+"Last-Translator: Daniel Demečko <daniel@demecko.com>\n"
+"Language-Team: \n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-06-02 20:22+0100\n"
-"Last-Translator: Daniel Demečko <daniel@demecko.com>\n"
-"Language-Team: \n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.8\n"
 "X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;"
 "_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;"
 "esc_html_x:1,2c\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-Basepath: ../\n"
+"X-Poedit-Basepath: ..\n"
 "X-Textdomain-Support: yes\n"
-"Language: sk\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: 404.php:20
-msgid "404 Page can&rsquo;t be found."
+#: includes/class-wp-best-courses-lbgs-admin-api.php:162
+msgid "Upload an image"
 msgstr ""
 
-#: 404.php:24
-msgid ""
-"It looks like nothing was found at this location. Return to home page to "
-"continue."
+#: includes/class-wp-best-courses-lbgs-admin-api.php:162
+msgid "Use image"
 msgstr ""
 
-#: comments.php:40 comments.php:61
-msgid "Comment navigation"
+#: includes/class-wp-best-courses-lbgs-admin-api.php:162
+msgid "Upload new image"
 msgstr ""
 
-#: comments.php:43 comments.php:64
-msgid "Older Comments"
+#: includes/class-wp-best-courses-lbgs-admin-api.php:163
+msgid "Remove image"
 msgstr ""
 
-#: comments.php:44 comments.php:65
-msgid "Newer Comments"
+#: includes/class-wp-best-courses-lbgs-settings.php:94
+#: includes/class-wp-best-courses-lbgs-settings.php:307
+msgid "Správa BEST databázy"
 msgstr ""
 
-#: comments.php:78
-msgid "Comments are closed."
+#: includes/class-wp-best-courses-lbgs-settings.php:95
+msgid "BEST DB admin"
 msgstr ""
 
-#: footer.php:25
-msgid ""
-"Board of European Students of Technology is a constantly growing non-profit "
-"and non-political organisation. Since 1989 we provide communication, co-"
-"operation and exchange possibilities for students all over Europe."
+#: includes/class-wp-best-courses-lbgs-settings.php:137
+msgid "Settings"
+msgstr "Nastavenia"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:150
+msgid "BEST events"
 msgstr ""
 
-#: footer.php:35
-msgid "Blog"
+#: includes/class-wp-best-courses-lbgs-settings.php:151
+msgid "Our events."
 msgstr ""
 
-#: footer.php:59
-msgid "No posts"
+#: includes/class-wp-best-courses-lbgs-settings.php:164
+msgid "Lokálne BEST skupiny"
 msgstr ""
 
-#: footer.php:70
-msgid "Contact"
+#: includes/class-wp-best-courses-lbgs-settings.php:165
+msgid "Our groups."
 msgstr ""
 
-#: functions.php:51
-msgid "Header"
+#: includes/class-wp-best-courses-lbgs-settings.php:178
+msgid "Configuration"
+msgstr "Konfigurácia"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:183
+msgid "Displayed rows"
+msgstr "Zobrazené riadky"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:192
+msgid "Display success"
+msgstr "Zobrazovať úspech"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:193
+msgid "Shows successful operations in the history table"
 msgstr ""
 
-#: functions.php:52
-msgid "Footer"
+#: includes/class-wp-best-courses-lbgs-settings.php:199
+msgid "Automatic refresh"
+msgstr "Automatické obnovenie"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:200
+msgid "Allows database to be updated in regular intervals"
 msgstr ""
 
-#: functions.php:109
-msgid "Sidebar"
+#: includes/class-wp-best-courses-lbgs-settings.php:350
+msgid "Aktuálny počet lokálnych BEST skupín v tabuľke"
 msgstr ""
 
-#: functions.php:202
-msgid "Share on Facebook"
+#: includes/class-wp-best-courses-lbgs-settings.php:351
+msgid "Aktuálny počet eventov v tabuľke"
 msgstr ""
 
-#: home.php:30
-msgid "Leaders of tomorrow are born today."
+#: includes/class-wp-best-courses-lbgs-settings.php:368
+msgid "Save Settings"
+msgstr "Uložiť Nastavenia"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:374
+msgid "Update groups"
+msgstr "Aktualizovať skupiny"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:375
+msgid "Update events"
+msgstr "Aktualizovať eventy"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:429
+msgid "Problem with history table"
 msgstr ""
 
-#: home.php:34
-msgid "Became one"
+#: includes/class-wp-best-courses-lbgs-settings.php:430
+msgid "The requested query was"
 msgstr ""
 
-#: home.php:43
-msgid "Educate yourself, explore Europe and experience impossible."
+#: includes/class-wp-best-courses-lbgs-settings.php:444
+msgid "Čas aktualizácie"
 msgstr ""
 
-#: home.php:47
-msgid "Apply for courses"
+#: includes/class-wp-best-courses-lbgs-settings.php:445
+msgid "Typ aktualizácie"
 msgstr ""
 
-#: home.php:74
-msgid "University"
+#: includes/class-wp-best-courses-lbgs-settings.php:446
+msgid "Operation"
 msgstr ""
 
-#: home.php:83
-msgid ""
-"Active participation in discussion about issues relating to higher "
-"engineering education in Europe.Promote your university to thousands of "
-"internationally minded students across Europe. Bringing new knowledge and "
-"international experience for university students."
+#: includes/class-wp-best-courses-lbgs-settings.php:447
+msgid "Result"
 msgstr ""
 
-#: home.php:88
-msgid "Students"
+#: includes/class-wp-best-courses-lbgs-settings.php:475
+msgid "OK"
+msgstr "OK"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:511
+#: includes/class-wp-best-courses-lbgs-settings.php:520
+#: includes/class-wp-best-courses-lbgs.php:263
+#: includes/class-wp-best-courses-lbgs.php:272
+msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: home.php:97
-msgid ""
-"With more than 70 academic courses, 10 leisure events, 2 general meetings, 8 "
-"workshops, 12 committee meetings, job fairs, case studies, cultural "
-"exchanges, training events, regional meetings, there is hardly a weekend "
-"during which the BEST world takes a rest."
+#: wp-best-courses-lbgs.php:212
+msgid "BEST Events"
+msgstr "BEST Eventy"
+
+#: wp-best-courses-lbgs.php:213
+msgid "BEST Event"
 msgstr ""
 
-#: home.php:102
-msgid "Companies"
-msgstr ""
-
-#: home.php:111
-msgid ""
-"BEST is actively present in 96 technical universities spread in 33 "
-"countries, where it acts as a bridge between universities, their students "
-"and the industry. For doing so, we develop different projects that aim at "
-"offering, for instance, international complementary education events, "
-"training opportunities or career support to our members and all the students "
-"of our universities."
-msgstr ""
-
-#: home.php:143
-msgid "News"
-msgstr ""
-
-#: home.php:190
-msgid "Read more"
-msgstr ""
-
-#: home.php:212
-msgid "Write your e-mail ..."
-msgstr ""
-
-#: home.php:215
-msgid "Subscribe"
-msgstr ""
-
-#: home.php:226
-msgid "Our proud parners"
-msgstr ""
-
-#. translators: %s: Name of current post
-#: inc/template-tags.php:74 template-parts/content-page.php:33
-msgid "Edit %s"
-msgstr ""
-
-#: search.php:20
-msgid "Search Results for: %s"
-msgstr ""
-
-#: template-parts/content-none.php:14
-msgid "Nothing Found"
-msgstr ""
-
-#: template-parts/content-none.php:21
-msgid ""
-"Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
-msgstr ""
-
-#: template-parts/content-none.php:25
-msgid ""
-"Sorry, but nothing matched your search terms. Please try again with some "
-"different keywords."
-msgstr ""
-
-#: template-parts/content-none.php:31
-msgid ""
-"It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps "
-"searching can help."
-msgstr ""
-
-#: template-parts/content-page.php:22
-msgid "Pages:"
-msgstr ""
-
-#. translators: %s: Name of current post.
-#: template-parts/content.php:33
-msgid "Continue reading %s <span class=\"meta-nav\">&rarr;</span>"
-msgstr ""
-
-#. Theme Name of the plugin/theme
-msgid "BEST Košice"
-msgstr ""
-
-#. Theme URI of the plugin/theme
-msgid "http://underscores.me/"
-msgstr ""
-
-#. Description of the plugin/theme
-msgid "Description"
-msgstr ""
-
-#. Author of the plugin/theme
-msgid "Daniel Demečko"
+#. Plugin Name of the plugin/theme
+msgid "wp_best_courses_lbgs"
 msgstr ""
 
 #. Author URI of the plugin/theme
-msgid "http://www.demecko.com/"
+msgid "http://www.best.tuke.sk/"
 msgstr ""
 
-#. Template Name of the plugin/theme
-msgid "Contact page template */"
+#. Description of the plugin/theme
+msgid "This is your starter template for your next WordPress plugin."
 msgstr ""
 
-#. Template Name of the plugin/theme
-msgid "Full width Template */"
+#. Author of the plugin/theme
+msgid "BEST AJ TY"
 msgstr ""
 
-#: inc/template-tags.php:29
-msgctxt "post date"
-msgid "Posted on %s"
-msgstr ""
+#: includes/class-wp-best-courses-lbgs-settings.php:460
+msgctxt "update type"
+msgid "Automatic"
+msgstr "Automatická"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:463
+msgctxt "update type"
+msgid "Manual"
+msgstr "Manuálna"

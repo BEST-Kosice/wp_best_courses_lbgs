@@ -17,15 +17,15 @@
  * @since 1.0.0
  */
 
+use best\kosice\Database;
+use best\kosice\LogRequestType;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 // Load composer
 require_once( 'vendor/autoload.php' );
-
-use best\kosice\Database;
-use best\kosice\LogRequestType;
 
 /**
  * This function removes registered WP Cron events by a specified event name.

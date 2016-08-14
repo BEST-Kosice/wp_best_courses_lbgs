@@ -8,11 +8,11 @@
 //TODO reconsider namespace, e.g.: best\kosice\best_courses_lbgs for all classes
 namespace best\kosice;
 
+use best\kosice\datalib\best_kosice_data;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-
-use best\kosice\datalib\best_kosice_data;
 
 /**
  * Enum for request_type field of Database::log_success() and Database::log_error().

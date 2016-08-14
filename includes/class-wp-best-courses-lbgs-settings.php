@@ -2,6 +2,7 @@
 
 use best\kosice\Database;
 use best\kosice\LogRequestType;
+use best\kosice\LogTarget;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -174,7 +175,7 @@ class wp_best_courses_lbgs_Settings {
         );
 
         $settings['configuration'] = array(
-            'title'       => __( 'Konfigurácia', PLUGIN_NAME ),
+            'title'       => __( 'Configuration', PLUGIN_NAME ),
             'description' => null,
             'fields'      => array(
                 array(
@@ -423,11 +424,12 @@ class wp_best_courses_lbgs_Settings {
             ), ARRAY_A
         );
 
-        //TODO consider logging error of the table select query in the table itself?
         $html = '';
         if ( $history_rows === null ) {
             $html .= "<p>" . __( 'Problem with history table', PLUGIN_NAME ) . ": {$wpdb->last_error}"
                      . "<br/>" . __( 'The requested query was', PLUGIN_NAME ) . ": {$wpdb->last_query}</p>";
+            Database::log_error( LogTarget::META, LogRequestType::AUTOMATIC
+                , 'Displaying history table', $wpdb->last_query, $wpdb->last_error );
         }
 
         $html .= '<table';
@@ -441,8 +443,8 @@ class wp_best_courses_lbgs_Settings {
 
         $html .= '<th>' . __( 'Čas aktualizácie', PLUGIN_NAME ) . '</th>';
         $html .= '<th>' . __( 'Typ aktualizácie', PLUGIN_NAME ) . '</th>';
-        $html .= '<th>' . __( 'Operácia', PLUGIN_NAME ) . '</th>';
-        $html .= '<th>' . __( 'Výsledok', PLUGIN_NAME ) . '</th>';
+        $html .= '<th>' . __( 'Operation', PLUGIN_NAME ) . '</th>';
+        $html .= '<th>' . __( 'Result', PLUGIN_NAME ) . '</th>';
         $html .= '</tr>';
 
         foreach ( $history_rows as $history ) {
@@ -477,7 +479,6 @@ class wp_best_courses_lbgs_Settings {
 
             $html .= '</tr>';
         }
-
         $html .= '</table>';
 
         return $html;
