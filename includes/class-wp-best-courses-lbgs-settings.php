@@ -288,6 +288,11 @@ class wp_best_courses_lbgs_Settings {
                 $target = 'lbgs_db';
                 break;
             case 'configuration':
+                //Checks for the request for erasing the DB
+                if ( isset( $_POST['erase_db'] ) ) {
+                    Database::erase_table( Database::BEST_EVENTS_TABLE, LogRequestType::MANUAL );
+                    Database::erase_table( Database::BEST_LBGS_TABLE, LogRequestType::MANUAL );
+                }
                 $target = 'meta';
                 break;
         }
@@ -359,6 +364,19 @@ class wp_best_courses_lbgs_Settings {
                     $html .= '</p>' . "\n";
                 }
             $html .= '</form>' . "\n";
+
+            // Additional configuration button for development purposes to erase the database
+            if($tab == 'configuration') {
+                $html .= '<form method="post">' . "\n";
+                    $html .= '<p class="submit">' . "\n";
+                        $html .= '<input type="hidden" name="tab" value="' . esc_attr( $tab ) . '" />' . "\n";
+                        $confirmation =
+                            esc_attr__( 'Are you sure you want to delete contents of all plugin tables?', PLUGIN_NAME );
+                        $html .= '<input name="erase_db" type="submit" class="button-primary" value="Erase DB" '
+                                 . 'onclick="return confirm(\'' . $confirmation . '\')" />' . "\n";
+                    $html .= '</p>' . "\n";
+                $html .= '</form>' . "\n";
+            }
 
             $manual_update_button_text = $tab == 'lbgs'
                 ? __( 'Update groups', PLUGIN_NAME )

@@ -493,4 +493,21 @@ SQL;
             "SELECT count(*) FROM $table_name"
         );
     }
+
+    /**
+     * Erases table contents in the database.
+     *
+     * @param $table_name_no_prefix string name of the table without prefix to be erased
+     * @param $request_type string type of the operation request, use enum class LogRequestType
+     */
+    public static function erase_table( $table_name_no_prefix, $request_type ) {
+        global $wpdb;
+        $table_name = esc_sql( "{$wpdb->prefix}$table_name_no_prefix" );
+        $operation  = "Erasing a table";
+        if ( $wpdb->query( "TRUNCATE TABLE $table_name" ) ) {
+            Database::log_success( $request_type, LogTarget::META, $operation, $wpdb->last_query );
+        } else {
+            Database::log_error( $request_type, LogTarget::META, $operation, $wpdb->last_query, $wpdb->last_error );
+        }
+    }
 }
