@@ -25,6 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once( 'vendor/autoload.php' );
 
 use best\kosice\Database;
+use best\kosice\LogRequestType;
 
 /**
  * This function removes registered WP Cron events by a specified event name.
@@ -36,9 +37,9 @@ use best\kosice\Database;
  */
 function wp_unschedule_cron_events_by_name( $event_name ) {
     $cron_events = _get_cron_array();
-    foreach ( $cron_events as $nTimeStamp => $arrEvent ) {
-        if ( isset( $cron_events[ $nTimeStamp ][ $event_name ] ) ) {
-            unset( $cron_events[ $nTimeStamp ] );
+    foreach ( $cron_events as $n_timestamp => $arr_event ) {
+        if ( isset( $cron_events[ $n_timestamp ][ $event_name ] ) ) {
+            unset( $cron_events[ $n_timestamp ] );
         }
     }
     _set_cron_array( $cron_events );
@@ -56,8 +57,8 @@ function wp_best_courses_lbgs_cron_task() {
     if ( get_option( Database::OPTION_BASE_PREFIX . wp_best_courses_lbgs_Settings::OPTION_NAME_AUTOMATIC_REFRESH
         , wp_best_courses_lbgs_Settings::OPTION_DEFAULT_AUTOMATIC_REFRESH )
     ) {
-        Database::refresh_db_best_events( 'automatic' );
-        Database::refresh_db_best_lbgs( 'automatic' );
+        Database::refresh_db_best_events( LogRequestType::AUTOMATIC );
+        Database::refresh_db_best_lbgs( LogRequestType::AUTOMATIC );
     }
 }
 
@@ -117,6 +118,7 @@ wp_best_courses_lbgs();
  * Source: <http://stackoverflow.com/questions/1683771/execute-a-php-file-and-return-the-result-as-a-string>
  *
  * @param $php_file string PHP file to be run
+ *
  * @return string PHP result as HTML, that is supposed to be displayed in the browser
  */
 function run_php_file_for_html( $php_file ) {
@@ -206,27 +208,27 @@ function wp_best_courses_lbgs_init() {
     register_post_type( 'best-events',
         // Custom post request_type options
         array(
-            'labels' => array(
+            'labels'  => array(
                 'name'          => __( 'BEST Events' ),
                 'singular_name' => __( 'BEST Event' )
             ),
-            'public'          => true,
+            'public'  => true,
             //'has_archive'     => true,
 
             // Hiding from the user administration view
-            'show_ui'         => false,
+            'show_ui' => false,
 
             'capability_type' => 'page',
-            'hierarchical'	  => false,
+            'hierarchical'    => false,
             //'hierarchical'    => true,
 
             // Rewriting path in the address bar
-            'rewrite' => array(
-                'slug'		 	=> '/',
-                'with_front'	=> true
+            'rewrite'         => array(
+                'slug'       => '/',
+                'with_front' => true
             ),
 
-            'supports'        => array(
+            'supports' => array(
                 //'title',
                 //'editor',
                 //'custom-fields',

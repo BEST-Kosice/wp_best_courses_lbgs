@@ -79,7 +79,7 @@ class Database {
         }
 
         $log = function ( $attempted_request ) {
-            self::log_success( 'automatic', LogTarget::META, 'Database upgrade', $attempted_request );
+            self::log_success( LogRequestType::AUTOMATIC, LogTarget::META, 'Database upgrade', $attempted_request );
         };
 
         // If the current version is already higher (mostly after development),
@@ -101,8 +101,8 @@ class Database {
                 case 0:
                     self::drop_all_tables();
                     self::create_all_tables();
-                    self::refresh_db_best_events( 'automatic' );
-                    self::refresh_db_best_lbgs( 'automatic' );
+                    self::refresh_db_best_events( LogRequestType::AUTOMATIC );
+                    self::refresh_db_best_lbgs( LogRequestType::AUTOMATIC );
                     update_option( self::OPTION_NAME_PLUGIN_DB_VERSION, self::TARGET_PLUGIN_DB_VERSION );
                     $log( 'Database initialization: installed version ' . self::TARGET_PLUGIN_DB_VERSION );
                     break;
@@ -180,6 +180,7 @@ SQL;
         // Querying and error handling
         $operation = 'Table creation';
 
+        //TODO: stop logging when table already existed (query still returns 1)
         if ( $wpdb->query( $sql_history ) ) {
             self::log_success( $request_type, LogTarget::META, $operation, $wpdb->last_query );
         } else {

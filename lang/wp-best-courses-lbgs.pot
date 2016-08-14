@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: wp_best_courses_lbgs 1.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-best-courses-lbgs\n"
-"POT-Creation-Date: 2016-06-25 22:07:35+00:00\n"
+"POT-Creation-Date: 2016-08-14 10:26:01+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25,325 +25,136 @@ msgstr ""
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
 
-#: includes/class-wp-best-courses-lbgs-settings.php:192
-msgid "42"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:70
-#: includes/class-wp-best-courses-lbgs-settings.php:283
-msgid "Plugin Settings"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:101
-msgid "Settings"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:113
-msgid "Season Events"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:114
-msgid "These are fairly standard form input fields."
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:118
-msgid "Some Text"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:119
-msgid "This is a standard text field."
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:122
-#: includes/class-wp-best-courses-lbgs-settings.php:130
-#: includes/class-wp-best-courses-lbgs-settings.php:138
-msgid "Placeholder text"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:126
-msgid "A Password"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:127
-msgid "This is a standard password field."
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:134
-msgid "Some Secret Text"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:135
-msgid ""
-"This is a secret text field - any data saved here will not be displayed "
-"after the page has reloaded, but it will be saved."
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:142
-msgid "A Text Block"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:143
-msgid "This is a standard text area."
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:146
-msgid "Placeholder text for this textarea"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:150
-msgid "An Option"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:151
-msgid ""
-"A standard checkbox - if you save this option as checked then it will store "
-"the option as 'on', otherwise it will be an empty string."
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:157
-msgid "A Select Box"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:158
-msgid "A standard select box."
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:165
-msgid "Some Options"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:166
-msgid "A standard set of radio buttons."
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:173
-msgid "Some Items"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:174
-msgid "You can select multiple items and they will be stored as an array."
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:183
-msgid "Extra"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:184
-msgid "These are some extra input fields that maybe aren't as common as the others."
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:188
-msgid "A Number"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:189
-msgid ""
-"This is a standard number field - if this field contains anything other "
-"than numbers then the form will not be submitted."
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:196
-msgid "Pick a colour"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:197
-msgid ""
-"This uses WordPress' built-in colour picker - the option is stored as the "
-"colour's hex code."
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:203
-msgid "An Image"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:204
-msgid ""
-"This will upload an image to your media library and store the attachment ID "
-"in the option field. Once you have uploaded an imge the thumbnail will "
-"display above these buttons."
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:211
-msgid "A Multi-Select Box"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:212
-msgid "A standard multi-select box - the saved data is stored as an array."
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:335
-msgid "Save Settings"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:366
-#: includes/class-wp-best-courses-lbgs-settings.php:375
-#: includes/class-wp-best-courses-lbgs.php:246
-#: includes/class-wp-best-courses-lbgs.php:255
-msgid "Cheatin&#8217; huh?"
-msgstr ""
-
-#: includes/lib/class-wp-best-courses-lbgs-admin-api.php:161
+#: includes/class-wp-best-courses-lbgs-admin-api.php:162
 msgid "Upload an image"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-admin-api.php:161
+#: includes/class-wp-best-courses-lbgs-admin-api.php:162
 msgid "Use image"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-admin-api.php:161
+#: includes/class-wp-best-courses-lbgs-admin-api.php:162
 msgid "Upload new image"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-admin-api.php:162
+#: includes/class-wp-best-courses-lbgs-admin-api.php:163
 msgid "Remove image"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:77
-#: includes/lib/class-wp-best-courses-lbgs-taxonomy.php:79
-msgid "Add New %s"
+#: includes/class-wp-best-courses-lbgs-settings.php:93
+#: includes/class-wp-best-courses-lbgs-settings.php:306
+msgid "Správa BEST databázy"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:78
-#: includes/lib/class-wp-best-courses-lbgs-taxonomy.php:76
-msgid "Edit %s"
+#: includes/class-wp-best-courses-lbgs-settings.php:94
+msgid "BEST DB admin"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:79
-msgid "New %s"
+#: includes/class-wp-best-courses-lbgs-settings.php:136
+msgid "Settings"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:80
-#: includes/lib/class-wp-best-courses-lbgs-taxonomy.php:75
-msgid "All %s"
+#: includes/class-wp-best-courses-lbgs-settings.php:149
+msgid "BEST events"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:81
-#: includes/lib/class-wp-best-courses-lbgs-taxonomy.php:77
-msgid "View %s"
+#: includes/class-wp-best-courses-lbgs-settings.php:150
+msgid "Our events."
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:82
-#: includes/lib/class-wp-best-courses-lbgs-taxonomy.php:83
-msgid "Search %s"
+#: includes/class-wp-best-courses-lbgs-settings.php:163
+msgid "Lokálne BEST skupiny"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:83
-msgid "No %s Found"
+#: includes/class-wp-best-courses-lbgs-settings.php:164
+msgid "Our groups."
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:84
-msgid "No %s Found In Trash"
+#: includes/class-wp-best-courses-lbgs-settings.php:177
+msgid "Konfigurácia"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:85
-#: includes/lib/class-wp-best-courses-lbgs-taxonomy.php:81
-msgid "Parent %s"
+#: includes/class-wp-best-courses-lbgs-settings.php:182
+msgid "Displayed rows"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:124
-msgid "%1$s updated. %2$sView %3$s%4$s."
+#: includes/class-wp-best-courses-lbgs-settings.php:191
+msgid "Display success"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:125
-msgid "Custom field updated."
+#: includes/class-wp-best-courses-lbgs-settings.php:192
+msgid "Shows successful operations in the history table"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:126
-msgid "Custom field deleted."
+#: includes/class-wp-best-courses-lbgs-settings.php:198
+msgid "Automatic refresh"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:127
-msgid "%1$s updated."
+#: includes/class-wp-best-courses-lbgs-settings.php:199
+msgid "Allows database to be updated in regular intervals"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:128
-msgid "%1$s restored to revision from %2$s."
+#: includes/class-wp-best-courses-lbgs-settings.php:349
+msgid "Aktuálny počet lokálnych BEST skupín v tabuľke"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:129
-msgid "%1$s published. %2$sView %3$s%4s."
+#: includes/class-wp-best-courses-lbgs-settings.php:350
+msgid "Aktuálny počet eventov v tabuľke"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:130
-msgid "%1$s saved."
+#: includes/class-wp-best-courses-lbgs-settings.php:367
+msgid "Save Settings"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:131
-msgid "%1$s submitted. %2$sPreview post%3$s%4$s."
+#: includes/class-wp-best-courses-lbgs-settings.php:373
+msgid "Update groups"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:132
-msgid "%1$s scheduled for: %2$s. %3$sPreview %4$s%5$s."
+#: includes/class-wp-best-courses-lbgs-settings.php:374
+msgid "Update events"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:132
-msgid "M j, Y @ G:i"
+#: includes/class-wp-best-courses-lbgs-settings.php:429
+msgid "Problem with history table"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:133
-msgid "%1$s draft updated. %2$sPreview %3$s%4$s."
+#: includes/class-wp-best-courses-lbgs-settings.php:430
+msgid "The requested query was"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:148
-msgid "%1$s %2$s updated."
-msgid_plural "%1$s %3$s updated."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:149
-msgid "%1$s %2$s not updated, somebody is editing it."
-msgid_plural "%1$s %3$s not updated, somebody is editing them."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:150
-msgid "%1$s %2$s permanently deleted."
-msgid_plural "%1$s %3$s permanently deleted."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:151
-msgid "%1$s %2$s moved to the Trash."
-msgid_plural "%1$s %3$s moved to the Trash."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/lib/class-wp-best-courses-lbgs-post-type.php:152
-msgid "%1$s %2$s restored from the Trash."
-msgid_plural "%1$s %3$s restored from the Trash."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/lib/class-wp-best-courses-lbgs-taxonomy.php:78
-msgid "Update %s"
+#: includes/class-wp-best-courses-lbgs-settings.php:442
+msgid "Čas aktualizácie"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-taxonomy.php:80
-msgid "New %s Name"
+#: includes/class-wp-best-courses-lbgs-settings.php:443
+msgid "Typ aktualizácie"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-taxonomy.php:82
-msgid "Parent %s:"
+#: includes/class-wp-best-courses-lbgs-settings.php:444
+msgid "Operácia"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-taxonomy.php:84
-msgid "Popular %s"
+#: includes/class-wp-best-courses-lbgs-settings.php:445
+msgid "Výsledok"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-taxonomy.php:85
-msgid "Separate %s with commas"
+#: includes/class-wp-best-courses-lbgs-settings.php:473
+msgid "OK"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-taxonomy.php:86
-msgid "Add or remove %s"
+#: includes/class-wp-best-courses-lbgs-settings.php:510
+#: includes/class-wp-best-courses-lbgs-settings.php:519
+#: includes/class-wp-best-courses-lbgs.php:263
+#: includes/class-wp-best-courses-lbgs.php:272
+msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-taxonomy.php:87
-msgid "Choose from the most used %s"
+#: wp-best-courses-lbgs.php:212
+msgid "BEST Events"
 msgstr ""
 
-#: includes/lib/class-wp-best-courses-lbgs-taxonomy.php:88
-msgid "No %s found"
+#: wp-best-courses-lbgs.php:213
+msgid "BEST Event"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
@@ -360,4 +171,14 @@ msgstr ""
 
 #. Author of the plugin/theme
 msgid "BEST AJ TY"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:458
+msgctxt "update type"
+msgid "Automatic"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:461
+msgctxt "update type"
+msgid "Manual"
 msgstr ""

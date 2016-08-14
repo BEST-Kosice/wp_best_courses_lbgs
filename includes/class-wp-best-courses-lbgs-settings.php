@@ -1,6 +1,7 @@
 <?php
 
 use best\kosice\Database;
+use best\kosice\LogRequestType;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -97,6 +98,7 @@ class wp_best_courses_lbgs_Settings {
             plugins_url( '../assets/images/BEST_DB_icon.png', __FILE__ ),
             110
         );
+        //add_action( 'admin_print_styles-' . $page, array( $this, 'settings_assets' ) );
     }
 
     /**
@@ -283,14 +285,14 @@ class wp_best_courses_lbgs_Settings {
             case 'events':
                 //Checks for the request for manually updating table
                 if ( isset( $_POST['manually_update'] ) ) {
-                    Database::refresh_db_best_events( 'manual' );
+                    Database::refresh_db_best_events( LogRequestType::MANUAL );
                 }
                 $target = 'events_db';
                 break;
             case 'lbgs':
                 //Checks for the request for manually updating table
                 if ( isset( $_POST['manually_update'] ) ) {
-                    Database::refresh_db_best_lbgs( 'manual' );
+                    Database::refresh_db_best_lbgs( LogRequestType::MANUAL );
                 }
                 $target = 'lbgs_db';
                 break;
@@ -362,14 +364,14 @@ class wp_best_courses_lbgs_Settings {
                     $html .= '<p class="submit">' . "\n";
                         $html .= '<input type="hidden" name="tab" value="' . esc_attr( $tab ) . '" />' . "\n";
                         $html .= '<input name="Submit" type="submit" class="button-primary" value="' .
-                                 esc_attr( __( 'Save Settings', PLUGIN_NAME ) ) . '" />' . "\n";
+                                 esc_attr__( 'Save Settings', PLUGIN_NAME ) . '" />' . "\n";
                     $html .= '</p>' . "\n";
                 }
             $html .= '</form>' . "\n";
 
             $manual_update_button_text = $tab == 'lbgs'
-                ? __( 'Aktualizovať skupiny', PLUGIN_NAME )
-                : __( 'Aktualizovať eventy', PLUGIN_NAME );
+                ? __( 'Update groups', PLUGIN_NAME )
+                : __( 'Update events', PLUGIN_NAME );
 
             // Form for manual database update
             if($tab != 'configuration') {
@@ -452,11 +454,11 @@ class wp_best_courses_lbgs_Settings {
             // Request type
             $request_type = $history['request_type'];
             switch ( $request_type ) {
-                case 'automatic':
-                    $request_type = __( 'Automatická', PLUGIN_NAME );
+                case LogRequestType::AUTOMATIC:
+                    $request_type = _x( 'Automatic', 'update type', PLUGIN_NAME );
                     break;
-                case 'manual':
-                    $request_type = __( 'Manuálna', PLUGIN_NAME );
+                case LogRequestType::MANUAL:
+                    $request_type = _x( 'Manual', 'update type', PLUGIN_NAME );
                     break;
             }
             $html .= '<td>' . $request_type . '</td>';
