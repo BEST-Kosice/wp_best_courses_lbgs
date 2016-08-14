@@ -317,7 +317,7 @@ SQL;
      * Replaces table's contents in the database by new content,
      * taking care of anomalies that can happen and logging them.
      *
-     * @param $table_name string name of the table to be replaced
+     * @param $table_name_no_prefix string name of the table without prefix to be replaced
      * @param $request_type string type of the operation request, use enum class LogRequestType
      * @param $target string the event where the operation was performed, use enum class LogTarget
      * @param $operation string description of the action that is being performed
@@ -328,9 +328,10 @@ SQL;
      *
      * @return bool true on success, false on failure
      */
-    public static function replace_db_table( $table_name, $request_type, $target, $operation, callable $insert ) {
+    public static function replace_db_table( $table_name_no_prefix, $request_type, $target, $operation, callable $insert
+    ) {
         global $wpdb;
-        $table_name = esc_sql( "{$wpdb->prefix}$table_name" );
+        $table_name = esc_sql( "{$wpdb->prefix}$table_name_no_prefix" );
 
         // Runs the callback for insert query
         $insert_query = $insert( $table_name );
@@ -384,7 +385,7 @@ SQL;
             // Replaces the table by new insert data based on the callback using function which logs the result
             return self::replace_db_table( self::BEST_EVENTS_TABLE, $request_type, $target, $operation,
                 function ( $table_name ) use ( $courses ) {
-                    if ( $table_name == null ) {
+                    if ( ! $table_name ) {
                         return null;
                     }
 
@@ -469,7 +470,7 @@ SQL;
                 } );
         } else {
             self::log_error( $request_type, $target, $operation
-                , 'Requesting courses from parser'
+                , 'Requesting lbgs from parser'
                 , 'Returned no data: ' . $parser->error_message()
             );
 

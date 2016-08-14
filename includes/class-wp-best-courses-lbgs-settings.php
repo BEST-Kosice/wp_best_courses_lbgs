@@ -158,8 +158,8 @@ class wp_best_courses_lbgs_Settings {
                 array(
                     'id'          => self::OPTION_NAME_HISTORY_DISPLAY_MAX_ROWS,
                     'label'       => __( 'Displayed rows', PLUGIN_NAME ),
-                    'description' => __( 'Maximum number of rows in the history (under all tabs) to be displayed at once' .
-                                         '.', PLUGIN_NAME ),
+                    'description' => __( 'Maximum number of rows in the history (under all tabs) to be displayed at once'
+                            , PLUGIN_NAME ) . '.',
                     'type'        => 'number',
                     'default'     => self::OPTION_DEFAULT_HISTORY_DISPLAY_MAX_ROWS,
                     'placeholder' => 0,
@@ -187,22 +187,25 @@ class wp_best_courses_lbgs_Settings {
     }
 
     /**
-     * Register plugin settings, adding all setting fields using the prepared array to the page.
+     * Register plugin settings to be later rendered to the website using settings_page(),
+     * adding all setting fields using the prepared array to the page.
+     * @see settings_page()
      */
     public function register_settings() {
         if ( is_array( $this->settings ) ) {
             // Check posted/selected tab
-            $current_section = '';
             if ( isset( $_POST['tab'] ) && $_POST['tab'] ) {
                 $current_section = $_POST['tab'];
             } else if ( isset( $_GET['tab'] ) && $_GET['tab'] ) {
                 $current_section = $_GET['tab'];
+            } else {
+                $current_section = 'events';
             }
 
             // Register each individual setting section
             foreach ( $this->settings as $section => $data ) {
                 // Skip all non-current sections
-                if ( $current_section && $current_section != $section ) {
+                if ( $current_section != $section ) {
                     continue;
                 }
 
@@ -229,7 +232,8 @@ class wp_best_courses_lbgs_Settings {
                         add_settings_field( $field['id']
                             , $field['label']
                             , array( $this->parent->admin, 'display_field' )
-                            , $this->parent->_token . '_settings', $section
+                            , $this->parent->_token . '_settings'
+                            , $section
                             , array( 'field' => $field, 'prefix' => $this->base ) );
                     }
 
@@ -258,9 +262,10 @@ class wp_best_courses_lbgs_Settings {
      * Load settings page content.
      */
     public function settings_page() {
-        $tab = '';
         if ( isset( $_GET['tab'] ) && $_GET['tab'] ) {
             $tab = $_GET['tab'];
+        } else {
+            $tab = 'events';
         }
 
         // Set the correct history table $target based on a current tab
