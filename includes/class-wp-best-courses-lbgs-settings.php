@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-//TODO: move to a more suitable location to be statically called from all other files
+//TODO: move to a more suitable location, e.g. to a namespace to be statically called from all other files
 // Representation of the plugin for text translation purposes
 const PLUGIN_NAME = 'wp-best-courses-lbgs';
 
@@ -62,7 +62,7 @@ class wp_best_courses_lbgs_Settings {
 
         $this->base = Database::OPTION_BASE_PREFIX;
 
-        // Initialise settings
+        // Initialize settings
         add_action( 'init', array( $this, 'init_settings' ), 11 );
 
         // Register plugin settings
@@ -78,16 +78,14 @@ class wp_best_courses_lbgs_Settings {
     }
 
     /**
-     * Initialise settings
-     * @return void
+     * Initialize settings.
      */
     public function init_settings() {
         $this->settings = $this->settings_fields();
     }
 
     /**
-     * Add settings page to admin menu
-     * @return void
+     * Add settings page to admin menu.
      */
     public function add_best_db_settings_page() {
         $page = add_menu_page(
@@ -103,8 +101,7 @@ class wp_best_courses_lbgs_Settings {
     }
 
     /**
-     * Load settings JS & CSS
-     * @return void
+     * Load settings JS & CSS.
      */
     public function settings_assets() {
 
@@ -126,7 +123,7 @@ class wp_best_courses_lbgs_Settings {
     }
 
     /**
-     * Add settings link to plugin list table
+     * Add settings link to plugin list table.
      *
      * @param  array $links Existing links
      *
@@ -141,42 +138,22 @@ class wp_best_courses_lbgs_Settings {
     }
 
     /**
-     * Build settings fields
-     * @return array Fields to be displayed on settings page
+     * Build settings fields to be registered in register_settings().
+     * @see register_settings()
+     * @return array Fields to be displayed on the settings page
      */
     private function settings_fields() {
-
         $settings['events'] = array(
-            'title'       => __( 'BEST events', PLUGIN_NAME ),
-            'description' => __( 'Our events.', PLUGIN_NAME ),
-            'fields'      => array(
-                array(
-                    'id'          => 'removeme',
-                    'label'       => 'Delete me',
-                    'description' => 'Please delete me - if you can, that is. It breaks the WordPress.',
-                    'type'        => 'checkbox',
-                    'default'     => ''
-                )
-            ),
+            'title' => __( 'BEST events', PLUGIN_NAME ),
         );
 
         $settings['lbgs'] = array(
-            'title'       => __( 'Lokálne BEST skupiny', PLUGIN_NAME ),
-            'description' => __( 'Our groups.', PLUGIN_NAME ),
-            'fields'      => array(
-                array(
-                    'id'          => 'removeme',
-                    'label'       => 'Delete me',
-                    'description' => 'Please delete me - if you can, that is. It breaks the WordPress',
-                    'type'        => 'checkbox',
-                    'default'     => ''
-                )
-            )
+            'title' => __( 'Local BEST groups', PLUGIN_NAME ),
         );
 
         $settings['configuration'] = array(
             'title'       => __( 'Configuration', PLUGIN_NAME ),
-            'description' => null,
+            'description' => __( 'Plugin configuration section', PLUGIN_NAME ),
             'fields'      => array(
                 array(
                     'id'          => self::OPTION_NAME_HISTORY_DISPLAY_MAX_ROWS,
@@ -184,24 +161,24 @@ class wp_best_courses_lbgs_Settings {
                     'description' => __( 'Maximum number of rows in the history (under all tabs) to be displayed at once' .
                                          '.', PLUGIN_NAME ),
                     'type'        => 'number',
-                    'default'     => '',
-                    'placeholder' => self::OPTION_DEFAULT_HISTORY_DISPLAY_MAX_ROWS
+                    'default'     => self::OPTION_DEFAULT_HISTORY_DISPLAY_MAX_ROWS,
+                    'placeholder' => 0,
                 ),
                 array(
                     'id'          => self::OPTION_NAME_HISTORY_DISPLAY_SUCCESS,
                     'label'       => __( 'Display success', PLUGIN_NAME ),
                     'description' => __( 'Shows successful operations in the history table', PLUGIN_NAME ) . '.',
                     'type'        => 'checkbox',
-                    'default'     => self::OPTION_DEFAULT_HISTORY_DISPLAY_SUCCESS
+                    'default'     => self::OPTION_DEFAULT_HISTORY_DISPLAY_SUCCESS,
                 ),
                 array(
                     'id'          => self::OPTION_NAME_AUTOMATIC_REFRESH,
                     'label'       => __( 'Automatic refresh', PLUGIN_NAME ),
                     'description' => __( 'Allows database to be updated in regular intervals', PLUGIN_NAME ) . '.',
                     'type'        => 'checkbox',
-                    'default'     => self::OPTION_DEFAULT_AUTOMATIC_REFRESH
+                    'default'     => self::OPTION_DEFAULT_AUTOMATIC_REFRESH,
                 ),
-            )
+            ),
         );
 
         $settings = apply_filters( $this->parent->_token . '_settings_fields', $settings );
@@ -210,72 +187,80 @@ class wp_best_courses_lbgs_Settings {
     }
 
     /**
-     * Register plugin settings
-     * @return void
+     * Register plugin settings, adding all setting fields using the prepared array to the page.
      */
     public function register_settings() {
         if ( is_array( $this->settings ) ) {
-
             // Check posted/selected tab
             $current_section = '';
             if ( isset( $_POST['tab'] ) && $_POST['tab'] ) {
                 $current_section = $_POST['tab'];
-            } else {
-                if ( isset( $_GET['tab'] ) && $_GET['tab'] ) {
-                    $current_section = $_GET['tab'];
-                }
+            } else if ( isset( $_GET['tab'] ) && $_GET['tab'] ) {
+                $current_section = $_GET['tab'];
             }
 
+            // Register each individual setting section
             foreach ( $this->settings as $section => $data ) {
-
+                // Skip all non-current sections
                 if ( $current_section && $current_section != $section ) {
                     continue;
                 }
 
-                // Add section to page
-                add_settings_section( $section, $data['title']
-                    , array( $this, 'settings_section' )
+                // Add section displaying settings title and description to the page
+                add_settings_section( $section
+                    , null //$data['title']
+                    , array( $this, 'echo_settings_section_description' )
                     , $this->parent->_token . '_settings' );
 
-                foreach ( $data['fields'] as $field ) {
+                // Adds all setting fields to the settings page
+                if ( array_key_exists( 'fields', $data ) ) {
+                    foreach ( $data['fields'] as $field ) {
+                        // Validation callback for field
+                        $validation = '';
+                        if ( isset( $field['callback'] ) ) {
+                            $validation = $field['callback'];
+                        }
 
-                    // Validation callback for field
-                    $validation = '';
-                    if ( isset( $field['callback'] ) ) {
-                        $validation = $field['callback'];
+                        // Register field
+                        $option_name = $this->base . $field['id'];
+                        register_setting( $this->parent->_token . '_settings', $option_name, $validation );
+
+                        // Add field to page
+                        add_settings_field( $field['id']
+                            , $field['label']
+                            , array( $this->parent->admin, 'display_field' )
+                            , $this->parent->_token . '_settings', $section
+                            , array( 'field' => $field, 'prefix' => $this->base ) );
                     }
 
-                    // Register field
-                    $option_name = $this->base . $field['id'];
-                    register_setting( $this->parent->_token . '_settings', $option_name, $validation );
-
-                    // Add field to page
-                    add_settings_field( $field['id'], $field['label']
-                        , array( $this->parent->admin, 'display_field' )
-                        , $this->parent->_token . '_settings', $section
-                        , array( 'field' => $field, 'prefix' => $this->base ) );
-                }
-
-                if ( ! $current_section ) {
-                    break;
+                    if ( ! $current_section ) {
+                        break;
+                    }
                 }
             }
         }
     }
 
-    public function settings_section( $section ) {
-        $html = '<p> ' . $this->settings[ $section['id'] ]['description'] . '</p>' . "\n";
-        echo $html;
+    /**
+     * Echoes a settings section description if it exists.
+     *
+     * @param array $section section array containing 'id' key that references a setting
+     */
+    public function echo_settings_section_description( $section ) {
+        $setting = $description = $this->settings[ $section['id'] ];
+        if ( array_key_exists( 'description', $setting ) ) {
+            $description = $this->settings[ $section['id'] ]['description'];
+            echo '<p> ' . $description . '</p>' . "\n";
+        }
     }
 
     /**
-     * Load settings page content
-     * @return void
+     * Load settings page content.
      */
     public function settings_page() {
         $tab = '';
         if ( isset( $_GET['tab'] ) && $_GET['tab'] ) {
-            $tab .= $_GET['tab'];
+            $tab = $_GET['tab'];
         }
 
         // Set the correct history table $target based on a current tab
@@ -485,12 +470,11 @@ class wp_best_courses_lbgs_Settings {
     }
 
     /**
-     * Main wp_best_courses_lbgs_Settings Instance
+     * Main wp_best_courses_lbgs_Settings instance.
      *
      * Ensures only one instance of wp_best_courses_lbgs_Settings is loaded or can be loaded.
      *
      * @since 1.0.0
-     * @static
      * @see wp_best_courses_lbgs()
      * @return wp_best_courses_lbgs_Settings main instance
      */
