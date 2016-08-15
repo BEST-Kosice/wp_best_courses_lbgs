@@ -1,12 +1,13 @@
 <?php
-// echo the shortcode
-// tu príde tabuľka kurzov
-//
+
+use best\kosice\best_courses_lbgs\best_courses_lbgs;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-wp_best_courses_lbgs()->enqueue_styles();
-wp_best_courses_lbgs()->enqueue_scripts();
+
+best_courses_lbgs::instance()->enqueue_styles();
+best_courses_lbgs::instance()->enqueue_scripts();
 
 // TODO tu príde zoznam lbg 
 ?>

@@ -5,8 +5,7 @@
  * Date: 06.08.2016
  */
 
-//TODO reconsider namespace, e.g.: best\kosice\best_courses_lbgs for all classes
-namespace best\kosice;
+namespace best\kosice\best_courses_lbgs;
 
 use best\kosice\datalib\best_kosice_data;
 
@@ -18,8 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Enum for request_type field of Database::log_success() and Database::log_error().
  * Type of the operation request.
  *
- * @package best\kosice
- * @see Database::log_success, Database::log_error
+ * @package best\kosice\best_courses_lbgs
+ * @see     Database::log_success, Database::log_error
  */
 abstract class LogRequestType {
     const MANUAL = 'manual';
@@ -30,8 +29,8 @@ abstract class LogRequestType {
  * Enum for target field of Database::log_success() and Database::log_error().
  * The event where the operation was performed or where the error occurred.
  *
- * @package best\kosice
- * @see Database::log_success, Database::log_error
+ * @package best\kosice\best_courses_lbgs
+ * @see     Database::log_success, Database::log_error
  */
 abstract class LogTarget {
     const EVENTS = 'events_db';
@@ -42,8 +41,8 @@ abstract class LogTarget {
 /**
  * Static class for Database operations within the plugin.
  *
- * @package best\kosice
- * @author scscgit
+ * @package best\kosice\best_courses_lbgs
+ * @author  scscgit
  */
 class Database {
 
@@ -230,11 +229,11 @@ SQL;
      * (If it becomes useful, it may even get its own class with enum like $target...)
      * @see wp_best_courses_lbgs_log_success
      *
-     * @param $request_type string type of the operation request, use enum class LogRequestType
-     * @param $target string the event where the error occurred, use enum class LogTarget
-     * @param $operation string description of the action that is being performed
+     * @param $request_type      string type of the operation request, use enum class LogRequestType
+     * @param $target            string the event where the error occurred, use enum class LogTarget
+     * @param $operation         string description of the action that is being performed
      * @param $attempted_request string request that has caused the error
-     * @param $error_message string explanation of the problem that happened
+     * @param $error_message     string explanation of the problem that happened
      *
      * @see LogRequestType, LogTarget
      *
@@ -274,9 +273,9 @@ SQL;
      * (If it becomes useful, it may even get its own class with enum like $target...)
      * @see wp_best_courses_lbgs_log_error
      *
-     * @param $request_type string type of the operation request, use enum class LogRequestType
-     * @param $target string the event where the operation was performed, use enum class LogTarget
-     * @param $operation string description of the action that is being performed
+     * @param $request_type      string type of the operation request, use enum class LogRequestType
+     * @param $target            string the event where the operation was performed, use enum class LogTarget
+     * @param $operation         string description of the action that is being performed
      * @param $attempted_request string the successfully executed request
      *
      * @see LogRequestType, LogTarget
@@ -318,11 +317,11 @@ SQL;
      * taking care of anomalies that can happen and logging them.
      *
      * @param $table_name_no_prefix string name of the table without prefix to be replaced
-     * @param $request_type string type of the operation request, use enum class LogRequestType
-     * @param $target string the event where the operation was performed, use enum class LogTarget
-     * @param $operation string description of the action that is being performed
-     * @param $insert callable {@param $table_name string @return string insert query}
-     *        returns the sql-safe insert query to be run
+     * @param $request_type         string type of the operation request, use enum class LogRequestType
+     * @param $target               string the event where the operation was performed, use enum class LogTarget
+     * @param $operation            string description of the action that is being performed
+     * @param $insert               callable {@param $table_name string @return string insert query}
+     *                              returns the sql-safe insert query to be run
      *
      * @see LogRequestType, LogTarget
      *
@@ -498,7 +497,7 @@ SQL;
      * Erases table contents in the database.
      *
      * @param $table_name_no_prefix string name of the table without prefix to be erased
-     * @param $request_type string type of the operation request, use enum class LogRequestType
+     * @param $request_type         string type of the operation request, use enum class LogRequestType
      */
     public static function erase_table( $table_name_no_prefix, $request_type ) {
         global $wpdb;
@@ -510,4 +509,5 @@ SQL;
             Database::log_error( $request_type, LogTarget::META, $operation, $wpdb->last_query, $wpdb->last_error );
         }
     }
+
 }

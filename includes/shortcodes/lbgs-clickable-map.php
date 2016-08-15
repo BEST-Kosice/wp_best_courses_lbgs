@@ -1,10 +1,13 @@
 <?php
-// echo the shortcode
+
+use best\kosice\best_courses_lbgs\best_courses_lbgs;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-wp_best_courses_lbgs()->enqueue_styles();
-wp_best_courses_lbgs()->enqueue_scripts();
+
+best_courses_lbgs::instance()->enqueue_styles();
+best_courses_lbgs::instance()->enqueue_scripts();
 
 // this is the shortcode for displaying an interactive svg map of all lbgs (currently no database involvement)
 // to test, just pust [best_lbgs_map] into a page or article.
@@ -22,7 +25,7 @@ wp_best_courses_lbgs()->enqueue_scripts();
          * Currently, the only parsing available (for demonstration purposes) involves translating country codes
          * and removing some document nodes (specifically, removing all SVG elements representing former LBGs).
          */
-        $svg = simplexml_load_file(esc_url( wp_best_courses_lbgs()->assets_url ) . 'images/map-optimized.svg');     
+        $svg = simplexml_load_file(esc_url( best_courses_lbgs::instance()->assets_url ) . 'images/map-optimized.svg');
         
         //foreach( $xml->children() as $child)
         //    print_r($child);

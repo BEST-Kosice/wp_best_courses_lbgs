@@ -17,8 +17,7 @@
  * @since 1.0.0
  */
 
-use best\kosice\Database;
-use best\kosice\LogRequestType;
+namespace best\kosice\best_courses_lbgs;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -26,6 +25,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Load composer
 require_once( 'vendor/autoload.php' );
+
+// Representation of the plugin for text translation purposes
+const PLUGIN_NAME = 'wp-best-courses-lbgs';
+
+// Temporary workaround to use for adding callback functions before moving the file contents into a class
+$namespace = 'best\\kosice\\best_courses_lbgs\\';
 
 /**
  * This function removes registered WP Cron events by a specified event name.
@@ -54,15 +59,15 @@ function wp_unschedule_cron_events_by_name( $event_name ) {
  */
 function wp_best_courses_lbgs_cron_task() {
     // If the user did not explicitly disable automatic refresh, the database gets refreshed
-    if ( get_option( Database::OPTION_BASE_PREFIX . wp_best_courses_lbgs_Settings::OPTION_NAME_AUTOMATIC_REFRESH
-        , wp_best_courses_lbgs_Settings::OPTION_DEFAULT_AUTOMATIC_REFRESH )
+    if ( get_option( Database::OPTION_BASE_PREFIX . Settings::OPTION_NAME_AUTOMATIC_REFRESH
+        , Settings::OPTION_DEFAULT_AUTOMATIC_REFRESH )
     ) {
         Database::refresh_db_best_events( LogRequestType::AUTOMATIC );
         Database::refresh_db_best_lbgs( LogRequestType::AUTOMATIC );
     }
 }
 
-add_action( 'best_courses_lbgs_cron_task', 'wp_best_courses_lbgs_cron_task' );
+add_action( 'best_courses_lbgs_cron_task', $namespace . 'wp_best_courses_lbgs_cron_task' );
 
 /**
  * Plugin activation event.
@@ -82,7 +87,7 @@ function wp_best_courses_lbgs_activation() {
     wp_best_courses_lbgs_cron_task();
 }
 
-register_activation_hook( __FILE__, 'wp_best_courses_lbgs_activation' );
+register_activation_hook( __FILE__, $namespace . 'wp_best_courses_lbgs_activation' );
 
 /**
  * Plugin deactivation event.
@@ -94,24 +99,19 @@ function wp_best_courses_lbgs_deactivation() {
     wp_unschedule_cron_events_by_name( 'best_courses_lbgs_cron_task' );
 }
 
-register_deactivation_hook( __FILE__, 'wp_best_courses_lbgs_deactivation' );
+register_deactivation_hook( __FILE__, $namespace . 'wp_best_courses_lbgs_deactivation' );
 
 /**
- * Returns the main instance of wp_best_courses_lbgs to prevent the need to use globals.
+ * Returns the main instance of best_courses_lbgs to prevent the need to use globals.
  *
  * @since  1.0.0
- * @return object wp_best_courses_lbgs
+ * @return best_courses_lbgs
  */
-function wp_best_courses_lbgs() {
-    $instance = wp_best_courses_lbgs::instance( __FILE__, '1.0.0' );
-    if ( is_null( $instance->settings ) ) {
-        $instance->settings = wp_best_courses_lbgs_Settings::instance( $instance );
-    }
-
-    return $instance;
+function best_courses_lbgs() {
+    return best_courses_lbgs::instance( __FILE__, '1.0.0' );
 }
 
-wp_best_courses_lbgs();
+best_courses_lbgs();
 
 /**
  * Runs a PHP code in a file and instead of displaying the resulting HTML page, only returns it as a string.
@@ -152,7 +152,8 @@ function run_php_file_for_html( $php_file ) {
 function best_events_shortcode() {
     return run_php_file_for_html( 'includes/shortcodes/events.php' );
 }
-add_shortcode( 'best_events', 'best_events_shortcode' );
+
+add_shortcode( 'best_events', $namespace . 'best_events_shortcode' );
 
 /**
  * Register shortcode [best_lbgs]
@@ -160,7 +161,8 @@ add_shortcode( 'best_events', 'best_events_shortcode' );
 function best_lbgs_shortcode() {
     return run_php_file_for_html( 'includes/shortcodes/local-best-groups.php' );
 }
-add_shortcode( 'best_lbgs', 'best_lbgs_shortcode' );
+
+add_shortcode( 'best_lbgs', $namespace . 'best_lbgs_shortcode' );
 
 /**
  * Register shortcode [best_lbgs_map]
@@ -168,13 +170,14 @@ add_shortcode( 'best_lbgs', 'best_lbgs_shortcode' );
 function best_lbgs_map_shortcode() {
     return run_php_file_for_html( 'includes/shortcodes/lbgs-clickable-map.php' );
 }
-add_shortcode( 'best_lbgs_map', 'best_lbgs_map_shortcode' );
+
+add_shortcode( 'best_lbgs_map', $namespace . 'best_lbgs_map_shortcode' );
 
 /**
  * Add custom buttons to the TinyMCE editor using javascript.
  */
 function wptuts_add_buttons( $plugin_array ) {
-    $plugin_array['wptuts'] = wp_best_courses_lbgs()->assets_url . 'js/shortcode.min.js';
+    $plugin_array['wptuts'] = best_courses_lbgs()->assets_url . 'js/shortcode.min.js';
 
     return $plugin_array;
 }
@@ -237,7 +240,7 @@ function wp_best_courses_lbgs_init() {
     );
 }
 
-add_action( 'init', 'wp_best_courses_lbgs_init' );
+add_action( 'init', $namespace . 'wp_best_courses_lbgs_init' );
 
 
 

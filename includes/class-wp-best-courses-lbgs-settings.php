@@ -1,19 +1,12 @@
 <?php
 
-use best\kosice\Database;
-use best\kosice\LogRequestType;
-use best\kosice\LogTarget;
+namespace best\kosice\best_courses_lbgs;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-//TODO: move to a more suitable location, e.g. to a namespace to be statically called from all other files
-// Representation of the plugin for text translation purposes
-const PLUGIN_NAME = 'wp-best-courses-lbgs';
-
-//TODO: consider renaming to Settings and add namespace, should not cause collisions if within namespace
-class wp_best_courses_lbgs_Settings {
+class Settings {
 
     // Plugin option names without prefix
     const OPTION_NAME_HISTORY_DISPLAY_MAX_ROWS = 'history_max_displayed_rows';
@@ -26,9 +19,8 @@ class wp_best_courses_lbgs_Settings {
     const OPTION_DEFAULT_AUTOMATIC_REFRESH = true;
 
     /**
-     * The single instance of wp_best_courses_lbgs_Settings.
-     * @var     object
-     * @access  private
+     * The single instance of Settings.
+     * @var     Settings
      * @since   1.0.0
      */
     private static $_instance = null;
@@ -36,7 +28,6 @@ class wp_best_courses_lbgs_Settings {
     /**
      * The main plugin object.
      * @var     object
-     * @access  public
      * @since   1.0.0
      */
     public $parent = null;
@@ -44,7 +35,6 @@ class wp_best_courses_lbgs_Settings {
     /**
      * Prefix for plugin settings.
      * @var     string
-     * @access  public
      * @since   1.0.0
      */
     public $base = '';
@@ -52,11 +42,13 @@ class wp_best_courses_lbgs_Settings {
     /**
      * Available settings for plugin.
      * @var     array
-     * @access  public
      * @since   1.0.0
      */
     public $settings = array();
 
+    /**
+     * Constructor function.
+     */
     public function __construct( $parent ) {
         $this->parent = $parent;
 
@@ -406,7 +398,7 @@ class wp_best_courses_lbgs_Settings {
     /**
      * A table consisting of history of recent updates.
      *
-     * @param $target string|null operation target that should be displayed in the table, null for all targets
+     * @param $target     string|null operation target that should be displayed in the table, null for all targets
      * @param $html_class string class used for the < table > tag
      *
      * @return string HTML code of < table > tag
@@ -493,13 +485,13 @@ class wp_best_courses_lbgs_Settings {
     }
 
     /**
-     * Main wp_best_courses_lbgs_Settings instance.
+     * Main Settings instance.
      *
-     * Ensures only one instance of wp_best_courses_lbgs_Settings is loaded or can be loaded.
+     * Ensures only one instance of Settings is loaded or can be loaded.
      *
      * @since 1.0.0
-     * @see wp_best_courses_lbgs()
-     * @return wp_best_courses_lbgs_Settings main instance
+     * @see   best_courses_lbgs
+     * @return self main instance
      */
     public static function instance( $parent ) {
         if ( is_null( self::$_instance ) ) {
@@ -526,4 +518,5 @@ class wp_best_courses_lbgs_Settings {
     public function __wakeup() {
         _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?' ), $this->parent->_version );
     } // End __wakeup()
+
 }

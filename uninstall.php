@@ -15,4 +15,4 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 // This gets executed when the plugin is being uninstalled.
-best\kosice\Database::drop_all_tables();
+best\kosice\best_courses_lbgs\Database::drop_all_tables();
