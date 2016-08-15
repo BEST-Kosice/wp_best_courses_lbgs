@@ -30,7 +30,7 @@ require_once( 'vendor/autoload.php' );
 const PLUGIN_NAME = 'wp-best-courses-lbgs';
 
 /**
- * Runs the main plugin entry point, instantiating Best_Courses_LBGS for the current PHP file.
+ * Runs the main plugin entry point, instantiating Best_Courses_LBGS with the current PHP file.
  */
 Best_Courses_LBGS::instance( __FILE__, '1.0.0' );
 

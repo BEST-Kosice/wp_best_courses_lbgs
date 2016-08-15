@@ -247,7 +247,7 @@ class Best_Courses_LBGS {
      *
      * @param $event_name string registered name of the scheduled cron event
      */
-    function unschedule_cron_events_by_name( $event_name ) {
+    public static function unschedule_cron_events_by_name( $event_name ) {
         $cron_events = _get_cron_array();
         foreach ( $cron_events as $n_timestamp => $arr_event ) {
             if ( isset( $cron_events[ $n_timestamp ][ $event_name ] ) ) {
@@ -303,7 +303,7 @@ class Best_Courses_LBGS {
      * List of actions:
      * 1. Removes cron scheduling
      */
-    function deactivation() {
+    public function deactivation() {
         $this->unschedule_cron_events_by_name( 'best_courses_lbgs_cron_task' );
     } // End deactivation()
 
@@ -315,7 +315,7 @@ class Best_Courses_LBGS {
      *
      * @return string PHP result as HTML, that is supposed to be displayed in the browser
      */
-    function run_php_file_for_html( $php_file ) {
+    public static function run_php_file_for_html( $php_file ) {
         ob_start();
         /** @noinspection PhpIncludeInspection */
         include( $php_file );
@@ -343,28 +343,28 @@ class Best_Courses_LBGS {
     /**
      * Register shortcode [best_events]
      */
-    function best_events_shortcode() {
+    public function best_events_shortcode() {
         return $this->run_php_file_for_html( 'shortcodes/events.php' );
     }
 
     /**
      * Register shortcode [best_lbgs]
      */
-    function best_lbgs_shortcode() {
+    public function best_lbgs_shortcode() {
         return $this->run_php_file_for_html( 'shortcodes/local-best-groups.php' );
     }
 
     /**
      * Register shortcode [best_lbgs_map]
      */
-    function best_lbgs_map_shortcode() {
+    public function best_lbgs_map_shortcode() {
         return $this->run_php_file_for_html( 'shortcodes/lbgs-clickable-map.php' );
     }
 
     /**
      * Add custom buttons to the TinyMCE editor using javascript.
      */
-    function wptuts_add_buttons( $plugin_array ) {
+    public function wptuts_add_buttons( $plugin_array ) {
         $plugin_array['wptuts'] = $this->assets_url . 'js/shortcode.min.js';
 
         return $plugin_array;
@@ -373,7 +373,7 @@ class Best_Courses_LBGS {
     /**
      * Register custom buttons in the TinyMCE editor.
      */
-    function wptuts_register_buttons( $buttons ) {
+    public function wptuts_register_buttons( $buttons ) {
         array_push( $buttons, 'events', 'lbgs', 'lbgs_map' );
 
         return $buttons;
@@ -390,7 +390,7 @@ class Best_Courses_LBGS {
      *    Reference: <http://www.wpbeginner.com/wp-tutorials/how-to-create-custom-post-types-in-wordpress/>
      *    (Is not currently being used for anything and may be removed later)
      */
-    function initialize() {
+    public function initialize() {
         // Load plugin localization
         $this->load_plugin_textdomain();
 

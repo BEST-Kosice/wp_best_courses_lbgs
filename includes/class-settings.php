@@ -61,7 +61,7 @@ class Settings {
         add_action( 'admin_init', array( $this, 'register_settings' ) );
 
         // Add settings page to menu
-        add_action( 'admin_menu', array( $this, 'add_best_db_settings_page' ) );
+        add_action( 'admin_menu', array( $this, 'add_settings_menu_item' ) );
 
         // Add settings link to plugins page
         add_filter( 'plugin_action_links_' . plugin_basename( $this->parent->file )
@@ -79,12 +79,12 @@ class Settings {
     /**
      * Add settings page to admin menu.
      */
-    public function add_best_db_settings_page() {
+    public function add_settings_menu_item() {
         $page = add_menu_page(
             __( 'Správa BEST databázy', PLUGIN_NAME ),
             __( 'BEST DB admin', PLUGIN_NAME ),
             'manage_options',
-            'best_db_settings',
+            $this->parent->_token . '_settings',
             array( $this, 'settings_page' ),
             plugins_url( '../assets/images/BEST_DB_icon.png', __FILE__ ),
             110
@@ -251,6 +251,18 @@ class Settings {
     }
 
     /**
+     * Displays a message on top of the page as an error or an update.
+     *
+     * @param string $message The formatted message text to display to the user
+     *                        (will be shown inside styled `< div >` and `< p >` tags).
+     * @param string $type    Type of the message. Accepts 'error' or 'updated'. Default 'error'.
+     */
+    public function display_settings_message( $message, $type = 'error' ) {
+        add_settings_error( 'general', 'settings_updated', $message, $type );
+        settings_errors();
+    }
+
+    /**
      * Load settings page content.
      */
     public function settings_page() {
@@ -392,7 +404,43 @@ class Settings {
 
         $html .= '</div>' . "\n";
 
+        // Displays a message about last update
+        if($tab != 'configuration') {
+            $this->display_last_update_status( $target );
+        }
         echo $html;
+    }
+
+    /**
+     * If there is a message to be displayed, displays it (not implemented yet),
+     * otherwise defaults to displaying a last update notification.
+     *
+     * @param string $target history table target of a current tab
+     */
+    public function display_last_update_status( $target ) {
+        if ( isset ( $_POST['settings_message'] ) ) {
+            $this->display_settings_message( $_POST['settings_message'],
+                isset ( $_POST['settings_message_error'] ) ? 'error' : 'updated' );
+        } else {
+            $last_history_row = Database::get_single_row(
+                Database::BEST_HISTORY_TABLE,
+                "target = '" . esc_sql( $target ) . "'",
+                esc_sql( 'time DESC' )
+            );
+            if ( $last_history_row && $last_history_row[0] ) {
+                $time          = $last_history_row[0]['time'];
+                $request_type  = $last_history_row[0]['request_type'];
+                $error_message = $last_history_row[0]['error_message'];
+
+                if ( $error_message ) {
+                    $result_status = __( 'update of the database has failed', PLUGIN_NAME );
+                } else {
+                    $result_status = __( 'update of the database has finished successfully', PLUGIN_NAME );
+                }
+                $message = $this->translate_request_type( $request_type ) . ' ' . $result_status . ' (' . $time . ')';
+                $this->display_settings_message( $message, $error_message ? 'error' : 'updated' );
+            }
+        }
     }
 
     /**
@@ -455,14 +503,7 @@ class Settings {
 
             // Request type
             $request_type = $history['request_type'];
-            switch ( $request_type ) {
-                case LogRequestType::AUTOMATIC:
-                    $request_type = _x( 'Automatic', 'update type', PLUGIN_NAME );
-                    break;
-                case LogRequestType::MANUAL:
-                    $request_type = _x( 'Manual', 'update type', PLUGIN_NAME );
-                    break;
-            }
+            $request_type = $this->translate_request_type($request_type);
             $html .= '<td>' . $request_type . '</td>';
 
             // Operation
@@ -482,6 +523,27 @@ class Settings {
         $html .= '</table>';
 
         return $html;
+    }
+
+    /**
+     * Translates a request type from database format to user-readable format. Made for DRY purposes.
+     *
+     * @param string $request_type request type in format accepted by LogRequestType
+     *
+     * @see LogRequestType
+     *
+     * @return string translated request type
+     */
+    public function translate_request_type($request_type){
+        switch ( $request_type ) {
+            case LogRequestType::AUTOMATIC:
+                $request_type = _x( 'Automatic', 'update type', PLUGIN_NAME );
+                break;
+            case LogRequestType::MANUAL:
+                $request_type = _x( 'Manual', 'update type', PLUGIN_NAME );
+                break;
+        }
+        return $request_type;
     }
 
     /**

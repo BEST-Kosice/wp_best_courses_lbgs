@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Type of the operation request.
  *
  * @package best\kosice\best_courses_lbgs
- * @see     Database::log_success, Database::log_error
+ * @see     Database::log_success(), Database::log_error()
  */
 abstract class LogRequestType {
     const MANUAL = 'manual';
@@ -27,10 +27,10 @@ abstract class LogRequestType {
 
 /**
  * Enum for target field of Database::log_success() and Database::log_error().
- * The event where the operation was performed or where the error occurred.
+ * The event where the operation was performed or where the error has occurred.
  *
  * @package best\kosice\best_courses_lbgs
- * @see     Database::log_success, Database::log_error
+ * @see     Database::log_success(), Database::log_error()
  */
 abstract class LogTarget {
     const EVENTS = 'events_db';
@@ -40,6 +40,10 @@ abstract class LogTarget {
 
 /**
  * Static class for Database operations within the plugin.
+ *
+ * TODO tasks:
+ * Option for administrator to delete old history (either by defining max rows, or manually).
+ * Refactor table names into Enum class.
  *
  * @package best\kosice\best_courses_lbgs
  * @author  scscgit
@@ -180,6 +184,8 @@ SQL;
         $operation = 'Table creation';
 
         //TODO: stop logging when table already existed (query still returns 1)
+
+        // NOTE: History table has to be created first in order for logging to work. Learned it the hard way.
         if ( $wpdb->query( $sql_history ) ) {
             self::log_success( $request_type, LogTarget::META, $operation, $wpdb->last_query );
         } else {
@@ -226,8 +232,6 @@ SQL;
 
     /**
      * Logs an error into the database in order to be displayed to the administrator.
-     * (If it becomes useful, it may even get its own class with enum like $target...)
-     * @see log_success()
      *
      * @param $request_type      string type of the operation request, use enum class LogRequestType
      * @param $target            string the event where the error occurred, use enum class LogTarget
@@ -236,6 +240,7 @@ SQL;
      * @param $error_message     string explanation of the problem that happened
      *
      * @see LogRequestType, LogTarget
+     * @see log_success()
      *
      * @return int|false false on logging error
      */
@@ -256,7 +261,7 @@ SQL;
 
         return $wpdb->query(
             $wpdb->prepare(
-                "INSERT INTO $table_name"
+                "INSERT INTO $table_name "
                 . "(request_type, target, operation, attempted_request, error_message) "
                 . "VALUES (%s, %s, %s, %s, %s)"
                 , $request_type
@@ -270,8 +275,6 @@ SQL;
 
     /**
      * Logs a successful operation into the database in order to be displayed to the administrator.
-     * (If it becomes useful, it may even get its own class with enum like $target...)
-     * @see log_error()
      *
      * @param $request_type      string type of the operation request, use enum class LogRequestType
      * @param $target            string the event where the operation was performed, use enum class LogTarget
@@ -279,6 +282,7 @@ SQL;
      * @param $attempted_request string the successfully executed request
      *
      * @see LogRequestType, LogTarget
+     * @see log_error()
      *
      * @return int|false false on logging error, which is also logged (if possible)
      */
@@ -293,7 +297,7 @@ SQL;
 
         $result = $wpdb->query(
             $wpdb->prepare(
-                "INSERT INTO $table_name"
+                "INSERT INTO $table_name "
                 . "(request_type, target, operation, attempted_request) "
                 . "VALUES (%s, %s, %s, %s)"
                 , $request_type
@@ -305,7 +309,7 @@ SQL;
 
         // Logging the error
         if ( $result === false ) {
-            self::log_error( $request_type, LogTarget::META, 'Logging success', $wpdb->last_query, $wpdb->last_error );
+            self::log_error( $request_type, LogTarget::META, 'Logging a success', $wpdb->last_query, $wpdb->last_error );
             // Error during logging the error of logging success will not be logged or returned. Is this too meta?
         }
 
@@ -498,6 +502,8 @@ SQL;
      *
      * @param $table_name_no_prefix string name of the table without prefix to be erased
      * @param $request_type         string type of the operation request, use enum class LogRequestType
+     *
+     * @see LogRequestType
      */
     public static function erase_table( $table_name_no_prefix, $request_type ) {
         global $wpdb;
@@ -508,6 +514,30 @@ SQL;
         } else {
             Database::log_error( $request_type, LogTarget::META, $operation, $wpdb->last_query, $wpdb->last_error );
         }
+    }
+
+    /**
+     * Returns up to a single row from the database.
+     *
+     * @param $table_name_no_prefix string name of the table without prefix to be selected from
+     * @param $condition            string|null SQL-safe condition (use esc_sql()) within 'WHERE' to be used to get the
+     *                              result, optional
+     * @param $order_by             string|null SQL-safe part (use esc_sql()) within 'ORDER BY' to order the results,
+     *                              optional
+     *
+     * @return array|null associative array column => value for the row values, null on error
+     */
+    public static function get_single_row( $table_name_no_prefix, $condition = null, $order_by = null ) {
+        global $wpdb;
+        $table_name = esc_sql( "{$wpdb->prefix}$table_name_no_prefix" );
+        if ( $condition ) {
+            $condition = " WHERE $condition";
+        }
+        if ( $order_by ) {
+            $order_by = " ORDER BY $order_by";
+        }
+
+        return $wpdb->get_results( "SELECT * FROM $table_name$condition$order_by LIMIT 1", ARRAY_A );
     }
 
 }
