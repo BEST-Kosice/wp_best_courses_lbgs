@@ -1,13 +1,13 @@
 <?php
 
-use best\kosice\best_courses_lbgs\best_courses_lbgs;
+use best\kosice\best_courses_lbgs\Best_Courses_LBGS;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-best_courses_lbgs::instance()->enqueue_styles();
-best_courses_lbgs::instance()->enqueue_scripts();
+Best_Courses_LBGS::instance()->enqueue_styles();
+Best_Courses_LBGS::instance()->enqueue_scripts();
 
 // TODO tu príde zoznam lbg 
 ?>

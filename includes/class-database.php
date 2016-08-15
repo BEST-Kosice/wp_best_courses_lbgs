@@ -227,7 +227,7 @@ SQL;
     /**
      * Logs an error into the database in order to be displayed to the administrator.
      * (If it becomes useful, it may even get its own class with enum like $target...)
-     * @see wp_best_courses_lbgs_log_success
+     * @see log_success()
      *
      * @param $request_type      string type of the operation request, use enum class LogRequestType
      * @param $target            string the event where the error occurred, use enum class LogTarget
@@ -271,7 +271,7 @@ SQL;
     /**
      * Logs a successful operation into the database in order to be displayed to the administrator.
      * (If it becomes useful, it may even get its own class with enum like $target...)
-     * @see wp_best_courses_lbgs_log_error
+     * @see log_error()
      *
      * @param $request_type      string type of the operation request, use enum class LogRequestType
      * @param $target            string the event where the operation was performed, use enum class LogTarget

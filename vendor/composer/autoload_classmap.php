@@ -6,7 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'best\\kosice\\best_courses_lbgs\\best_courses_lbgs' => $baseDir . '/includes/class-best-courses-lbgs.php',
+    'best\\kosice\\best_courses_lbgs\\Best_Courses_LBGS' => $baseDir . '/includes/class-best-courses-lbgs.php',
     'best\\kosice\\best_courses_lbgs\\Admin_API' => $baseDir . '/includes/class-admin-api.php',
     'best\\kosice\\best_courses_lbgs\\Database' => $baseDir . '/includes/class-database.php',
     'best\\kosice\\best_courses_lbgs\\Settings' => $baseDir . '/includes/class-settings.php',

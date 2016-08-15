@@ -1,13 +1,13 @@
 <?php
 
-use best\kosice\best_courses_lbgs\best_courses_lbgs;
+use best\kosice\best_courses_lbgs\Best_Courses_LBGS;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-best_courses_lbgs::instance()->enqueue_styles();
-best_courses_lbgs::instance()->enqueue_scripts();
+Best_Courses_LBGS::instance()->enqueue_styles();
+Best_Courses_LBGS::instance()->enqueue_scripts();
 
 // this is the shortcode for displaying an interactive svg map of all lbgs (currently no database involvement)
 // to test, just pust [best_lbgs_map] into a page or article.
@@ -16,7 +16,7 @@ best_courses_lbgs::instance()->enqueue_scripts();
 <div id="svg_map" style="min-height:600px; min-width:600px;;">
     <?php 
         // this is the short version, just echo SVG file contents into generated HTML code, let JS handle the rest
-        //echo file_get_contents(esc_url( wp_best_courses_lbgs()->assets_url ) . 'images/map-optimized.svg'); 
+        //echo file_get_contents(esc_url( Best_Courses_LBGS::instance()->assets_url ) . 'images/map-optimized.svg');
         
         /* This is the long version, where we transform the SVG content to a simpleXML object 
          * and apply some parsing to somewhat unburden the client side (such as adding homepage URLs).
@@ -25,7 +25,7 @@ best_courses_lbgs::instance()->enqueue_scripts();
          * Currently, the only parsing available (for demonstration purposes) involves translating country codes
          * and removing some document nodes (specifically, removing all SVG elements representing former LBGs).
          */
-        $svg = simplexml_load_file(esc_url( best_courses_lbgs::instance()->assets_url ) . 'images/map-optimized.svg');
+        $svg = simplexml_load_file( esc_url( Best_Courses_LBGS::instance()->assets_url ) . 'images/map-optimized.svg');
         
         //foreach( $xml->children() as $child)
         //    print_r($child);
