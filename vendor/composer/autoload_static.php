@@ -17,14 +17,11 @@ class ComposerStaticInite658008a4f40a5cc71f4348e1d0e57fc
     );
 
     public static $classMap = array (
-        'best\\kosice\\best_courses_lbgs\\best_courses_lbgs' => __DIR__ . '/../..' . '/includes/class-wp-best-courses-lbgs.php',
-        'best\\kosice\\best_courses_lbgs\\Admin_API' => __DIR__ . '/../..' . '/includes/class-wp-best-courses-lbgs-admin-api.php',
-        'best\\kosice\\best_courses_lbgs\\Database' => __DIR__ . '/../..' . '/includes/class-wp-best-courses-lbgs-database.php',
-        'best\\kosice\\best_courses_lbgs\\Settings' => __DIR__ . '/../..' . '/includes/class-wp-best-courses-lbgs-settings.php',
+        'best\\kosice\\best_courses_lbgs\\best_courses_lbgs' => __DIR__ . '/../..',
+        'best\\kosice\\best_courses_lbgs\\Admin_API' => __DIR__ . '/../..',
+        'best\\kosice\\best_courses_lbgs\\Database' => __DIR__ . '/../..',
+        'best\\kosice\\best_courses_lbgs\\Settings' => __DIR__ . '/../..',
         'best\\kosice\\datalib\\best_kosice_data' => __DIR__ . '/../..' . '/includes/class-wp-best-courses-lbgs-parser.php',
-        'wp_best_courses_lbgs' => __DIR__ . '/../..' . '/includes/class-wp-best-courses-lbgs.php',
-        'wp_best_courses_lbgs_Admin_API' => __DIR__ . '/../..' . '/includes/class-wp-best-courses-lbgs-admin-api.php',
-        'wp_best_courses_lbgs_Settings' => __DIR__ . '/../..' . '/includes/class-wp-best-courses-lbgs-settings.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

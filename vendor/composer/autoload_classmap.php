@@ -6,12 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'best\\kosice\\best_courses_lbgs\\best_courses_lbgs' => $baseDir . '/includes/class-wp-best-courses-lbgs.php',
-    'best\\kosice\\best_courses_lbgs\\Admin_API' => $baseDir . '/includes/class-wp-best-courses-lbgs-admin-api.php',
-    'best\\kosice\\best_courses_lbgs\\Database' => $baseDir . '/includes/class-wp-best-courses-lbgs-database.php',
-    'best\\kosice\\best_courses_lbgs\\Settings' => $baseDir . '/includes/class-wp-best-courses-lbgs-settings.php',
+    'best\\kosice\\best_courses_lbgs\\best_courses_lbgs' => $baseDir . '/includes/class-best-courses-lbgs.php',
+    'best\\kosice\\best_courses_lbgs\\Admin_API' => $baseDir . '/includes/class-admin-api.php',
+    'best\\kosice\\best_courses_lbgs\\Database' => $baseDir . '/includes/class-database.php',
+    'best\\kosice\\best_courses_lbgs\\Settings' => $baseDir . '/includes/class-settings.php',
     'best\\kosice\\datalib\\best_kosice_data' => $baseDir . '/includes/class-wp-best-courses-lbgs-parser.php',
-    'wp_best_courses_lbgs' => $baseDir . '/includes/class-wp-best-courses-lbgs.php',
-    'wp_best_courses_lbgs_Admin_API' => $baseDir . '/includes/class-wp-best-courses-lbgs-admin-api.php',
-    'wp_best_courses_lbgs_Settings' => $baseDir . '/includes/class-wp-best-courses-lbgs-settings.php',
 );
