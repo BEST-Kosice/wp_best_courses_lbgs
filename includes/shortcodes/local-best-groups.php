@@ -9,5 +9,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 Best_Courses_LBGS::instance()->enqueue_styles();
 Best_Courses_LBGS::instance()->enqueue_scripts();
 
-// TODO tu príde zoznam lbg 
-?>
+// TODO tu príde zoznam lbg
