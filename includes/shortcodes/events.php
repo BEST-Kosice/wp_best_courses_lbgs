@@ -18,8 +18,8 @@ Best_Courses_LBGS::instance()->enqueue_scripts();
 
     $num_rows = $wpdb->num_rows;
     if ($data){
-        $months_short = array('Jan', 'F', 'Mar', 'Ap', 'May', 'Jun',
-                              'Jul', 'Au', 'S', 'O', 'N', 'D');
+        $months_short = array('Jan', 'Feb', 'Mar', 'Ap', 'May', 'Jun',
+                              'Jul', 'Au', 'Sep', 'Oct', 'Nov', 'Dec');
         $month_numbers = array('1.','2.','3.','4.','5.','6.',
                                '7.','8.','9.','10.','11.','12.');
         $tbody = '';
@@ -31,6 +31,7 @@ Best_Courses_LBGS::instance()->enqueue_scripts();
             $place = explode(',', preg_replace(
                 '/\(([a-zA-Z]+)\)/', ', $1', $data[$i]['place'])
             );
+
             //startdate = $dates[0] and enddate = $dates[1]
             $dates = explode('- ', $data[$i]['dates']);
             $startdate; $enddate; $year;
@@ -45,22 +46,25 @@ Best_Courses_LBGS::instance()->enqueue_scripts();
                         strpos($dates[0], ' ', 0)
                     ) . '.';
 
-                    if (strlen($dates[0]) > 2)
+                    if (strlen($dates[0]) > 3) {
                         $startdate .= $month_numbers[$j-1];
-                    else
+                    }
+                    else {
                         $startdate .= $month_numbers[$j];
+                    }
                     preg_match('/2[0-9]{3}/', $dates[1], $year);
                     break;
                 }
             }
+
             //event duration in days
-            $date1 = new DateTime(
-                preg_replace('/([0-9]+)-([0-9]+)\.([0-9]+)/',
-                             '$1-$3-$2', $year[0] . '-' . $startdate));
-            $date2 = new DateTime(
-                preg_replace('/([0-9]+)-([0-9]+)\.([0-9]+)/',
-                             '$1-$3-$2', $year[0] . '-' . $enddate));
-            $diff = $date1->diff($date2);
+            // TODO calculate diff should be function
+
+            $start = (strlen ($startdate) === 1) ? '0'.$startdate : $startdate;
+            $end = (strlen ($startdate) === 1) ? '0'.$enddate : $enddate;
+            $start_unix = strtotime($start.$year[0]);
+            $end_unix = strtotime($end.$year[0]);
+            $diff = (int)($end_unix - $start_unix) / (int)(24*60*60);
 
             //create a new table row
             $tbody .= '<tr>'
@@ -71,7 +75,7 @@ Best_Courses_LBGS::instance()->enqueue_scripts();
                 . '<td>' . $data[$i]['place'] . '</td>'
             //    . '<td>' . $data[$i]['app_deadline'] . '</td>'
                 . '<td>' . $data[$i]['fee'] . '</td>'
-                . '<td>' . $diff->days . ' dní</td>'
+                . '<td>' . $diff . ' dní</td>'
                 . '<td>' . $startdate . $year[0]
                     . ' - '
                 . $enddate . $year[0] . '</td>'
@@ -79,7 +83,6 @@ Best_Courses_LBGS::instance()->enqueue_scripts();
             . '</tr>';
         }
         //echo the content of tbody
-
     }
 
     if ($data) :
@@ -163,8 +166,7 @@ Best_Courses_LBGS::instance()->enqueue_scripts();
 else :
  ?>
 
-Viac o kurzoch sa dozvieš na <a href="https://best.eu.org/courses/welcome.jsp">https://best.eu.org/</a>
+Viac o kurzoch sa dozvieš na <a href="https://best.eu.org/courses/welcome.jsp" terget="_blank">https://best.eu.org/</a>
 
 <?php
 endif;
- ?>
