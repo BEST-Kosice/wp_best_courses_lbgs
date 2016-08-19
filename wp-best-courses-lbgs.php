@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: wp_best_courses_lbgs
- * Version: 1.0
+ * Version: 0.0.1-rc0
  * Plugin URI: http://www.best.tuke.sk/
  * Description: This is your starter template for your next WordPress plugin.
  * Author: BEST AJ TY
@@ -12,6 +12,9 @@
  * Text Domain: wp-best-courses-lbgs
  * Domain Path: /lang/
  *
+ * GitHub Plugin URI: BEST-Kosice/wp_best_courses_lbgs/
+ * GitHub Plugin URI: https://github.com/BEST-Kosice/wp_best_courses_lbgs/
+ * GitHub Branch:     master
  * @package WordPress
  * @author BEST AJ TY
  * @since 1.0.0
