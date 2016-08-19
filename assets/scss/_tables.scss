@@ -4,6 +4,9 @@
 
 
  .best-events {
+     a:hover {
+         text-decoration: none;
+     }
      thead {
          background-color: $color-best-yellow;
          color           : #fff;
