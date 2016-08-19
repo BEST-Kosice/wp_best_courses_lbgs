@@ -34,12 +34,5 @@ const PLUGIN_NAME = 'wp-best-courses-lbgs';
  */
 Best_Courses_LBGS::instance( __FILE__, '1.0.0' );
 
-/*function return_map_data(){
-    global $wpdb;
-    $wpdb->query("SELECT * FROM " . $wpdb->prefix . "best_lbgs" . "ORDER BY ")
-}
-
-add_action( 'wp_ajax_return_map_data', 'return_map_data' );
-add_action( 'wp_ajax_nopriv_return_map_data', 'return_map_data' );*/
 //define( 'WP_DEBUG_LOG', true );
 //define( 'WP_DEBUG', true );

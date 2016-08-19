@@ -45,7 +45,7 @@ if (!defined('ABSPATH')) {
 class best_kosice_data
 {
     private $coursesurl = 'https://best.eu.org/courses/list.jsp';
-    private $lbgsurl = 'https://best.eu.org/localWeb/lbgChooser.jsp';
+    private $lbgsurl = 'https://best.eu.org/aboutBEST/structure/lbgList.jsp';
     private $season_events_url = 'https://best.eu.org/student/courses/coursesList.jsp';
     private $parsed_link_prefix = 'https://best.eu.org';
     private $userAgent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)';
@@ -124,23 +124,24 @@ class best_kosice_data
         }
 
         $data = $data ? $this->prepare_data($data) : false;
-
+		
         // changed structure
         if (!$data) {
-            $this->error_id = 2;
+		    $this->error_id = 2;
 
             return false;
         }
-
-        $data = (is_array($data[1]) && $data[1]) ? $this->parse_lbgs($data[1]) : false;
+		
+        $data = is_string($data) ? $this->parse_lbgs($data) : false;
+        //$data = (is_array($data[1]) && $data[1]) ? $this->parse_lbgs($data[1]) : false;
 
         if (!$data) {
             $this->error_id = 2;
-
+			
             return false;
         }
 
-        return false;
+        return $data;
     }
 
     // TODO
@@ -201,7 +202,7 @@ class best_kosice_data
         curl_close($ch);
 
         // convert from ISO-8859-1 to UTF8
-        $data = utf8_decode($data);
+        $data = utf8_encode($data);
 
         return $data;
     }
@@ -261,8 +262,24 @@ class best_kosice_data
      */
     private function parse_lbgs($html)
     {
-        $theData = false;
-        foreach ($html as $key => $value) {
+        $theData = array();
+        
+		$html = HtmlDomParser::str_get_html($html);
+                
+        $lbg = ""; $url = "";
+        foreach($html->find("#map .city-description section") as $lbg){
+            $name = preg_replace( '/\s+Local Group\s+/', '', $lbg->find("h4 > a")[0]->innertext() );
+            $url = $lbg->find("dd a[href*=http]");
+            if (!$url)
+                $url = null;
+            else
+                $url = $url[0]->href;
+            array_push( $theData, array($url, "na", $name) );
+        }
+        return $theData;
+		
+		//old parser
+        /*foreach ($html as $key => $value) {
             $rowData = false;
             if (preg_match("/<option\s[^>]*value=(\"??)([^\" >]*?)\\1[^>]*>(.*)<\/option>/siU", $value, $matches)) {
                 if ($matches[2] != '') {
@@ -280,7 +297,7 @@ class best_kosice_data
             }
         }
 
-        return $theData;
+        return $theData;*/
     }
 
     private function parse_table($table) {
