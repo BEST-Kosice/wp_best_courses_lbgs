@@ -17,10 +17,12 @@ class ComposerStaticInite658008a4f40a5cc71f4348e1d0e57fc
     );
 
     public static $classMap = array (
-        'best\\kosice\\best_courses_lbgs\\Best_Courses_LBGS' => __DIR__ . '/../..',
-        'best\\kosice\\best_courses_lbgs\\Admin_API' => __DIR__ . '/../..',
-        'best\\kosice\\best_courses_lbgs\\Database' => __DIR__ . '/../..',
-        'best\\kosice\\best_courses_lbgs\\Settings' => __DIR__ . '/../..',
+        'best\\kosice\\best_courses_lbgs\\Admin_API' => __DIR__ . '/../..' . '/includes/class-admin-api.php',
+        'best\\kosice\\best_courses_lbgs\\Best_Courses_LBGS' => __DIR__ . '/../..' . '/includes/class-best-courses-lbgs.php',
+        'best\\kosice\\best_courses_lbgs\\Database' => __DIR__ . '/../..' . '/includes/class-database.php',
+        'best\\kosice\\best_courses_lbgs\\LogRequestType' => __DIR__ . '/../..' . '/includes/class-database.php',
+        'best\\kosice\\best_courses_lbgs\\LogTarget' => __DIR__ . '/../..' . '/includes/class-database.php',
+        'best\\kosice\\best_courses_lbgs\\Settings' => __DIR__ . '/../..' . '/includes/class-settings.php',
         'best\\kosice\\datalib\\best_kosice_data' => __DIR__ . '/../..' . '/includes/class-wp-best-courses-lbgs-parser.php',
     );
 
