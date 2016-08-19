@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: wp_best_courses_lbgs 1.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-best-courses-lbgs\n"
-"POT-Creation-Date: 2016-08-14 14:48:22+00:00\n"
+"POT-Creation-Date: 2016-08-19 09:00:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25,142 +25,148 @@ msgstr ""
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
 
-#: includes/class-wp-best-courses-lbgs-admin-api.php:162
+#: includes/class-admin-api.php:190
 msgid "Upload an image"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-admin-api.php:162
+#: includes/class-admin-api.php:191
 msgid "Use image"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-admin-api.php:162
+#: includes/class-admin-api.php:192
 msgid "Upload new image"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-admin-api.php:163
+#: includes/class-admin-api.php:195
 msgid "Remove image"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:92
-#: includes/class-wp-best-courses-lbgs-settings.php:302
+#: includes/class-best-courses-lbgs.php:228
+#: includes/class-best-courses-lbgs.php:237 includes/class-settings.php:572
+#: includes/class-settings.php:581
+msgid "Cheatin&#8217; huh?"
+msgstr ""
+
+#: includes/class-best-courses-lbgs.php:408
+msgid "BEST Events"
+msgstr ""
+
+#: includes/class-best-courses-lbgs.php:409
+msgid "BEST Event"
+msgstr ""
+
+#: includes/class-settings.php:84 includes/class-settings.php:306
 msgid "Správa BEST databázy"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:93
+#: includes/class-settings.php:85
 msgid "BEST DB admin"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:134
+#: includes/class-settings.php:126
 msgid "Settings"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:147
+#: includes/class-settings.php:139
 msgid "BEST events"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:151
+#: includes/class-settings.php:143
 msgid "Local BEST groups"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:155
+#: includes/class-settings.php:147
 msgid "Configuration"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:156
+#: includes/class-settings.php:148
 msgid "Plugin configuration section"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:160
+#: includes/class-settings.php:152
 msgid "Displayed rows"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:161
+#: includes/class-settings.php:153
 msgid ""
 "Maximum number of rows in the history (under all tabs) to be displayed at "
 "once"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:169
+#: includes/class-settings.php:161
 msgid "Display success"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:170
+#: includes/class-settings.php:162
 msgid "Shows successful operations in the history table"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:176
+#: includes/class-settings.php:168
 msgid "Automatic refresh"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:177
+#: includes/class-settings.php:169
 msgid "Allows database to be updated in regular intervals"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:345
+#: includes/class-settings.php:349
 msgid "Aktuálny počet lokálnych BEST skupín v tabuľke"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:346
+#: includes/class-settings.php:350
 msgid "Aktuálny počet eventov v tabuľke"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:363
+#: includes/class-settings.php:367
 msgid "Save Settings"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:374
+#: includes/class-settings.php:378
 msgid "Are you sure you want to delete contents of all plugin tables?"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:382
+#: includes/class-settings.php:386
 msgid "Update groups"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:383
+#: includes/class-settings.php:387
 msgid "Update events"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:437
+#: includes/class-settings.php:436
+msgid "update of the database has failed"
+msgstr ""
+
+#: includes/class-settings.php:438
+msgid "update of the database has finished successfully"
+msgstr ""
+
+#: includes/class-settings.php:477
 msgid "Problem with history table"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:438
+#: includes/class-settings.php:478
 msgid "The requested query was"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:452
+#: includes/class-settings.php:492
 msgid "Čas aktualizácie"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:453
+#: includes/class-settings.php:493
 msgid "Typ aktualizácie"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:454
+#: includes/class-settings.php:494
 msgid "Operation"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:455
+#: includes/class-settings.php:495
 msgid "Result"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:483
+#: includes/class-settings.php:516
 msgid "OK"
-msgstr ""
-
-#: includes/class-wp-best-courses-lbgs-settings.php:518
-#: includes/class-wp-best-courses-lbgs-settings.php:527
-#: includes/class-wp-best-courses-lbgs.php:263
-#: includes/class-wp-best-courses-lbgs.php:272
-msgid "Cheatin&#8217; huh?"
-msgstr ""
-
-#: wp-best-courses-lbgs.php:212
-msgid "BEST Events"
-msgstr ""
-
-#: wp-best-courses-lbgs.php:213
-msgid "BEST Event"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
@@ -179,12 +185,12 @@ msgstr ""
 msgid "BEST AJ TY"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:468
+#: includes/class-settings.php:540
 msgctxt "update type"
 msgid "Automatic"
 msgstr ""
 
-#: includes/class-wp-best-courses-lbgs-settings.php:471
+#: includes/class-settings.php:543
 msgctxt "update type"
 msgid "Manual"
 msgstr ""
