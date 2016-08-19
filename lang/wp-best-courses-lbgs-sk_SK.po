@@ -1,0 +1,182 @@
+# Copyright (C) 2016 Daniel Demečko
+# This file is distributed under the GNU General Public License v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: BEST Košice 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-best-courses-"
+"lbgs\n"
+"POT-Creation-Date: 2016-08-14 13:19+0200\n"
+"PO-Revision-Date: 2016-08-14 13:22+0200\n"
+"Last-Translator: Daniel Demečko <daniel@demecko.com>\n"
+"Language-Team: \n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.8\n"
+"X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;"
+"_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;"
+"esc_html_x:1,2c\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: ..\n"
+"X-Textdomain-Support: yes\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: includes/class-wp-best-courses-lbgs-admin-api.php:162
+msgid "Upload an image"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-admin-api.php:162
+msgid "Use image"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-admin-api.php:162
+msgid "Upload new image"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-admin-api.php:163
+msgid "Remove image"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:94
+#: includes/class-wp-best-courses-lbgs-settings.php:307
+msgid "Správa BEST databázy"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:95
+msgid "BEST DB admin"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:137
+msgid "Settings"
+msgstr "Nastavenia"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:150
+msgid "BEST events"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:151
+msgid "Our events."
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:164
+msgid "Lokálne BEST skupiny"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:165
+msgid "Our groups."
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:178
+msgid "Configuration"
+msgstr "Konfigurácia"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:183
+msgid "Displayed rows"
+msgstr "Zobrazené riadky"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:192
+msgid "Display success"
+msgstr "Zobrazovať úspech"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:193
+msgid "Shows successful operations in the history table"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:199
+msgid "Automatic refresh"
+msgstr "Automatické obnovenie"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:200
+msgid "Allows database to be updated in regular intervals"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:350
+msgid "Aktuálny počet lokálnych BEST skupín v tabuľke"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:351
+msgid "Aktuálny počet eventov v tabuľke"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:368
+msgid "Save Settings"
+msgstr "Uložiť Nastavenia"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:374
+msgid "Update groups"
+msgstr "Aktualizovať skupiny"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:375
+msgid "Update events"
+msgstr "Aktualizovať eventy"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:429
+msgid "Problem with history table"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:430
+msgid "The requested query was"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:444
+msgid "Čas aktualizácie"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:445
+msgid "Typ aktualizácie"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:446
+msgid "Operation"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:447
+msgid "Result"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:475
+msgid "OK"
+msgstr "OK"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:511
+#: includes/class-wp-best-courses-lbgs-settings.php:520
+#: includes/class-wp-best-courses-lbgs.php:263
+#: includes/class-wp-best-courses-lbgs.php:272
+msgid "Cheatin&#8217; huh?"
+msgstr ""
+
+#: wp-best-courses-lbgs.php:212
+msgid "BEST Events"
+msgstr "BEST Eventy"
+
+#: wp-best-courses-lbgs.php:213
+msgid "BEST Event"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "wp_best_courses_lbgs"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.best.tuke.sk/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "This is your starter template for your next WordPress plugin."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "BEST AJ TY"
+msgstr ""
+
+#: includes/class-wp-best-courses-lbgs-settings.php:460
+msgctxt "update type"
+msgid "Automatic"
+msgstr "Automatická"
+
+#: includes/class-wp-best-courses-lbgs-settings.php:463
+msgctxt "update type"
+msgid "Manual"
+msgstr "Manuálna"

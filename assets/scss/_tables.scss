@@ -1,0 +1,186 @@
+/**
+ *  Styles fot displaying events in table
+ */
+
+
+ .best-events {
+     a:hover {
+         text-decoration: none;
+     }
+     thead {
+         background-color: $color-best-yellow;
+         color           : #fff;
+     }
+
+     tfoot th {
+         font-size  : 14px;
+         font-weight: 300;
+         font-style : italic;
+     }
+
+     td {
+         text-align: center;
+     }
+
+     th {
+         text-align: left;
+     }
+
+     th .fa {
+         padding: 18px 15px 0 0;
+         width  : 10px;
+         float  : right;
+     }
+
+     th div:not(.fa) {
+         display   : table;
+         float     : left;
+         min-height: 50px;
+         width     : 100%;
+     }
+
+     th div:not(.fa) span {
+         display       : table-cell;
+         vertical-align: middle;
+         padding       : 0 0 0 6px;
+         text-align    : center;
+     }
+     /* mobile devices related stuff (using Stacktable) */
+     &.stacktable {
+         width: 100%;
+     }
+
+     &.small-only {
+         display: none;
+     }
+     /* css rules for when to display which arrow */
+      &.large-only .fa-caret-down,
+     .fa-caret-up {
+         display: none;
+     }
+
+     th[data-sorted-direction="descending"] .fa-caret-down {
+         display: block;
+     }
+
+     th[data-sorted-direction="ascending"] .fa-caret-up {
+         display: block;
+     }
+
+     th[data-sorted="true"] .fa-sort {
+         display: none;
+     }
+     /* mobile devices related stuff (using Stacktable) */
+     &.stacktable {
+         width: 100%;
+     }
+
+     .st-head-row {
+         background-color: lighten($color-best-yellow, 35% );
+         color           : $color-best-blue;
+     }
+
+     .st-head-row-main {
+         background-color: $color-best-yellow;
+         color           : #fff;
+     }
+
+     .small-only tr:last-child th {
+         padding-top     : 20px;
+         background-color: #fff;
+         color           : #000;
+         text-align      : justify;
+         font-size       : 1em;
+         font-weight     : 300;
+         font-style      : italic;
+     }
+
+     .st-head-row,
+     .st-head-row-main {
+         font-size     : 1.2em;
+     }
+
+     .st-key,
+     .st-val {
+         font-size: 1.1em;
+         padding: 3px 5px;
+     }
+     .st-key {
+         width: 33%;
+     }
+     .st-val {
+         width: 77%;
+     }
+
+     .small-only .fa {
+         display: none;
+     }
+
+     &.large-only {
+         display: none;
+     }
+
+     &.small-only {
+         display: table;
+     }
+
+     &.small-only tr:last-child th {
+         padding-top     : 20px;
+         background-color: #fff;
+         color           : #000;
+         text-align      : justify;
+         font-size       : 1em;
+         font-weight     : 300;
+         font-style      : italic;
+     }
+
+     .st-head-row {
+         padding: 10px 0;
+         text-align: center;
+     }
+
+     .st-head-row,
+     .st-head-row-main {
+         font-size     : 1.2em;
+     }
+
+     .st-key,
+     .st-val {
+         font-size: 1.1em;
+         text-align: left;
+     }
+
+     &.small-only .fa {
+         display: none;
+     }
+     @media (min-width: 767px) {
+         &.large-only {
+             display: table;
+             width  : 100%;
+             border : none;
+         }
+
+         &.small-only {
+             display: none;
+         }
+         /* table striping (screens greater than xs) */
+         tbody tr:nth-child(odd) {
+             background-color: lighten($color-best-yellow, 45% );
+         }
+
+         tbody tr:nth-child(even) {
+             background-color: lighten($color-best-yellow, 35% );
+         }
+         /* text and border styles for all table cells (screens greater than xs) */
+         &.large-only tbody td,
+         thead th {
+             border-width   : 3px 1px 3px 1px;
+             border-color   : #fff;
+             border-style   : solid;
+             border-collapse: collapse;
+         }
+         th div:not(.fa) {
+             width:80%;
+         }
+     }
+ }

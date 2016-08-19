@@ -1,0 +1,40 @@
+/*!
+ * Admin styles
+ * Plugin Name: wp_best_courses_lbgs
+ * Version: 1.0
+ */
+@import 'mixins';
+@import 'variables';
+// Updates history table in the administration panel
+.history_table {
+    font-size       : medium;
+    text-align      : center;
+    margin-left     : 5%;
+    margin-right    : 5%;
+    width           : 90%;
+    background-color: #fff;
+    border-collapse : collapse;
+
+    & > tbody > tr {
+        @include animation-default();
+        &:nth-child(even) {
+            background-color: #ecf7ed;
+        }
+
+        &:hover {
+            background-color: #ccffcc;
+        }
+
+        & > td {
+            border : 1px solid $color-best-green;
+            padding: 2px;
+        }
+        & > th {
+            font-size       : large;
+            text-shadow     : 0.3px 0.3px;
+            background-color: #e4f2fd;
+            border          : 1px solid $color-best-blue;
+            padding         : 4px;
+        }
+    }
+}
