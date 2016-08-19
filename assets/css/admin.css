@@ -2,4 +2,4 @@
  * Admin styles
  * Plugin Name: wp_best_courses_lbgs
  * Version: 1.0
- */.history_table{font-size:medium;text-align:center;margin-left:5%;margin-right:5%;width:90%;background-color:#fff;border-collapse:collapse}.history_table>tbody>tr{transition-duration:.2s;transition-timing-function:cubic-bezier(0.4,0,.2,1)}.history_table>tbody>tr:nth-child(even){background-color:#ecf7ed}.history_table>tbody>tr:hover{background-color:#cfc}.history_table>tbody>tr>td{border:1px solid #679940;padding:2px}.history_table>tbody>tr>th{font-size:large;text-shadow:.3px .3px;background-color:#e4f2fd;border:1px solid #1973BE;padding:4px}
+ */.history_table{font-size:medium;text-align:center;margin-left:5%;margin-right:5%;width:90%;background-color:#fff;border-collapse:collapse}.history_table>tbody>tr{transition-duration:.2s;transition-timing-function:cubic-bezier(.4,0,.2,1)}.history_table>tbody>tr:nth-child(even){background-color:#ecf7ed}.history_table>tbody>tr:hover{background-color:#cfc}.history_table>tbody>tr>td{border:1px solid #679940;padding:2px}.history_table>tbody>tr>th{font-size:large;text-shadow:.3px .3px;background-color:#e4f2fd;border:1px solid #1973BE;padding:4px}
