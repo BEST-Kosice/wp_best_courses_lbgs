@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Enum for request_type field of Database::log_success() and Database::log_error().
- * Type of the operation request.
+ * <p>Type of the operation request.
  *
  * @package best\kosice\best_courses_lbgs
  * @see     Database::log_success(), Database::log_error()
@@ -27,7 +27,7 @@ abstract class LogRequestType {
 
 /**
  * Enum for target field of Database::log_success() and Database::log_error().
- * The event where the operation was performed or where the error has occurred.
+ * <p>The event where the operation was performed or where the error has occurred.
  *
  * @package best\kosice\best_courses_lbgs
  * @see     Database::log_success(), Database::log_error()
@@ -41,7 +41,7 @@ abstract class LogTarget {
 /**
  * Static class for Database operations within the plugin.
  *
- * TODO tasks:
+ * <p>TODO tasks:
  * Option for administrator to delete old history (either by defining max rows, or manually).
  * Refactor table names into Enum class.
  *
@@ -67,18 +67,21 @@ class Database {
 
     /**
      * Database version upgrading with the least destructive effect for the end user.
+     * <p>When this is the first time running the upgrade, initializes (installs) the database to the latest version.
      *
-     * Usage:
-     * When increasing the DB version, increase the class constant TARGET_PLUGIN_DB_VERSION and add a new
+     * <p>Usage:
+     * <p>When increasing the DB version, increase the class constant TARGET_PLUGIN_DB_VERSION value and add a new
      * switch case for the previous version.
      *
-     * Database of all users will go through the required steps based on their currently installed version.
+     * <p>Database of all users will go through the required steps based on their currently installed version.
+     *
+     * @return bool true when an upgrade has occurred, false otherwise
      */
     public static function upgrade_database() {
         // Thinking about the future: if at any point we add this "feature" and then user rolls back to old version,
         // we don't want to break his entire database
         if ( get_option( self::OPTION_NAME_PLUGIN_DB_UPGRADE_DISABLED, false ) ) {
-            return;
+            return false;
         }
 
         $log = function ( $attempted_request ) {
@@ -91,16 +94,19 @@ class Database {
             update_option( self::OPTION_NAME_PLUGIN_DB_VERSION, self::TARGET_PLUGIN_DB_VERSION );
             $log( 'Detected too large database version, setting down to ' . self::TARGET_PLUGIN_DB_VERSION );
 
-            return;
+            return false;
         }
 
+        $upgraded = false;
         // Upgrades the database towards the currently installed plugin version
         while ( ( $current_db_version = get_option( self::OPTION_NAME_PLUGIN_DB_VERSION, 0 ) )
                 < self::TARGET_PLUGIN_DB_VERSION
         ) {
+            $previous_db_version = $current_db_version;
+
             switch ( $current_db_version ) {
-                // Initialization - if the database had none or an unknown version, drops and recreates everything
-                //default: // Uncomment when testing to recreate database after any version change
+                //default: // Uncomment when testing to recreate tables after any version change
+                // Initialization - if the database had none or an unknown version, drop and recreate everything
                 case 0:
                     self::drop_all_tables();
                     self::create_all_tables();
@@ -112,21 +118,27 @@ class Database {
             }
 
             // Implicitly increases version by 1 after each step, unless there was an explicit external change
-            if ( $current_db_version == get_option( self::OPTION_NAME_PLUGIN_DB_VERSION, 0 ) &&
-                 $current_db_version < self::TARGET_PLUGIN_DB_VERSION
-            ) {
+            $new_db_version = get_option( self::OPTION_NAME_PLUGIN_DB_VERSION, 0 );
+            if ( $current_db_version == $new_db_version && $current_db_version < self::TARGET_PLUGIN_DB_VERSION ) {
                 update_option( self::OPTION_NAME_PLUGIN_DB_VERSION, ++ $current_db_version );
                 $log( 'Upgraded version from ' . ( $current_db_version - 1 ) . ' to ' . $current_db_version );
             }
+
+            // Database was upgraded if the db version has changed
+            if ( $previous_db_version < $new_db_version ) {
+                $upgraded = true;
+            }
         }
+
+        return $upgraded;
     }
 
     /**
      * Creates all missing plugin-specific tables in the database.
-     * Does nothing if tables with the same name already exist.
-     * Should be run at the time of the plugin activation.
+     * <p>Does nothing if tables with the same name already exist.
+     * <p>Should be run at the time of the plugin activation.
      *
-     * Studying references:
+     * <p>Studying references:
      * <https://codex.wordpress.org/Function_Reference/wpdb_Class>
      * <https://codex.wordpress.org/Creating_Tables_with_Plugins>
      *
@@ -166,13 +178,19 @@ PRIMARY KEY (id_lbg)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 SQL;
 
+        $request_type_automatic = LogRequestType::AUTOMATIC;
+        $request_type_manual    = LogRequestType::MANUAL;
+        $target_events          = LogTarget::EVENTS;
+        $target_lbgs            = LogTarget::LBGS;
+        $target_meta            = LogTarget::META;
+
         //TODO possibly decide on a better name (and purpose) for this table
         $sql_history = <<< SQL
 CREATE TABLE IF NOT EXISTS {$wpdb->prefix}{$history_table} (
 id_history int(11) NOT NULL AUTO_INCREMENT,
 time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-request_type varchar(50) NOT NULL CHECK(request_type IN('automatic', 'manual', 'unknown')),
-target varchar(50) NOT NULL CHECK(target IN('events_db', 'lbgs_db', 'meta')),
+request_type varchar(50) NOT NULL CHECK(request_type IN({$request_type_automatic}, {$request_type_manual}, 'unknown')),
+target varchar(50) NOT NULL CHECK(target IN({$target_events}, {$target_lbgs}, {$target_meta})),
 operation varchar(50) NOT NULL,
 attempted_request text DEFAULT NULL,
 error_message text DEFAULT NULL,
@@ -181,7 +199,7 @@ PRIMARY KEY (id_history)
 SQL;
 
         // Querying and error handling
-        $operation = 'Table creation';
+        $operation = 'Table creation if missing';
 
         //TODO: stop logging when table already existed (query still returns 1)
 
@@ -309,7 +327,8 @@ SQL;
 
         // Logging the error
         if ( $result === false ) {
-            self::log_error( $request_type, LogTarget::META, 'Logging a success', $wpdb->last_query, $wpdb->last_error );
+            self::log_error( $request_type, LogTarget::META, 'Logging a success', $wpdb->last_query,
+                $wpdb->last_error );
             // Error during logging the error of logging success will not be logged or returned. Is this too meta?
         }
 

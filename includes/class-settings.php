@@ -131,7 +131,9 @@ class Settings {
 
     /**
      * Build settings fields to be registered in register_settings().
+     *
      * @see register_settings()
+     *
      * @return array Fields to be displayed on the settings page
      */
     private function settings_fields() {
@@ -181,6 +183,7 @@ class Settings {
     /**
      * Register plugin settings to be later rendered to the website using settings_page(),
      * adding all setting fields using the prepared array to the page.
+     *
      * @see settings_page()
      */
     public function register_settings() {
@@ -278,21 +281,21 @@ class Settings {
             //TODO: find in the code below where this default is defined and use that condition instead
             default:
             case 'events':
-                //Checks for the request for manually updating table
+                // Checks for the request for manually updating table
                 if ( isset( $_POST['manually_update'] ) ) {
                     Database::refresh_db_best_events( LogRequestType::MANUAL );
                 }
                 $target = 'events_db';
                 break;
             case 'lbgs':
-                //Checks for the request for manually updating table
+                // Checks for the request for manually updating table
                 if ( isset( $_POST['manually_update'] ) ) {
                     Database::refresh_db_best_lbgs( LogRequestType::MANUAL );
                 }
                 $target = 'lbgs_db';
                 break;
             case 'configuration':
-                //Checks for the request for erasing the DB
+                // Checks for the request for erasing the DB
                 if ( isset( $_POST['erase_db'] ) ) {
                     Database::erase_table( Database::BEST_EVENTS_TABLE, LogRequestType::MANUAL );
                     Database::erase_table( Database::BEST_LBGS_TABLE, LogRequestType::MANUAL );
@@ -466,7 +469,7 @@ class Settings {
             $wpdb->prepare(
                 "SELECT * FROM $table_name WHERE target LIKE %s "
                 . ( $display_history_success ? "" : "AND error_message IS NOT null " )
-                . "ORDER BY time DESC LIMIT %d"
+                . "ORDER BY id_history DESC LIMIT %d"
                 , $target == null ? '%' : $target
                 , $history_max_displayed_rows
             ), ARRAY_A
@@ -549,7 +552,7 @@ class Settings {
     /**
      * Main Settings instance.
      *
-     * Ensures only one instance of Settings is loaded or can be loaded.
+     * <p>Ensures only one instance of Settings is loaded or can be loaded.
      *
      * @since 1.0.0
      * @see   best_courses_lbgs

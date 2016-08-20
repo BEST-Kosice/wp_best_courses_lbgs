@@ -23,7 +23,7 @@
 
 
 /*
-  TODO refactor to static class
+  TODO refactor to static class? (note: it is singleton to allow access to last error, pure static class would not allow it)
   php parser for courses  data
   NOTE Add special call to google api for attitude and longtitude save tod db
   NOTE make wp api endpoint for lbgs and courses
@@ -31,39 +31,50 @@
 
 namespace best\kosice\datalib;
 
-
 use Sunra\PhpSimple\HtmlDomParser;
 
 // security
-if (!defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 // load lib for parsing
 //require 'vendor/simple_html_dom.php';
 
+// TODO: rename using convention: Large first characters, no explicit namespace repetition; rename file using wp convention
 class best_kosice_data
 {
-    private $coursesurl = 'https://best.eu.org/courses/list.jsp';
-    private $lbgsurl = 'https://best.eu.org/aboutBEST/structure/lbgList.jsp';
+    private $courses_url = 'https://best.eu.org/courses/list.jsp';
+    private $lbgs_url = 'https://best.eu.org/aboutBEST/structure/lbgList.jsp';
     private $season_events_url = 'https://best.eu.org/student/courses/coursesList.jsp';
     private $parsed_link_prefix = 'https://best.eu.org';
     private $userAgent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)';
     private $timeout = 5;
 
-    public $conection_info = false;
+    public $connection_info = false;
     public $error_id = false;
 
+    /**
+     * The single instance of best_kosice_data.
+     * @var best_kosice_data
+     */
     private static $_instance;
 
-    public function __construct()
+    /**
+     * Constructor function with private access, singleton class.
+     */
+    private function __construct()
     {
     }
 
-    //TODO convert singleton to static class
+    /**
+     * Return the instance of the Parser.
+     *
+     * @return best_kosice_data
+     */
     public static function instance()
     {
-        if (is_null(self::$_instance)) {
+        if ( is_null( self::$_instance ) ) {
             self::$_instance = new self();
         }
 
@@ -71,16 +82,16 @@ class best_kosice_data
     }
 
     /**
-     * return list of courses and details.
+     * Return list of courses and their details.
      *
      * @return array|false courses, false on error
      */
     public function courses()
     {
-        $data = $this->download_doc($this->coursesurl);
+        $data = $this->download_doc($this->courses_url);
 
         // can't download
-        if (!$data | $this->conection_info['http_code'] != 200) {
+        if (!$data | $this->connection_info['http_code'] != 200) {
             $this->error_id = 1;
 
             return false;
@@ -108,36 +119,36 @@ class best_kosice_data
     }
 
     /**
-     * return list of Local BEST Groups.
+     * Return list of Local BEST Groups.
      *
-     * @return array|false lbgs, false on error
+     * @return array|false local best groups, false on error
      */
     public function lbgs()
     {
-        $data = $this->download_doc($this->lbgsurl);
+        $data = $this->download_doc($this->lbgs_url);
 
         // can't download
-        if (!$data | $this->conection_info['http_code'] != 200) {
+        if (!$data | $this->connection_info['http_code'] != 200) {
             $this->error_id = 1;
 
             return false;
         }
 
         $data = $data ? $this->prepare_data($data) : false;
-		
+
         // changed structure
         if (!$data) {
 		    $this->error_id = 2;
 
             return false;
         }
-		
+
         $data = is_string($data) ? $this->parse_lbgs($data) : false;
         //$data = (is_array($data[1]) && $data[1]) ? $this->parse_lbgs($data[1]) : false;
 
         if (!$data) {
             $this->error_id = 2;
-			
+
             return false;
         }
 
@@ -159,7 +170,9 @@ class best_kosice_data
     }
 
     /**
-     * @return string error message
+     * Returns message describing an error of the last operation.
+     *
+     * @return string|false last error message, false if there was no error
      */
     public function error_message()
     {
@@ -170,16 +183,18 @@ class best_kosice_data
             case 2:
                 return 'Unable to parse changed document structure.';
                 break;
-
+            default:
+                return false;
+                break;
         }
     }
 
     /**
-     * Download document from url.
+     * Download document from URL.
      *
      * @param string $url
      *
-     * @return string or false
+     * @return string|false downloaded document, false on error
      */
     private function download_doc($url)
     {
@@ -196,7 +211,7 @@ class best_kosice_data
         if (curl_errno($ch)) {
             $data = false;
         } else {
-            $this->conection_info = curl_getinfo($ch);
+            $this->connection_info = curl_getinfo($ch);
         }
 
         curl_close($ch);
@@ -212,7 +227,7 @@ class best_kosice_data
      *
      * @param string $raw raw html doc with js html comments
      *
-     * @return array|false      array that matches
+     * @return array|false array that matches
      */
     private function prepare_data($raw)
     {
@@ -221,11 +236,11 @@ class best_kosice_data
     }
 
     /**
-     * parse courses from html.
+     * Parse courses from HTML.
      *
      * @param string $html [description]
      *
-     * @return array|false       [description]
+     * @return array|false [description]
      */
     private function parse_courses($html)
     {
