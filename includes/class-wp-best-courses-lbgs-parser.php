@@ -145,6 +145,8 @@ class best_kosice_data
 
         $data = is_string($data) ? $this->parse_lbgs($data) : false;
         //$data = (is_array($data[1]) && $data[1]) ? $this->parse_lbgs($data[1]) : false;
+		
+		return $data;
 
         if (!$data) {
             $this->error_id = 2;
@@ -280,16 +282,33 @@ class best_kosice_data
         $theData = array();
         
 		$html = HtmlDomParser::str_get_html($html);
-                
-        $lbg = ""; $url = "";
-        foreach($html->find("#map .city-description section") as $lbg){
-            $name = preg_replace( '/\s+Local Group\s+/', '', $lbg->find("h4 > a")[0]->innertext() );
-            $url = $lbg->find("dd a[href*=http]");
+        
+		foreach($html->find("#map .city-description section") as $lbg){
+            //get homepage URL of LBG from link inside heading
+			$name = preg_replace( '/\s+Local\s+Group\s+/', '', $lbg->find("h4 > a")[0]->innertext() );
+			if (preg_match('/\s+Local\s+Group\s+/', $name) == 1)
+				$name = preg_replace( '/\s+Local\s+Group\s+/', '', $name );
+			else
+				$name = preg_replace( '/\s+Observer\s+Group\s+/', '', $name );
+			//get LBG code from <img> src attribute	
+		    $code = $lbg->find("img");
+			if ($code)
+				$code = substr($code[0]->src, -2);
+			//if there is no image next to an LBG item, we will guess it is an observer group
+			else {
+				$observers = $html->find("#list section.lbg-list", 1);
+				foreach ($observers->find("a.lbg-link") as $observer){
+				    if (stripos($observer->children[0]->innertext, $name) !== FALSE)
+						$code = substr($observer->href, -2);
+				}
+			}
+			//get homepage URL
+		    $url = $lbg->find("dd a[href^=http]");
             if (!$url)
-                $url = null;
+                $url = $this->parsed_link_prefix . '/aboutBEST/structure/lbgView.jsp?lbginfo=' . $code;
             else
                 $url = $url[0]->href;
-            array_push( $theData, array($url, "na", $name) );
+            array_push( $theData, array($url, $code, $name) );
         }
         return $theData;
 		
