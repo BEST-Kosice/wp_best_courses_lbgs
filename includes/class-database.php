@@ -52,7 +52,7 @@ abstract class LogTarget {
 class Database {
 
     // Plugin version of the database, any change here immediately upgrades database of all plugin users
-    const TARGET_PLUGIN_DB_VERSION = 1;
+    const TARGET_PLUGIN_DB_VERSION = 2;
 
     // Prefix for all plugin options
     const OPTION_BASE_PREFIX = 'best_courses_lbgs_';
@@ -102,6 +102,7 @@ class Database {
             return false;
         }
 
+        global $wpdb;
         $upgraded = false;
         // Upgrades the database towards the currently installed plugin version
         while ( ( $current_db_version = get_option( self::OPTION_NAME_PLUGIN_DB_VERSION, 0 ) )
@@ -120,9 +121,36 @@ class Database {
                     foreach ( self::$TRANSLATION_CODES as $code ) {
                         self::refresh_lbg_translation_table( LogRequestType::AUTOMATIC, $code );
                     }
+                    // Skips all other upgrade steps by setting the version to the highest
                     update_option( self::OPTION_NAME_PLUGIN_DB_VERSION, self::TARGET_PLUGIN_DB_VERSION );
                     $log( 'Database initialization: installed version ' . self::TARGET_PLUGIN_DB_VERSION );
                     break;
+                // Added LBGS translations
+                case 1:
+                    $translation_tables       = array();
+                    $idx                      = 0;
+                    $translation_table_prefix = self::BEST_LBGS_TRANSLATION_TABLE_PREFIX;
+                    foreach ( self::$TRANSLATION_CODES as $code ) {
+                        $translation_tables[ $idx ++ ] = <<< SQL
+CREATE TABLE IF NOT EXISTS {$wpdb->prefix}{$translation_table_prefix}{$code} (
+lbg_id char(2),
+name varchar(50),
+PRIMARY KEY (lbg_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+SQL;
+                    }
+                    $operation = 'Upgrading DB by adding translation tables';
+                    foreach ( $translation_tables as $translation ) {
+                        if ( $wpdb->query( $translation ) ) {
+                            self::log_success( LogRequestType::AUTOMATIC, LogTarget::TRANSLATION, $operation,
+                                $wpdb->last_query );
+                        } else {
+                            self::log_error( LogRequestType::AUTOMATIC, LogTarget::TRANSLATION, $operation,
+                                $wpdb->last_query, $wpdb->last_error );
+                        }
+                    }
+                    break;
+                // End switch ( $current_db_version )
             }
 
             // Implicitly increases version by 1 after each step, unless there was an explicit external change
@@ -247,7 +275,8 @@ SQL;
             if ( $wpdb->query( $translation ) ) {
                 self::log_success( $request_type, LogTarget::TRANSLATION, $operation, $wpdb->last_query );
             } else {
-                self::log_error( $request_type, LogTarget::TRANSLATION, $operation, $wpdb->last_query, $wpdb->last_error );
+                self::log_error( $request_type, LogTarget::TRANSLATION, $operation, $wpdb->last_query,
+                    $wpdb->last_error );
             }
         }
     }
@@ -558,7 +587,8 @@ SQL;
         $operation = 'Refreshing translation table for language code: ' . $lang_code;
         if ( $lbgs ) {
             // Replaces the table by new insert data based on the callback using function which logs the result
-            return self::replace_db_table( self::BEST_LBGS_TRANSLATION_TABLE_PREFIX . $lang_code, $request_type, $target,
+            return self::replace_db_table( self::BEST_LBGS_TRANSLATION_TABLE_PREFIX . $lang_code, $request_type,
+                $target,
                 $operation,
                 function ( $table_name ) use ( $lbgs ) {
                     if ( $table_name == null ) {
