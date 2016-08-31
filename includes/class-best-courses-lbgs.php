@@ -13,11 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @package best\kosice\best_courses_lbgs
  */
-class Best_Courses_LBGS {
+class BEST_Courses_LBGS {
 
     /**
      * The single instance of Best_Courses_LBGS.
-     * @var      Best_Courses_LBGS
+     * @var      BEST_Courses_LBGS
      * @since    1.0.0
      */
     private static $_instance = null;

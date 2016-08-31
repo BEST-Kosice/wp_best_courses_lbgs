@@ -1,13 +1,13 @@
 <?php
 
-use best\kosice\best_courses_lbgs\Best_Courses_LBGS;
+use best\kosice\best_courses_lbgs\BEST_Courses_LBGS;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-Best_Courses_LBGS::instance()->enqueue_styles();
-Best_Courses_LBGS::instance()->enqueue_scripts();
+BEST_Courses_LBGS::instance()->enqueue_styles();
+BEST_Courses_LBGS::instance()->enqueue_scripts();
 
 // this is the shortcode for displaying an interactive svg map of all lbgs.
 // to test, just pust [best_lbgs_map] into a page or article.

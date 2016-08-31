@@ -35,4 +35,4 @@ const PLUGIN_NAME = 'wp-best-courses-lbgs';
 /**
  * Runs the main plugin entry point, instantiating Best_Courses_LBGS using the current PHP file.
  */
-Best_Courses_LBGS::instance( __FILE__, '1.0.0' );
+BEST_Courses_LBGS::instance( __FILE__, '1.0.0' );

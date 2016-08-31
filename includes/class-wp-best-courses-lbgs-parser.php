@@ -179,13 +179,10 @@ class best_kosice_data
         switch ($this->error_id) {
             case 1:
                 return 'Unable to download document.';
-                break;
             case 2:
                 return 'Unable to parse changed document structure.';
-                break;
             default:
                 return false;
-                break;
         }
     }
 

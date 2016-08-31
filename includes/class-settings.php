@@ -144,10 +144,10 @@ class Settings {
         $settings['lbgs'] = array(
             'title' => __( 'Local BEST groups', PLUGIN_NAME ),
         );
-		
-		$settings['translations'] = array(
-			'title' => __( 'LBG translations', PLUGIN_NAME ),
-		);
+
+        $settings['translations'] = array(
+            'title' => __( 'LBG translations', PLUGIN_NAME ),
+        );
 
         $settings['configuration'] = array(
             'title'       => __( 'Configuration', PLUGIN_NAME ),
@@ -289,31 +289,32 @@ class Settings {
                 if ( isset( $_POST['manually_update'] ) ) {
                     Database::refresh_db_best_events( LogRequestType::MANUAL );
                 }
-                $target = 'events_db';
+                $target = LogTarget::EVENTS;
                 break;
             case 'lbgs':
                 // Checks for the request for manually updating table
                 if ( isset( $_POST['manually_update'] ) ) {
                     Database::refresh_db_best_lbgs( LogRequestType::MANUAL );
                 }
-                $target = 'lbgs_db';
+                $target = LogTarget::LBGS;
                 break;
-			case 'translations':
-				// LBG translations
-				// Checks for the request for manually updating table
+            case 'translations':
+                // LBG translations
+                // Checks for the request for manually updating table
                 if ( isset( $_POST['manually_update'] ) ) {
-					foreach (Database::$TRANSLATION_CODES as $code)
-						Database::refresh_lbg_translation_table( LogRequestType::MANUAL, $code );
-				}
-				$target = 'translation';
-				break;
+                    foreach ( Database::$TRANSLATION_CODES as $code ) {
+                        Database::refresh_lbg_translation_table( LogRequestType::MANUAL, $code );
+                    }
+                }
+                $target = LogTarget::TRANSLATION;
+                break;
             case 'configuration':
                 // Checks for the request for erasing the DB
                 if ( isset( $_POST['erase_db'] ) ) {
                     Database::erase_table( Database::BEST_EVENTS_TABLE, LogRequestType::MANUAL );
                     Database::erase_table( Database::BEST_LBGS_TABLE, LogRequestType::MANUAL );
                 }
-                $target = 'meta';
+                $target = LogTarget::META;
                 break;
         }
 
@@ -357,33 +358,32 @@ class Settings {
                 $html .= '</h2>' . "\n";
             }
 
-		$manual_update_button_text = "";
-        if ( $tab != 'configuration' ) {
-			$table_context = "";
-			switch ($tab) {
-				case 'events':
-					$manual_update_button_text = __( 'Update events', PLUGIN_NAME );
-					$table_context = __( 'Aktuálny počet eventov v tabuľke: ' 
-										. Database::count_db_table_rows(Database::BEST_EVENTS_TABLE), PLUGIN_NAME );
-					break;
-				case 'lbgs':
-					$manual_update_button_text = __( 'Update groups', PLUGIN_NAME );
-					$table_context = __( 'Aktuálny počet lokálnych BEST skupín v tabuľke: ' 
-										. Database::count_db_table_rows(Database::BEST_LBGS_TABLE), PLUGIN_NAME);
-					break;
-				case 'translations':
-					$manual_update_button_text = __( 'Update translations', PLUGIN_NAME );
-					$table_context = __( 'Aktuálny počet prekladových tabuliek pre ' 
-										. Database::count_db_table_rows(Database::BEST_LBGS_TABLE) 
-										. ' lokálnych skupín: '. count(Database::$TRANSLATION_CODES) 
-										, PLUGIN_NAME);
-					break;
-				default:
-					break;
-			}
-            // Displaying number of entries in the table
-            $html .= '<p>' . $table_context . '</p>';
-        }
+            $manual_update_button_text = "";
+            if ( $tab != 'configuration' ) {
+                $table_context = "";
+                switch ( $tab ) {
+                    // TODO: translate a formatted string instead, improves readability and in case of case 'translation', solves a problem
+                    case 'events':
+                        $manual_update_button_text = __( 'Update events', PLUGIN_NAME );
+                        $table_context             = __( 'Aktuálny počet eventov v tabuľke',
+                                PLUGIN_NAME ) . ': ' . Database::count_db_table_rows( Database::BEST_EVENTS_TABLE );
+                        break;
+                    case 'lbgs':
+                        $manual_update_button_text = __( 'Update groups', PLUGIN_NAME );
+                        $table_context             = __( 'Aktuálny počet lokálnych BEST skupín v tabuľke',
+                                PLUGIN_NAME ) . ': ' . Database::count_db_table_rows( Database::BEST_LBGS_TABLE );
+                        break;
+                    case 'translations':
+                        $manual_update_button_text = __( 'Update translations', PLUGIN_NAME );
+                        $table_context             = __( 'Aktuálny počet prekladových tabuliek pre '
+                                                         . Database::count_db_table_rows( Database::BEST_LBGS_TABLE ) .
+                                                         ' lokálnych skupín', PLUGIN_NAME ) . ': ' .
+                                                     count( Database::$TRANSLATION_CODES );
+                        break;
+                }
+                // Displaying number of entries in the table
+                $html .= '<p>' . $table_context . '</p>';
+            }
 
             // Setting fields and submit button
             $html .= '<form method="post" action="options.php" enctype="multipart/form-data">' . "\n";
@@ -415,7 +415,7 @@ class Settings {
                     $html .= '</p>' . "\n";
                 $html .= '</form>' . "\n";
             }
-		
+
             // Form for manual database update
             if($tab != 'configuration') {
                 $html .= '<form method="post">' . "\n";
@@ -428,14 +428,14 @@ class Settings {
                 $html .= '</form>' . "\n";
             }
 
-        // Displays an updates history table
-        $html .= '<hr />';
-        $html .= $this->updates_history_table( $target, 'history_table' );
+            // Displays an updates history table
+            $html .= '<hr />';
+            $html .= $this->updates_history_table( $target, 'history_table' );
 
         $html .= '</div>' . "\n";
 
         // Displays a message about last update
-        if($tab != 'configuration') {
+        if ( $tab != 'configuration' ) {
             $this->display_last_update_status( $target );
         }
         echo $html;
@@ -533,7 +533,7 @@ class Settings {
 
             // Request type
             $request_type = $history['request_type'];
-            $request_type = $this->translate_request_type($request_type);
+            $request_type = $this->translate_request_type( $request_type );
             $html .= '<td>' . $request_type . '</td>';
 
             // Operation
@@ -564,7 +564,7 @@ class Settings {
      *
      * @return string translated request type
      */
-    public function translate_request_type($request_type){
+    public function translate_request_type( $request_type ) {
         switch ( $request_type ) {
             case LogRequestType::AUTOMATIC:
                 $request_type = _x( 'Automatic', 'update type', PLUGIN_NAME );
@@ -573,6 +573,7 @@ class Settings {
                 $request_type = _x( 'Manual', 'update type', PLUGIN_NAME );
                 break;
         }
+
         return $request_type;
     }
 
