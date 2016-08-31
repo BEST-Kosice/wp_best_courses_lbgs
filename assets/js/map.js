@@ -1,4 +1,4 @@
-    var map_container = document.getElementById("svg_map");
+    var map_container = document.getElementById("lbg_map");
     if (map_container) {
         var s = Snap(map_container);
         countries_add_effects('#1973BE', "#144173", s.selectAll("#Countries > g"));

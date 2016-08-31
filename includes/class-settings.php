@@ -144,6 +144,10 @@ class Settings {
         $settings['lbgs'] = array(
             'title' => __( 'Local BEST groups', PLUGIN_NAME ),
         );
+		
+		$settings['translations'] = array(
+			'title' => __( 'LBG translations', PLUGIN_NAME ),
+		);
 
         $settings['configuration'] = array(
             'title'       => __( 'Configuration', PLUGIN_NAME ),
@@ -294,6 +298,15 @@ class Settings {
                 }
                 $target = 'lbgs_db';
                 break;
+			case 'translations':
+				// LBG translations
+				// Checks for the request for manually updating table
+                if ( isset( $_POST['manually_update'] ) ) {
+					foreach (Database::$TRANSLATION_CODES as $code)
+						Database::refresh_lbg_translation_table( LogRequestType::MANUAL, $code );
+				}
+				$target = 'translation';
+				break;
             case 'configuration':
                 // Checks for the request for erasing the DB
                 if ( isset( $_POST['erase_db'] ) ) {
@@ -344,14 +357,32 @@ class Settings {
                 $html .= '</h2>' . "\n";
             }
 
+		$manual_update_button_text = "";
         if ( $tab != 'configuration' ) {
+			$table_context = "";
+			switch ($tab) {
+				case 'events':
+					$manual_update_button_text = __( 'Update events', PLUGIN_NAME );
+					$table_context = __( 'Aktuálny počet eventov v tabuľke: ' 
+										. Database::count_db_table_rows(Database::BEST_EVENTS_TABLE), PLUGIN_NAME );
+					break;
+				case 'lbgs':
+					$manual_update_button_text = __( 'Update groups', PLUGIN_NAME );
+					$table_context = __( 'Aktuálny počet lokálnych BEST skupín v tabuľke: ' 
+										. Database::count_db_table_rows(Database::BEST_LBGS_TABLE), PLUGIN_NAME);
+					break;
+				case 'translations':
+					$manual_update_button_text = __( 'Update translations', PLUGIN_NAME );
+					$table_context = __( 'Aktuálny počet prekladových tabuliek pre ' 
+										. Database::count_db_table_rows(Database::BEST_LBGS_TABLE) 
+										. ' lokálnych skupín: '. count(Database::$TRANSLATION_CODES) 
+										, PLUGIN_NAME);
+					break;
+				default:
+					break;
+			}
             // Displaying number of entries in the table
-            $table_name        = ( $tab == 'lbgs' ? Database::BEST_LBGS_TABLE : Database::BEST_EVENTS_TABLE );
-            $table_row_entries = Database::count_db_table_rows( $table_name );
-            $table_context     = $tab == 'lbgs'
-                ? __( 'Aktuálny počet lokálnych BEST skupín v tabuľke', PLUGIN_NAME )
-                : __( 'Aktuálny počet eventov v tabuľke', PLUGIN_NAME );
-            $html .= '<p>' . $table_context . ': ' . $table_row_entries . '</p>';
+            $html .= '<p>' . $table_context . '</p>';
         }
 
             // Setting fields and submit button
@@ -384,11 +415,7 @@ class Settings {
                     $html .= '</p>' . "\n";
                 $html .= '</form>' . "\n";
             }
-
-            $manual_update_button_text = $tab == 'lbgs'
-                ? __( 'Update groups', PLUGIN_NAME )
-                : __( 'Update events', PLUGIN_NAME );
-
+		
             // Form for manual database update
             if($tab != 'configuration') {
                 $html .= '<form method="post">' . "\n";

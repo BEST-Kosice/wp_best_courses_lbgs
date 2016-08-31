@@ -145,8 +145,6 @@ class best_kosice_data
 
         $data = is_string($data) ? $this->parse_lbgs($data) : false;
         //$data = (is_array($data[1]) && $data[1]) ? $this->parse_lbgs($data[1]) : false;
-		
-		return $data;
 
         if (!$data) {
             $this->error_id = 2;

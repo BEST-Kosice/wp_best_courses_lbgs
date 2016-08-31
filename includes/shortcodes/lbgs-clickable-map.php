@@ -13,7 +13,7 @@ Best_Courses_LBGS::instance()->enqueue_scripts();
 // to test, just pust [best_lbgs_map] into a page or article.
 ?>
 
-<div id="svg_map" style="min-height:600px; min-width:600px;;">
+<div id="lbg_map" style="min-height:600px; min-width:600px;;">
     <?php
 		/*use best\kosice\datalib\best_kosice_data;
 		use Sunra\PhpSimple\HtmlDomParser;
@@ -51,7 +51,9 @@ Best_Courses_LBGS::instance()->enqueue_scripts();
 		 * and removing some document nodes (specifically, removing all SVG elements representing former LBGs).
 		 */
 		global $wpdb;
-		$data = $wpdb->get_results('SELECT * FROM '.$wpdb->prefix.'best_lbg', ARRAY_A);
+		$data = $wpdb->get_results('SELECT lbg_id, sk.name, web_page FROM '
+								   .$wpdb->prefix.'best_lbg lbg INNER JOIN '.$wpdb->prefix.'best_lbg_sk sk
+								   ON sk.lbg_id = lbg.state ORDER BY lbg_id DESC', ARRAY_A);
 
 		$svg = simplexml_load_file( __DIR__ .'/../../assets/images/map-optimized.svg');
 
@@ -59,104 +61,6 @@ Best_Courses_LBGS::instance()->enqueue_scripts();
 		$svg->registerXPathNamespace('svg', 'http://www.w3.org/2000/svg');
 		// required for the xlink:href=" ... attribute, if we were to use it later
 		$svg->registerXPathNamespace('xlink', 'http://www.w3.org/1999/xlink');
-	
-		$LBG_SK = array('lp'=>'Las Palmas',
-		'vn'=>'Vinnytsia',
-		'mt'=>'Mostar',
-		'po'=>'Podgorica',
-		'ip'=>'Isparta',
-		'al'=>'Aalborg',
-		'am'=>'Almada',
-		'at'=>'Atény',
-		'ba'=>'Barcelona',
-		'bg'=>'Belehrad',
-		'bv'=>'Brasov',
-		'br'=>'Bratislava',
-		'bl'=>'Brusel ULB',
-		'bx'=>'Brusel',
-		'bc'=>'Bukurešť',
-		'bp'=>'Budapešť',
-		'xa'=>'Chania',
-		'cj'=>'Cluj-Napoca',
-		'co'=>'Coimbra',
-		'cp'=>'Kodaň',
-		'yk'=>'Ekaterinburg UrFU',
-		'ye'=>'Ekaterinburg',
-		'gd'=>'Gdansk',
-		'ge'=>'Ghent',
-		'gl'=>'Gliwice',
-		'go'=>'Göteborg',
-		'gr'=>'Grenoble',
-		'he'=>'Helsinki',
-		'is'=>'Iasi',
-		'it'=>'Istanbul',
-		'yl'=>'Istanbul Yildiz',
-		'ib'=>'Istanbul Bogazici',
-		'ku'=>'Kaunas',
-		'ko'=>'Košice',
-		'cr'=>'Kraków',
-		'le'=>'Leuven',
-		'lg'=>'Liege',
-		'ls'=>'Lisabon',
-		'lj'=>'Ljubljana',
-		'ld'=>'Lodz',
-		'lu'=>'Lund',
-		'lv'=>'Lviv',
-		'ly'=>'Lyon',
-		'mc'=>'Madrid Carlos III',
-		'ma'=>'Madrid',
-		'mb'=>'Maribor',
-		'mi'=>'Milán',
-		'nn'=>'Nancy',
-		'na'=>'Naples',
-		'et'=>'ENSTA ParisTech',
-		'ep'=>'Paríž Polytechnique',
-		'ec'=>'Paríž Ecole Centrale',
-		'em'=>'ENSAM',
-		'se'=>'Supélec',
-		'pa'=>'Patras',
-		'pt'=>'Porto',
-		'ri'=>'Riga',
-		'ro'=>'Rím',
-		'tv'=>'Rím Tor Vergata',
-		'sk'=>'Skopje',
-		'sf'=>'Sofia',
-		'st'=>'Štokholm',
-		'ta'=>'Tallinn',
-		'tp'=>'Tampere',
-		'th'=>'Thessaloniki',
-		'tm'=>'Timisoara',
-		'tr'=>'Trondheim',
-		'to'=>'Turín',
-		'up'=>'Uppsala',
-		'va'=>'Valladolid',
-		'vs'=>'Veszprém',
-		'vi'=>'Viedeň',
-		'wa'=>'Varšava',
-		'za'=>'Záhreb',
-		'ac'=>'Aachen',
-		'rl'=>'Erlangen',
-		'bu'=>'Brno',
-		'ns'=>'Novi Sad',
-		're'=>'Reykjavik',
-		'gz'=>'Graz',
-		'ln'=>'Louvain-la-Neuve',
-		'an'=>'Ankara',
-		'mo'=>'Moskva',
-		'zp'=>'Zaporizhzhya',
-		'ni'=>'Niš',
-		'vl'=>'Valencia',
-		'kv'=>'Kyjev',
-		'me'=>'Messina',
-		'ch'=>'Kišiňov',
-		'pe'=>'Petrohrad',
-		'av'=>'Aveiro',
-		'iz'=>'Izmir',
-		'pg'=>'Praha',
-		'df'=>'Delft',
-		'wc'=>'Wroclaw',
-		'gn'=>'Groningen'
-		);
 
 		// delete SVG group of former BEST LBGs
 		$res = $svg->xpath('./svg:g[@id="LBGs"]/svg:g[@id="former"]');
@@ -191,7 +95,7 @@ Best_Courses_LBGS::instance()->enqueue_scripts();
 		}*/
 		
 	    // create links and change the id of all svg:path objects (dots) to what will be displayed in the decription boxes
-	    function add_link($group, $lbg_db_table, $lbg_translations, $id_addition){
+	    function add_link($group, $lbg_db_table, $id_addition){
 			$group->registerXPathNamespace('svg', 'http://www.w3.org/2000/svg');
 	    	$lbgs = $group->xpath('./svg:path');
 	    	$dom = dom_import_simplexml($group);
@@ -199,17 +103,18 @@ Best_Courses_LBGS::instance()->enqueue_scripts();
 				$link = new DOMElement("a");
 				$dom->appendChild( $link )->appendChild(dom_import_simplexml($lbg));
 				foreach ($lbg_db_table as $item){
-					if (stripos($lbg->attributes()["id"], $item["state"]) === 0){
+					if (stripos($lbg->attributes()["id"], $item["lbg_id"]) === 0){
 						$link->setAttribute("xlink:href", $item["web_page"]);
-						$lbg->attributes()["id"] = $lbg_translations[$item["state"]] . $id_addition;
+						$link->setAttribute("target", '_blank');
+						$lbg->attributes()["id"] = $item["name"] . $id_addition;
 						break;
 					}
 				}
 			}
 	    }
 
-		add_link($svg->xpath('./svg:g[@id="LBGs"]/svg:g[@id="current"]')[0], $data, $LBG_SK, "");
-	    add_link($svg->xpath('./svg:g[@id="LBGs"]/svg:g[@id="observer"]')[0], $data, $LBG_SK, " (pozorovateľská skupina)");
+		add_link($svg->xpath('./svg:g[@id="LBGs"]/svg:g[@id="current"]')[0], $data, "");
+	    add_link($svg->xpath('./svg:g[@id="LBGs"]/svg:g[@id="observer"]')[0], $data, " (pozorovateľská skupina)");
 	
 		// echo the SVG code
 		echo $svg->asXML();

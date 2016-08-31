@@ -36,6 +36,7 @@ abstract class LogTarget {
     const EVENTS = 'events_db';
     const LBGS = 'lbgs_db';
     const META = 'meta';
+	const TRANSLATION = 'translation';
 }
 
 /**
@@ -64,7 +65,9 @@ class Database {
     const BEST_EVENTS_TABLE = 'best_events';
     const BEST_LBGS_TABLE = 'best_lbg';
     const BEST_HISTORY_TABLE = 'best_history';
-
+	const BEST_LBGS_TRANSLATION_TABLE = 'best_lbg_';
+	static $TRANSLATION_CODES = array("sk");
+	
     /**
      * Database version upgrading with the least destructive effect for the end user.
      * <p>When this is the first time running the upgrade, initializes (installs) the database to the latest version.
@@ -112,6 +115,9 @@ class Database {
                     self::create_all_tables();
                     self::refresh_db_best_events( LogRequestType::AUTOMATIC );
                     self::refresh_db_best_lbgs( LogRequestType::AUTOMATIC );
+					foreach (self::$TRANSLATION_CODES as $code){
+						self::refresh_lbg_translation_table( LogRequestType::AUTOMATIC, $code );
+					}
                     update_option( self::OPTION_NAME_PLUGIN_DB_VERSION, self::TARGET_PLUGIN_DB_VERSION );
                     $log( 'Database initialization: installed version ' . self::TARGET_PLUGIN_DB_VERSION );
                     break;
@@ -151,6 +157,7 @@ class Database {
         $events_table  = self::BEST_EVENTS_TABLE;
         $lbgs_table    = self::BEST_LBGS_TABLE;
         $history_table = self::BEST_HISTORY_TABLE;
+		$translation_tables = array();
 
         $sql_events = <<< SQL
 CREATE TABLE IF NOT EXISTS {$wpdb->prefix}{$events_table} (
@@ -198,6 +205,17 @@ PRIMARY KEY (id_history)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 SQL;
 
+		$idx = 0; $translation_table_prefix = self::BEST_LBGS_TRANSLATION_TABLE;
+		foreach(self::$TRANSLATION_CODES as $code){
+			$translation_tables[$idx++] = <<< SQL
+CREATE TABLE IF NOT EXISTS {$wpdb->prefix}{$translation_table_prefix}{$code} (
+lbg_id char(2),
+name varchar(50),
+PRIMARY KEY (lbg_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+SQL;
+		}
+		
         // Querying and error handling
         $operation = 'Table creation if missing';
 
@@ -221,6 +239,14 @@ SQL;
         } else {
             self::log_error( $request_type, LogTarget::LBGS, $operation, $wpdb->last_query, $wpdb->last_error );
         }
+
+		foreach ($translation_tables as $translation){
+			if ( $wpdb->query( $translation ) ) {
+            	self::log_success( $request_type, LogTarget::LBGS, $operation, $wpdb->last_query );
+        	} else {
+            	self::log_error( $request_type, LogTarget::LBGS, $operation, $wpdb->last_query, $wpdb->last_error );
+        	}
+		}
     }
 
     /**
@@ -232,8 +258,16 @@ SQL;
      */
     public static function drop_all_tables( $request_type = LogRequestType::AUTOMATIC ) {
         global $wpdb;
+		
+		$success = true;
+		foreach (self::$TRANSLATION_CODES as $code){
+			if ( !$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . self::BEST_LBGS_TRANSLATION_TABLE . $code ) ) {
+				$success = false;
+				self::log_error( $request_type, LogTarget::META, 'Dropping tables', $wpdb->last_query, $wpdb->last_error );
+			}
+		}
 
-        if ( $wpdb->query( 'DROP TABLE IF EXISTS '
+        if ( $success && $wpdb->query( 'DROP TABLE IF EXISTS '
                            . $wpdb->prefix . self::BEST_EVENTS_TABLE
                            . ', '
                            . $wpdb->prefix . self::BEST_LBGS_TABLE
@@ -362,7 +396,7 @@ SQL;
 
             return false;
         }
-
+		
         // If the DB supports it, we will offer transaction rollback on error
         $wpdb->query( 'START TRANSACTION' );
 
@@ -499,6 +533,55 @@ SQL;
             return false;
         }
     }
+	
+	/**
+	 * Add a translation table of LBG names into the database. Values to insert are accessed from an XML document.
+	 * 
+	 * @param $request_type string type of the operation request, use enum class LogRequestType
+	 * @param $lang_code: a 2-letter code in lowercase that represents the language code of a particular language
+	 *                    e.g. sk - Slovak, etc.
+	 * @see LogRequestType
+	 * 
+	 * @return bool true on success, false on failure
+	 */
+	public static function refresh_lbg_translation_table($request_type, $lang_code){
+		
+		$lbgs = simplexml_load_file(Best_Courses_LBGS::instance()->assets_dir . '/lbgs_' . 'sk' . '.xml');
+		// Used logger values
+        $target    = LogTarget::TRANSLATION;
+        $operation = 'Refreshing translation table for language code: ' . $lang_code;
+		if ( $lbgs ) {
+            // Replaces the table by new insert data based on the callback using function which logs the result
+            return self::replace_db_table( self::BEST_LBGS_TRANSLATION_TABLE . $lang_code, $request_type, $target, $operation,
+                function ( $table_name ) use ( $lbgs ) {
+                    if ( $table_name == null ) {
+                        return null;
+                    }
+
+                    $insert_query = "INSERT INTO $table_name (lbg_id, name) VALUES ";
+
+                    // Inserts new entries
+                    foreach ( $lbgs->children() as $lbg ) {
+                        // Next row
+                        $insert_query .= '(' .
+                                         // lbg_id
+                                         "'" . esc_sql( $lbg["id"] ) . "'," .
+                                         // name
+                                         "'" . esc_sql( $lbg ) . "'" .
+                                         '),';
+                    }
+
+                    return rtrim( $insert_query, ',' );
+                } );
+        } else {
+            self::log_error( $request_type, $target, $operation
+                , 'Failed to retrieve LBGs from XML file for language: ' . $lang_code
+                , 'Returned no data'
+            );
+
+            return false;
+        }
+	}
 
     /**
      * Counts the number of rows of a table in the database.
@@ -558,5 +641,4 @@ SQL;
 
         return $wpdb->get_results( "SELECT * FROM $table_name$condition$order_by LIMIT 1", ARRAY_A );
     }
-
 }
