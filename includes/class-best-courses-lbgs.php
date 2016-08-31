@@ -137,9 +137,6 @@ class Best_Courses_LBGS {
         wp_register_style( $this->_token . '-frontend', esc_url( $this->assets_url ) . 'css/frontend.css', array(),
             $this->_version );
         wp_enqueue_style( $this->_token . '-frontend' );
-		wp_register_style( $this->_token . '-map', esc_url( $this->assets_url ) . 'css/map.css', array(),
-            $this->_version );
-        wp_enqueue_style( $this->_token . '-map' );
     } // End enqueue_styles()
 
     /**
