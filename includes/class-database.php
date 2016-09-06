@@ -39,6 +39,55 @@ abstract class LogTarget {
     const TRANSLATION = 'translation';
 }
 
+// Use these constants as table names when possible, be DRY. Add table prefix. In future, enums may be created.
+abstract class TableNames {
+    const HISTORY = 'best_history';
+    const EVENTS = 'best_events';
+    const LBGS = 'best_lbg';
+    //note: ?? is a placeholder value for a specific language code
+    const LBG_TRANSLATIONS = 'best_lbg_??';
+}
+
+define('HISTORY_DDL', "CREATE TABLE IF NOT EXISTS ?? (
+id_history int(11) NOT NULL AUTO_INCREMENT,
+time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+request_type varchar(50) NOT NULL CHECK(request_type IN
+( '" . LogRequestType::AUTOMATIC . "', '" . LogRequestType::MANUAL . "', 'unknown' )),
+target varchar(50) NOT NULL CHECK(target IN
+( '" . LogTarget::EVENTS . "', '" . LogTarget::LBGS . "', '" . LogTarget::META . "', '" . LogTarget::TRANSLATION . "' )),
+operation varchar(50) NOT NULL,
+attempted_request text DEFAULT NULL,
+error_message text DEFAULT NULL,
+PRIMARY KEY (id_history)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;");
+
+define('EVENTS_DDL', "CREATE TABLE IF NOT EXISTS ?? (
+id_event int(11) NOT NULL AUTO_INCREMENT,
+event_name varchar(100) NOT NULL,
+place varchar(40) NOT NULL,
+dates varchar(40) NOT NULL,
+event_type varchar(100) NOT NULL,
+acad_compl varchar(20) DEFAULT NULL,
+fee varchar(10) NOT NULL,
+app_deadline varchar(30) DEFAULT NULL,
+login_url varchar(1000) DEFAULT NULL,
+PRIMARY KEY (id_event)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;");
+
+define('LBGS_DDL', "CREATE TABLE IF NOT EXISTS ?? (
+id_lbg int(11) NOT NULL AUTO_INCREMENT,
+city varchar(50) NOT NULL,
+state varchar(50) NOT NULL,
+web_page varchar(200) DEFAULT NULL,
+PRIMARY KEY (id_lbg)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;");
+
+define('LBGS_TRANSLATION_DDL', "CREATE TABLE IF NOT EXISTS ?? (
+lbg_id char(2),
+name varchar(50),
+PRIMARY KEY (lbg_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;");
+
 /**
  * Static class for Database operations within the plugin.
  *
@@ -66,9 +115,20 @@ class Database {
     const BEST_LBGS_TABLE = 'best_lbg';
     const BEST_HISTORY_TABLE = 'best_history';
     const BEST_LBGS_TRANSLATION_TABLE_PREFIX = 'best_lbg_';
-
+    
+    //TODO possibly decide on a better name (and purpose) for this table
+    const HISTORY_DDL_STATEMENT = HISTORY_DDL;
+    
+    const EVENTS_DDL_STATEMENT = EVENTS_DDL;
+    
+    //TODO rename lbg to lbgs for consistency (but I don't want to ruin current dbs of developers, maybe some patch?)
+    const LBGS_DDL_STATEMENT = LBGS_DDL;
+    
+    const LBGS_TRANSLATION_DDL_STATEMENT = LBGS_TRANSLATION_DDL;
+    
     // Available translations with an existing corresponding lbgs_??.xml file
-    static $TRANSLATION_CODES = array( "sk" );
+    static $LANG_CODES = array( "sk" );
+    static $TRANSLATION_XML_FILENAME = 'lbgs_??';
 
     /**
      * Database version upgrading with the least destructive effect for the end user.
@@ -98,7 +158,6 @@ class Database {
         if ( get_option( self::OPTION_NAME_PLUGIN_DB_VERSION, 0 ) > self::TARGET_PLUGIN_DB_VERSION ) {
             update_option( self::OPTION_NAME_PLUGIN_DB_VERSION, self::TARGET_PLUGIN_DB_VERSION );
             $log( 'Detected too large database version, setting down to ' . self::TARGET_PLUGIN_DB_VERSION );
-
             return false;
         }
 
@@ -115,10 +174,11 @@ class Database {
                 // Initialization - if the database had none or an unknown version, drop and recreate everything
                 case 0:
                     self::drop_all_tables();
-                    self::create_all_tables();
+                    self::create_all_tables( LogRequestType::AUTOMATIC );
                     self::refresh_db_best_events( LogRequestType::AUTOMATIC );
                     self::refresh_db_best_lbgs( LogRequestType::AUTOMATIC );
-                    foreach ( self::$TRANSLATION_CODES as $code ) {
+                    // create_all_tables() already called lbg_translations_init(), no need to call again here;
+                    foreach ( self::$LANG_CODES as $code ) {
                         self::refresh_lbg_translation_table( LogRequestType::AUTOMATIC, $code );
                     }
                     // Skips all other upgrade steps by setting the version to the highest
@@ -127,28 +187,17 @@ class Database {
                     break;
                 // Added LBGS translations
                 case 1:
-                    $translation_tables       = array();
-                    $idx                      = 0;
-                    $translation_table_prefix = self::BEST_LBGS_TRANSLATION_TABLE_PREFIX;
-                    foreach ( self::$TRANSLATION_CODES as $code ) {
-                        $translation_tables[ $idx ++ ] = <<< SQL
-CREATE TABLE IF NOT EXISTS {$wpdb->prefix}{$translation_table_prefix}{$code} (
-lbg_id char(2),
-name varchar(50),
-PRIMARY KEY (lbg_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-SQL;
-                    }
+                    // in case of upgrading from version 1, however, we need to call lbg_translations_init();
+					self::lbg_translations_init();
                     $operation = 'Upgrading DB by adding translation tables';
-                    foreach ( $translation_tables as $translation ) {
-                        if ( $wpdb->query( $translation ) ) {
-                            self::log_success( LogRequestType::AUTOMATIC, LogTarget::TRANSLATION, $operation,
-                                $wpdb->last_query );
-                        } else {
-                            self::log_error( LogRequestType::AUTOMATIC, LogTarget::TRANSLATION, $operation,
-                                $wpdb->last_query, $wpdb->last_error );
-                        }
-                    }
+					foreach ( self::$LANG_CODES as $code ) {
+                        self::create_table( 
+                            str_replace('??', 
+                                    $wpdb->prefix . self::BEST_LBGS_TRANSLATION_TABLE_PREFIX . $code, 
+                                    self::LBGS_TRANSLATION_DDL_STATEMENT), 
+                            LogTarget::LBGS, LogRequestType::AUTOMATIC, $operation );
+						self::refresh_lbg_translation_table( LogRequestType::AUTOMATIC, $code );
+					}
                     break;
                 // End switch ( $current_db_version )
             }
@@ -184,100 +233,25 @@ SQL;
      */
     public static function create_all_tables( $request_type = LogRequestType::AUTOMATIC ) {
         global $wpdb;
-        $events_table       = self::BEST_EVENTS_TABLE;
-        $lbgs_table         = self::BEST_LBGS_TABLE;
-        $history_table      = self::BEST_HISTORY_TABLE;
-        $translation_tables = array();
-
-        $sql_events = <<< SQL
-CREATE TABLE IF NOT EXISTS {$wpdb->prefix}{$events_table} (
-id_event int(11) NOT NULL AUTO_INCREMENT,
-event_name varchar(100) NOT NULL,
-place varchar(40) NOT NULL,
-dates varchar(40) NOT NULL,
-event_type varchar(100) NOT NULL,
-acad_compl varchar(20) DEFAULT NULL,
-fee varchar(10) NOT NULL,
-app_deadline varchar(30) DEFAULT NULL,
-login_url varchar(1000) DEFAULT NULL,
-PRIMARY KEY (id_event)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-SQL;
-
-        //TODO rename lbg to lbgs for consistency (but I don't want to ruin current dbs of developers, maybe some patch?)
-        $sql_lbgs = <<< SQL
-CREATE TABLE IF NOT EXISTS {$wpdb->prefix}{$lbgs_table} (
-id_lbg int(11) NOT NULL AUTO_INCREMENT,
-city varchar(50) NOT NULL,
-state varchar(50) NOT NULL,
-web_page varchar(200) DEFAULT NULL,
-PRIMARY KEY (id_lbg)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-SQL;
-
-        $request_type_automatic = LogRequestType::AUTOMATIC;
-        $request_type_manual    = LogRequestType::MANUAL;
-        $target_events          = LogTarget::EVENTS;
-        $target_lbgs            = LogTarget::LBGS;
-        $target_meta            = LogTarget::META;
-
-        //TODO possibly decide on a better name (and purpose) for this table
-        $sql_history = <<< SQL
-CREATE TABLE IF NOT EXISTS {$wpdb->prefix}{$history_table} (
-id_history int(11) NOT NULL AUTO_INCREMENT,
-time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-request_type varchar(50) NOT NULL CHECK(request_type IN({$request_type_automatic}, {$request_type_manual}, 'unknown')),
-target varchar(50) NOT NULL CHECK(target IN({$target_events}, {$target_lbgs}, {$target_meta})),
-operation varchar(50) NOT NULL,
-attempted_request text DEFAULT NULL,
-error_message text DEFAULT NULL,
-PRIMARY KEY (id_history)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-SQL;
-
-        $idx                      = 0;
-        $translation_table_prefix = self::BEST_LBGS_TRANSLATION_TABLE_PREFIX;
-        foreach ( self::$TRANSLATION_CODES as $code ) {
-            $translation_tables[ $idx ++ ] = <<< SQL
-CREATE TABLE IF NOT EXISTS {$wpdb->prefix}{$translation_table_prefix}{$code} (
-lbg_id char(2),
-name varchar(50),
-PRIMARY KEY (lbg_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-SQL;
-        }
-
-        // Querying and error handling
         $operation = 'Table creation if missing';
-
-        //TODO: stop logging when table already existed (query still returns 1)
-
-        // NOTE: History table has to be created first in order for logging to work. Learned it the hard way.
-        if ( $wpdb->query( $sql_history ) ) {
-            self::log_success( $request_type, LogTarget::META, $operation, $wpdb->last_query );
-        } else {
-            self::log_error( $request_type, LogTarget::META, $operation, $wpdb->last_query, $wpdb->last_error );
-        }
-
-        if ( $wpdb->query( $sql_events ) ) {
-            self::log_success( $request_type, LogTarget::EVENTS, $operation, $wpdb->last_query );
-        } else {
-            self::log_error( $request_type, LogTarget::EVENTS, $operation, $wpdb->last_query, $wpdb->last_error );
-        }
-
-        if ( $wpdb->query( $sql_lbgs ) ) {
-            self::log_success( $request_type, LogTarget::LBGS, $operation, $wpdb->last_query );
-        } else {
-            self::log_error( $request_type, LogTarget::LBGS, $operation, $wpdb->last_query, $wpdb->last_error );
-        }
-
-        foreach ( $translation_tables as $translation ) {
-            if ( $wpdb->query( $translation ) ) {
-                self::log_success( $request_type, LogTarget::TRANSLATION, $operation, $wpdb->last_query );
-            } else {
-                self::log_error( $request_type, LogTarget::TRANSLATION, $operation, $wpdb->last_query,
-                    $wpdb->last_error );
-            }
+        self::create_table( 
+            str_replace('??', $wpdb->prefix . self::BEST_HISTORY_TABLE ,self::LBGS_DDL_STATEMENT),
+            LogTarget::META, $request_type, $operation );
+        self::create_table( 
+            str_replace('??', $wpdb->prefix . self::BEST_EVENTS_TABLE ,self::EVENTS_DDL_STATEMENT),
+            LogTarget::EVENTS, $request_type, $operation );
+        self::create_table( 
+            str_replace('??', $wpdb->prefix . self::BEST_LBGS_TABLE ,self::LBGS_DDL_STATEMENT),
+            LogTarget::LBGS, $request_type, $operation );
+        self::lbg_translations_init();
+        $operation = 'Upgrading DB by adding translation tables';
+        foreach ( self::$LANG_CODES as $code ) {
+            self::create_table( 
+                str_replace('??', 
+                            $wpdb->prefix . self::BEST_LBGS_TRANSLATION_TABLE_PREFIX . $code, 
+                            self::LBGS_TRANSLATION_DDL_STATEMENT
+                           ), 
+                LogTarget::LBGS, LogRequestType::AUTOMATIC, $operation );
         }
     }
 
@@ -292,7 +266,8 @@ SQL;
         global $wpdb;
 
         $success = true;
-        foreach ( self::$TRANSLATION_CODES as $code ) {
+        self::lbg_translations_init();
+        foreach ( self::$LANG_CODES as $code ) {
             if ( ! $wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . self::BEST_LBGS_TRANSLATION_TABLE_PREFIX .
                                  $code )
             ) {
@@ -461,7 +436,7 @@ SQL;
      *
      * @see LogRequestType
      *
-     * @return bool true on success, false on failure
+     * @return bool true on success, false on failure (@see @return of replace_db_table())
      */
     public static function refresh_db_best_events( $request_type ) {
         // Reads all courses from the remote db
@@ -523,7 +498,7 @@ SQL;
      *
      * @see LogRequestType
      *
-     * @return bool true on success, false on failure
+     * @return bool true on success, false on failure (@see @return of replace_db_table())
      */
     public static function refresh_db_best_lbgs( $request_type ) {
         // Reads all local best groups from the remote db
@@ -578,10 +553,12 @@ SQL;
      *
      * @see LogRequestType
      *
-     * @return bool true on success, false on failure
+     * @return bool true on success, false on failure (@see @return of replace_db_table())
      */
     public static function refresh_lbg_translation_table( $request_type, $lang_code ) {
-        $lbgs = simplexml_load_file( BEST_Courses_LBGS::instance()->assets_dir . '/lbgs_' . 'sk' . '.xml' );
+        $lbgs = simplexml_load_file( BEST_Courses_LBGS::instance()->assets_dir . '/lang_xml/'
+                                    . str_replace('??', $lang_code, self::$TRANSLATION_XML_FILENAME) 
+                                    . '.xml' );
         // Used logger values
         $target    = LogTarget::TRANSLATION;
         $operation = 'Refreshing translation table for language code: ' . $lang_code;
@@ -619,7 +596,61 @@ SQL;
             return false;
         }
     }
+    
+    
+    /**
+     * Initializes member variables required for creating and refreshing LBG translation tables,
+     * namely, filename format minus .xml extension of XML translation files (default: lbgs_??,
+     * where ?? is a language code) and the list of available languages (represented as an array
+     * of language codes). Initialization information is retrieved from a config XML file in the 
+     * same directory as the XML translation files.
+     *
+     * It is necessary to call this function before any attempt at creating the LBG translations DB,
+     * (including upgrading the DB to add translation tables) and also before manually updating
+     * the translations database, in case it is done after adding new languages or changing the config.
+     *
+     * @see $TRANSLATION_XML_FILENAME, $LANG_CODES and the file lang.conf.xml
+     *
+     * @return bool true on success, false on failure
+     */
+    public static function lbg_translations_init(){
+        $config = simplexml_load_file( BEST_Courses_LBGS::instance()->assets_dir . '/lang_xml/lang.conf.xml' );
+        if ($config) {
+            self::$TRANSLATION_XML_FILENAME = $config->xpath('./format')[0];
+            self::$LANG_CODES = $config->xpath('./langs/lang/@id');
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    //General database querrying and manipulation methods
+    
+    /**
+     * Creates a database table by running an SQL DDL statement (e.g. 'CREATE TABLE ...')
+     *
+     * @param $sql_ddl_statement string of the DDL SQL statement
+     * @param $log_target        string of the target (table) to create, use enum class LogTarget
+     * @param $request_type      string request type, use enum class LogRequestType
+     * @param $operation         string description of the action that is being performed
+     *
+     * @see LogRequestType, LogTarget
+     *
+     * @return int|false false on logging error
+     */
+    public static function create_table( $sql_ddl_statement, $log_target, $request_type = LogRequestType::AUTOMATIC, $operation = 'Table creation if missing' ){
+        global $wpdb;
+        // Querying and error handling
+        //TODO: stop logging when table already existed (query still returns 1)
 
+        // NOTE: History table has to be created first in order for logging to work. Learned it the hard way.
+        if ( $wpdb->query( $sql_ddl_statement ) ) {
+            self::log_success( $request_type, $log_target, $operation, $wpdb->last_query );
+        } else {
+            self::log_error( $request_type, $log_target, $operation, $wpdb->last_query, $wpdb->last_error );
+        }
+    }
+    
     /**
      * Counts the number of rows of a table in the database.
      *

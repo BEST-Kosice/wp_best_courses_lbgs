@@ -302,7 +302,8 @@ class Settings {
                 // LBG translations
                 // Checks for the request for manually updating table
                 if ( isset( $_POST['manually_update'] ) ) {
-                    foreach ( Database::$TRANSLATION_CODES as $code ) {
+                    Database::lbg_translations_init();
+					foreach ( Database::$LANG_CODES as $code ) {
                         Database::refresh_lbg_translation_table( LogRequestType::MANUAL, $code );
                     }
                 }
@@ -378,7 +379,7 @@ class Settings {
                         $table_context             = __( 'Aktuálny počet prekladových tabuliek pre '
                                                          . Database::count_db_table_rows( Database::BEST_LBGS_TABLE ) .
                                                          ' lokálnych skupín', PLUGIN_NAME ) . ': ' .
-                                                     count( Database::$TRANSLATION_CODES );
+                                                     count( Database::$LANG_CODES );
                         break;
                 }
                 // Displaying number of entries in the table

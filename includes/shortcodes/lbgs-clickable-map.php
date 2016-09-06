@@ -15,6 +15,9 @@ BEST_Courses_LBGS::instance()->enqueue_scripts();
 
 <div id="lbg_map" style="min-height:600px; min-width:600px;;">
     <?php
+        /* Just some code to test the parser during development without
+         * having to fill up the updates history table needlessly.
+         */
 		/*use best\kosice\datalib\best_kosice_data;
 		use Sunra\PhpSimple\HtmlDomParser;
 
