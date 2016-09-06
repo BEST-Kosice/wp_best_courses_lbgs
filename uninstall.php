@@ -14,5 +14,8 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
     exit;
 }
 
+// Class autoloader
+require_once( 'vendor/autoload.php' );
+
 // This gets executed when the plugin is being uninstalled.
 best\kosice\best_courses_lbgs\Database::drop_all_tables();
