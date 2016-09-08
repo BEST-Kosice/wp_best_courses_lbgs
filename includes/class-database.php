@@ -57,7 +57,7 @@ abstract class TableName {
 
 // TODO: reconsider this, globals can conflict with other plugins and wordpress core itself; static/const is class local
 
-define('HISTORY_DDL', "CREATE TABLE IF NOT EXISTS ?? (
+define( 'HISTORY_DDL', "CREATE TABLE IF NOT EXISTS ?? (
 id_history int(11) NOT NULL AUTO_INCREMENT,
 time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 request_type varchar(50) NOT NULL CHECK(request_type IN
@@ -68,9 +68,9 @@ operation varchar(50) NOT NULL,
 attempted_request text DEFAULT NULL,
 error_message text DEFAULT NULL,
 PRIMARY KEY (id_history)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;" );
 
-define('EVENTS_DDL', "CREATE TABLE IF NOT EXISTS ?? (
+define( 'EVENTS_DDL', "CREATE TABLE IF NOT EXISTS ?? (
 id_event int(11) NOT NULL AUTO_INCREMENT,
 event_name varchar(100) NOT NULL,
 place varchar(40) NOT NULL,
@@ -81,21 +81,21 @@ fee varchar(10) NOT NULL,
 app_deadline varchar(30) DEFAULT NULL,
 login_url varchar(1000) DEFAULT NULL,
 PRIMARY KEY (id_event)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;" );
 
-define('LBGS_DDL', "CREATE TABLE IF NOT EXISTS ?? (
+define( 'LBGS_DDL', "CREATE TABLE IF NOT EXISTS ?? (
 id_lbg int(11) NOT NULL AUTO_INCREMENT,
 city varchar(50) NOT NULL,
 state varchar(50) NOT NULL,
 web_page varchar(200) DEFAULT NULL,
 PRIMARY KEY (id_lbg)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;" );
 
-define('LBGS_TRANSLATION_DDL', "CREATE TABLE IF NOT EXISTS ?? (
+define( 'LBGS_TRANSLATION_DDL', "CREATE TABLE IF NOT EXISTS ?? (
 lbg_id char(2),
 name varchar(50),
 PRIMARY KEY (lbg_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;" );
 
 /**
  * Static class for Database operations within the plugin.
@@ -161,6 +161,7 @@ class Database {
         if ( get_option( self::OPTION_NAME_PLUGIN_DB_VERSION, 0 ) > self::TARGET_PLUGIN_DB_VERSION ) {
             update_option( self::OPTION_NAME_PLUGIN_DB_VERSION, self::TARGET_PLUGIN_DB_VERSION );
             $log( 'Detected too large database version, setting down to ' . self::TARGET_PLUGIN_DB_VERSION );
+
             return false;
         }
 
@@ -191,16 +192,16 @@ class Database {
                 // Added LBGS translations
                 case 1:
                     // in case of upgrading from version 1, however, we need to call lbg_translations_init();
-					self::lbg_translations_init();
+                    self::lbg_translations_init();
                     $operation = 'Upgrading DB by adding translation tables';
-					foreach ( self::$LANG_CODES as $code ) {
+                    foreach ( self::$LANG_CODES as $code ) {
                         self::create_table(
-                            str_replace('??',
-                                    $wpdb->prefix . self::BEST_LBGS_TRANSLATION_TABLE_PREFIX . $code,
-                                    self::LBGS_TRANSLATION_DDL_STATEMENT),
+                            str_replace( '??',
+                                $wpdb->prefix . self::BEST_LBGS_TRANSLATION_TABLE_PREFIX . $code,
+                                self::LBGS_TRANSLATION_DDL_STATEMENT ),
                             LogTarget::LBGS, LogRequestType::AUTOMATIC, $operation );
-						self::refresh_lbg_translation_table( LogRequestType::AUTOMATIC, $code );
-					}
+                        self::refresh_lbg_translation_table( LogRequestType::AUTOMATIC, $code );
+                    }
                     break;
                 // End switch ( $current_db_version )
             }
@@ -238,22 +239,22 @@ class Database {
         global $wpdb;
         $operation = 'Table creation if missing';
         self::create_table(
-            str_replace('??', $wpdb->prefix . TableName::HISTORY ,self::HISTORY_DDL_STATEMENT),
+            str_replace( '??', $wpdb->prefix . TableName::HISTORY, self::HISTORY_DDL_STATEMENT ),
             LogTarget::META, $request_type, $operation );
         self::create_table(
-            str_replace('??', $wpdb->prefix . TableName::EVENTS ,self::EVENTS_DDL_STATEMENT),
+            str_replace( '??', $wpdb->prefix . TableName::EVENTS, self::EVENTS_DDL_STATEMENT ),
             LogTarget::EVENTS, $request_type, $operation );
         self::create_table(
-            str_replace('??', $wpdb->prefix . TableName::LBGS ,self::LBGS_DDL_STATEMENT),
+            str_replace( '??', $wpdb->prefix . TableName::LBGS, self::LBGS_DDL_STATEMENT ),
             LogTarget::LBGS, $request_type, $operation );
         self::lbg_translations_init();
         $operation = 'Upgrading DB by adding translation tables';
         foreach ( self::$LANG_CODES as $code ) {
             self::create_table(
-                str_replace('??',
-                            $wpdb->prefix . self::BEST_LBGS_TRANSLATION_TABLE_PREFIX . $code,
-                            self::LBGS_TRANSLATION_DDL_STATEMENT
-                           ),
+                str_replace( '??',
+                    $wpdb->prefix . self::BEST_LBGS_TRANSLATION_TABLE_PREFIX . $code,
+                    self::LBGS_TRANSLATION_DDL_STATEMENT
+                ),
                 LogTarget::LBGS, LogRequestType::AUTOMATIC, $operation );
         }
     }
@@ -560,8 +561,8 @@ class Database {
      */
     public static function refresh_lbg_translation_table( $request_type, $lang_code ) {
         $lbgs = simplexml_load_file( BEST_Courses_LBGS::instance()->assets_dir . '/lang_xml/'
-                                    . str_replace('??', $lang_code, self::$TRANSLATION_XML_FILENAME)
-                                    . '.xml' );
+                                     . str_replace( '??', $lang_code, self::$TRANSLATION_XML_FILENAME )
+                                     . '.xml' );
         // Used logger values
         $target    = LogTarget::TRANSLATION;
         $operation = 'Refreshing translation table for language code: ' . $lang_code;
@@ -616,11 +617,12 @@ class Database {
      *
      * @return bool true on success, false on failure
      */
-    public static function lbg_translations_init(){
+    public static function lbg_translations_init() {
         $config = simplexml_load_file( BEST_Courses_LBGS::instance()->assets_dir . '/lang_xml/lang.conf.xml' );
-        if ($config) {
-            self::$TRANSLATION_XML_FILENAME = $config->xpath('./format')[0];
-            self::$LANG_CODES = $config->xpath('./langs/lang/@id');
+        if ( $config ) {
+            self::$TRANSLATION_XML_FILENAME = $config->xpath( './format' )[0];
+            self::$LANG_CODES               = $config->xpath( './langs/lang/@id' );
+
             return true;
         } else {
             return false;
@@ -641,7 +643,10 @@ class Database {
      *
      * @return int|false false on logging error
      */
-    public static function create_table( $sql_ddl_statement, $log_target, $request_type = LogRequestType::AUTOMATIC, $operation = 'Table creation if missing' ){
+    public static function create_table(
+        $sql_ddl_statement, $log_target, $request_type = LogRequestType::AUTOMATIC,
+        $operation = 'Table creation if missing'
+    ) {
         global $wpdb;
         // Querying and error handling
         //TODO: stop logging when table already existed (query still returns 1)
