@@ -238,7 +238,7 @@ class Database {
         global $wpdb;
         $operation = 'Table creation if missing';
         self::create_table(
-            str_replace('??', $wpdb->prefix . TableName::HISTORY ,self::LBGS_DDL_STATEMENT),
+            str_replace('??', $wpdb->prefix . TableName::HISTORY ,self::HISTORY_DDL_STATEMENT),
             LogTarget::META, $request_type, $operation );
         self::create_table(
             str_replace('??', $wpdb->prefix . TableName::EVENTS ,self::EVENTS_DDL_STATEMENT),
