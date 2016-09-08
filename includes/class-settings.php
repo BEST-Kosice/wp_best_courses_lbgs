@@ -312,8 +312,8 @@ class Settings {
             case 'configuration':
                 // Checks for the request for erasing the DB
                 if ( isset( $_POST['erase_db'] ) ) {
-                    Database::erase_table( Database::BEST_EVENTS_TABLE, LogRequestType::MANUAL );
-                    Database::erase_table( Database::BEST_LBGS_TABLE, LogRequestType::MANUAL );
+                    Database::erase_table( TableName::EVENTS, LogRequestType::MANUAL );
+                    Database::erase_table( TableName::LBGS, LogRequestType::MANUAL );
                 }
                 $target = LogTarget::META;
                 break;
@@ -367,17 +367,17 @@ class Settings {
                     case 'events':
                         $manual_update_button_text = __( 'Update events', PLUGIN_NAME );
                         $table_context             = __( 'Aktuálny počet eventov v tabuľke',
-                                PLUGIN_NAME ) . ': ' . Database::count_db_table_rows( Database::BEST_EVENTS_TABLE );
+                                PLUGIN_NAME ) . ': ' . Database::count_db_table_rows( TableName::EVENTS );
                         break;
                     case 'lbgs':
                         $manual_update_button_text = __( 'Update groups', PLUGIN_NAME );
                         $table_context             = __( 'Aktuálny počet lokálnych BEST skupín v tabuľke',
-                                PLUGIN_NAME ) . ': ' . Database::count_db_table_rows( Database::BEST_LBGS_TABLE );
+                                PLUGIN_NAME ) . ': ' . Database::count_db_table_rows( TableName::LBGS );
                         break;
                     case 'translations':
                         $manual_update_button_text = __( 'Update translations', PLUGIN_NAME );
                         $table_context             = __( 'Aktuálny počet prekladových tabuliek pre '
-                                                         . Database::count_db_table_rows( Database::BEST_LBGS_TABLE ) .
+                                                         . Database::count_db_table_rows( TableName::LBGS ) .
                                                          ' lokálnych skupín', PLUGIN_NAME ) . ': ' .
                                                      count( Database::$LANG_CODES );
                         break;
@@ -454,7 +454,7 @@ class Settings {
                 isset ( $_POST['settings_message_error'] ) ? 'error' : 'updated' );
         } else {
             $last_history_row = Database::get_single_row(
-                Database::BEST_HISTORY_TABLE,
+                TableName::HISTORY,
                 "target = '" . esc_sql( $target ) . "'",
                 esc_sql( 'time DESC' )
             );
@@ -484,7 +484,7 @@ class Settings {
      */
     private function updates_history_table( $target = null, $html_class = null ) {
         global $wpdb;
-        $table_name = esc_sql( $wpdb->prefix . Database::BEST_HISTORY_TABLE );
+        $table_name = esc_sql( $wpdb->prefix . TableName::HISTORY );
 
         $history_max_displayed_rows = get_option(
             Database::OPTION_BASE_PREFIX . self::OPTION_NAME_HISTORY_DISPLAY_MAX_ROWS,

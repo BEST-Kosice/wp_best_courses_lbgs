@@ -39,14 +39,23 @@ abstract class LogTarget {
     const TRANSLATION = 'translation';
 }
 
-// Use these constants as table names when possible, be DRY. Add table prefix. In future, enums may be created.
-abstract class TableNames {
+/**
+ * Enum for names of all tables (without prefix) that will be used for methods within this class.
+ * <p>Use with global $wpdb->prefix as a prefix to make a full database table name for query purposes.
+ *
+ * @package best\kosice\best_courses_lbgs
+ */
+abstract class TableName {
+    //TODO possibly decide on a better name (and purpose) for this table (it is history of plugin-specific events)
     const HISTORY = 'best_history';
     const EVENTS = 'best_events';
+    //TODO rename lbg to lbgs for consistency (but I don't want to ruin current dbs of developers, maybe some patch?)
     const LBGS = 'best_lbg';
-    //note: ?? is a placeholder value for a specific language code
+    //NOTE: ?? is a placeholder value for a specific language code
     const LBG_TRANSLATIONS = 'best_lbg_??';
 }
+
+// TODO: reconsider this, globals can conflict with other plugins and wordpress core itself; static/const is class local
 
 define('HISTORY_DDL', "CREATE TABLE IF NOT EXISTS ?? (
 id_history int(11) NOT NULL AUTO_INCREMENT,
@@ -93,7 +102,6 @@ PRIMARY KEY (lbg_id)
  *
  * <p>TODO tasks:
  * Option for administrator to delete old history (either by defining max rows, or manually).
- * Refactor table names into Enum class.
  *
  * @package best\kosice\best_courses_lbgs
  * @author  scscgit
@@ -110,22 +118,17 @@ class Database {
     const OPTION_NAME_PLUGIN_DB_VERSION = 'best_courses_lbgs_plugin_db_version';
     const OPTION_NAME_PLUGIN_DB_UPGRADE_DISABLED = 'best_courses_lbgs_plugin_db_upgrade_disabled';
 
-    // Use these constants as table names when possible, be DRY. Add table prefix. In future, enums may be created.
-    const BEST_EVENTS_TABLE = 'best_events';
-    const BEST_LBGS_TABLE = 'best_lbg';
-    const BEST_HISTORY_TABLE = 'best_history';
+    // Prefix for translation tables
     const BEST_LBGS_TRANSLATION_TABLE_PREFIX = 'best_lbg_';
-    
-    //TODO possibly decide on a better name (and purpose) for this table
+
     const HISTORY_DDL_STATEMENT = HISTORY_DDL;
-    
+
     const EVENTS_DDL_STATEMENT = EVENTS_DDL;
-    
-    //TODO rename lbg to lbgs for consistency (but I don't want to ruin current dbs of developers, maybe some patch?)
+
     const LBGS_DDL_STATEMENT = LBGS_DDL;
-    
+
     const LBGS_TRANSLATION_DDL_STATEMENT = LBGS_TRANSLATION_DDL;
-    
+
     // Available translations with an existing corresponding lbgs_??.xml file
     static $LANG_CODES = array( "sk" );
     static $TRANSLATION_XML_FILENAME = 'lbgs_??';
@@ -191,10 +194,10 @@ class Database {
 					self::lbg_translations_init();
                     $operation = 'Upgrading DB by adding translation tables';
 					foreach ( self::$LANG_CODES as $code ) {
-                        self::create_table( 
-                            str_replace('??', 
-                                    $wpdb->prefix . self::BEST_LBGS_TRANSLATION_TABLE_PREFIX . $code, 
-                                    self::LBGS_TRANSLATION_DDL_STATEMENT), 
+                        self::create_table(
+                            str_replace('??',
+                                    $wpdb->prefix . self::BEST_LBGS_TRANSLATION_TABLE_PREFIX . $code,
+                                    self::LBGS_TRANSLATION_DDL_STATEMENT),
                             LogTarget::LBGS, LogRequestType::AUTOMATIC, $operation );
 						self::refresh_lbg_translation_table( LogRequestType::AUTOMATIC, $code );
 					}
@@ -234,23 +237,23 @@ class Database {
     public static function create_all_tables( $request_type = LogRequestType::AUTOMATIC ) {
         global $wpdb;
         $operation = 'Table creation if missing';
-        self::create_table( 
-            str_replace('??', $wpdb->prefix . self::BEST_HISTORY_TABLE ,self::LBGS_DDL_STATEMENT),
+        self::create_table(
+            str_replace('??', $wpdb->prefix . TableName::HISTORY ,self::LBGS_DDL_STATEMENT),
             LogTarget::META, $request_type, $operation );
-        self::create_table( 
-            str_replace('??', $wpdb->prefix . self::BEST_EVENTS_TABLE ,self::EVENTS_DDL_STATEMENT),
+        self::create_table(
+            str_replace('??', $wpdb->prefix . TableName::EVENTS ,self::EVENTS_DDL_STATEMENT),
             LogTarget::EVENTS, $request_type, $operation );
-        self::create_table( 
-            str_replace('??', $wpdb->prefix . self::BEST_LBGS_TABLE ,self::LBGS_DDL_STATEMENT),
+        self::create_table(
+            str_replace('??', $wpdb->prefix . TableName::LBGS ,self::LBGS_DDL_STATEMENT),
             LogTarget::LBGS, $request_type, $operation );
         self::lbg_translations_init();
         $operation = 'Upgrading DB by adding translation tables';
         foreach ( self::$LANG_CODES as $code ) {
-            self::create_table( 
-                str_replace('??', 
-                            $wpdb->prefix . self::BEST_LBGS_TRANSLATION_TABLE_PREFIX . $code, 
+            self::create_table(
+                str_replace('??',
+                            $wpdb->prefix . self::BEST_LBGS_TRANSLATION_TABLE_PREFIX . $code,
                             self::LBGS_TRANSLATION_DDL_STATEMENT
-                           ), 
+                           ),
                 LogTarget::LBGS, LogRequestType::AUTOMATIC, $operation );
         }
     }
@@ -278,11 +281,11 @@ class Database {
         }
 
         if ( $success && $wpdb->query( 'DROP TABLE IF EXISTS '
-                                       . $wpdb->prefix . self::BEST_EVENTS_TABLE
+                                       . $wpdb->prefix . TableName::EVENTS
                                        . ', '
-                                       . $wpdb->prefix . self::BEST_LBGS_TABLE
+                                       . $wpdb->prefix . TableName::LBGS
                                        . ', '
-                                       . $wpdb->prefix . self::BEST_HISTORY_TABLE
+                                       . $wpdb->prefix . TableName::HISTORY
             )
         ) {
             // Removes the stored plugin version setting, next time the DB has to be re-initialized
@@ -319,7 +322,7 @@ class Database {
         }
 
         global $wpdb;
-        $table_name = esc_sql( $wpdb->prefix . Database::BEST_HISTORY_TABLE );
+        $table_name = esc_sql( $wpdb->prefix . TableName::HISTORY );
 
         return $wpdb->query(
             $wpdb->prepare(
@@ -355,7 +358,7 @@ class Database {
         }
 
         global $wpdb;
-        $table_name = esc_sql( $wpdb->prefix . Database::BEST_HISTORY_TABLE );
+        $table_name = esc_sql( $wpdb->prefix . TableName::HISTORY );
 
         $result = $wpdb->query(
             $wpdb->prepare(
@@ -383,9 +386,9 @@ class Database {
      * Replaces table's contents in the database by new content,
      * taking care of anomalies that can happen and logging them.
      *
-     * @param $table_name_no_prefix string name of the table without prefix to be replaced
-     * @param $request_type         string type of the operation request, use enum class LogRequestType
-     * @param $target               string the event where the operation was performed, use enum class LogTarget
+     * @param $table_name_no_prefix string name of the table without prefix to be replaced, use enum TableName
+     * @param $request_type         string type of the operation request, use enum LogRequestType
+     * @param $target               string the event where the operation was performed, use enum LogTarget
      * @param $operation            string description of the action that is being performed
      * @param $insert               callable {@param $table_name string @return string insert query}
      *                              returns the sql-safe insert query to be run
@@ -432,7 +435,7 @@ class Database {
     /**
      * Refreshes the state of the BEST Events database table using parser data.
      *
-     * @param $request_type string type of the operation request, use enum class LogRequestType
+     * @param $request_type string type of the operation request, use enum LogRequestType
      *
      * @see LogRequestType
      *
@@ -449,7 +452,7 @@ class Database {
 
         if ( $courses['learning']['data'] ) {
             // Replaces the table by new insert data based on the callback using function which logs the result
-            return self::replace_db_table( self::BEST_EVENTS_TABLE, $request_type, $target, $operation,
+            return self::replace_db_table( TableName::EVENTS, $request_type, $target, $operation,
                 function ( $table_name ) use ( $courses ) {
                     if ( ! $table_name ) {
                         return null;
@@ -494,7 +497,7 @@ class Database {
     /**
      * Refreshes the state of the BEST Local Best Groups database table using parser data.
      *
-     * @param $request_type string type of the operation request, use enum class LogRequestType
+     * @param $request_type string type of the operation request, use enum LogRequestType
      *
      * @see LogRequestType
      *
@@ -511,7 +514,7 @@ class Database {
 
         if ( $lbgs ) {
             // Replaces the table by new insert data based on the callback using function which logs the result
-            return self::replace_db_table( self::BEST_LBGS_TABLE, $request_type, $target, $operation,
+            return self::replace_db_table( TableName::LBGS, $request_type, $target, $operation,
                 function ( $table_name ) use ( $lbgs ) {
                     if ( $table_name == null ) {
                         return null;
@@ -547,7 +550,7 @@ class Database {
     /**
      * Add a translation table of LBG names into the database. Values to insert are accessed from an XML document.
      *
-     * @param $request_type string type of the operation request, use enum class LogRequestType
+     * @param $request_type string type of the operation request, use enum LogRequestType
      * @param $lang_code    string a 2-letter code in lowercase that represents the language code of a particular
      *                      language, e.g. sk - Slovak, etc.
      *
@@ -557,7 +560,7 @@ class Database {
      */
     public static function refresh_lbg_translation_table( $request_type, $lang_code ) {
         $lbgs = simplexml_load_file( BEST_Courses_LBGS::instance()->assets_dir . '/lang_xml/'
-                                    . str_replace('??', $lang_code, self::$TRANSLATION_XML_FILENAME) 
+                                    . str_replace('??', $lang_code, self::$TRANSLATION_XML_FILENAME)
                                     . '.xml' );
         // Used logger values
         $target    = LogTarget::TRANSLATION;
@@ -596,13 +599,13 @@ class Database {
             return false;
         }
     }
-    
-    
+
+
     /**
      * Initializes member variables required for creating and refreshing LBG translation tables,
      * namely, filename format minus .xml extension of XML translation files (default: lbgs_??,
      * where ?? is a language code) and the list of available languages (represented as an array
-     * of language codes). Initialization information is retrieved from a config XML file in the 
+     * of language codes). Initialization information is retrieved from a config XML file in the
      * same directory as the XML translation files.
      *
      * It is necessary to call this function before any attempt at creating the LBG translations DB,
@@ -623,15 +626,15 @@ class Database {
             return false;
         }
     }
-    
-    //General database querrying and manipulation methods
-    
+
+    //General database querying and manipulation methods
+
     /**
      * Creates a database table by running an SQL DDL statement (e.g. 'CREATE TABLE ...')
      *
      * @param $sql_ddl_statement string of the DDL SQL statement
-     * @param $log_target        string of the target (table) to create, use enum class LogTarget
-     * @param $request_type      string request type, use enum class LogRequestType
+     * @param $log_target        string of the target (table) to create, use enum LogTarget
+     * @param $request_type      string request type, use enum LogRequestType
      * @param $operation         string description of the action that is being performed
      *
      * @see LogRequestType, LogTarget
@@ -650,11 +653,11 @@ class Database {
             self::log_error( $request_type, $log_target, $operation, $wpdb->last_query, $wpdb->last_error );
         }
     }
-    
+
     /**
      * Counts the number of rows of a table in the database.
      *
-     * @param $table_name_no_prefix string table name without prefix
+     * @param $table_name_no_prefix string table name without prefix, use enum TableName
      *
      * @return null|string number of rows, null on error
      */
@@ -670,8 +673,8 @@ class Database {
     /**
      * Erases table contents in the database.
      *
-     * @param $table_name_no_prefix string name of the table without prefix to be erased
-     * @param $request_type         string type of the operation request, use enum class LogRequestType
+     * @param $table_name_no_prefix string name of the table without prefix to be erased, use enum TableName
+     * @param $request_type         string type of the operation request, use enum LogRequestType
      *
      * @see LogRequestType
      */
@@ -689,7 +692,7 @@ class Database {
     /**
      * Returns up to a single row from the database.
      *
-     * @param $table_name_no_prefix string name of the table without prefix to be selected from
+     * @param $table_name_no_prefix string name of the table without prefix to be selected from, use enum TableName
      * @param $condition            string|null SQL-safe condition (use esc_sql()) within 'WHERE' to be used to get the
      *                              result, optional
      * @param $order_by             string|null SQL-safe part (use esc_sql()) within 'ORDER BY' to order the results,
