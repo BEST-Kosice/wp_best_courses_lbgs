@@ -302,9 +302,9 @@ class Settings {
                 // LBG translations
                 // Checks for the request for manually updating table
                 if ( isset( $_POST['manually_update'] ) ) {
-                    Database::lbg_translations_init();
+                    Database::lbgs_translations_init();
                     foreach ( Database::$LANG_CODES as $code ) {
-                        Database::refresh_lbg_translation_table( LogRequestType::MANUAL, $code );
+                        Database::refresh_lbgs_translation_table( LogRequestType::MANUAL, $code );
                     }
                 }
                 $target = LogTarget::TRANSLATION;

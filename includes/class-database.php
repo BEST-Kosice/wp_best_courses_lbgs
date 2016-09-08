@@ -102,6 +102,8 @@ PRIMARY KEY (lbg_id)
  *
  * <p>TODO tasks:
  * Option for administrator to delete old history (either by defining max rows, or manually).
+ * Encapsulate all direct database operations using some common interface - example: DAO pattern.
+ * Change some functions to private when encapsulated enough.
  *
  * @package best\kosice\best_courses_lbgs
  * @author  scscgit
@@ -121,6 +123,7 @@ class Database {
     // Prefix for translation tables
     const BEST_LBGS_TRANSLATION_TABLE_PREFIX = 'best_lbg_';
 
+    // TODO: move them out (e.g. here) from a global scope
     const HISTORY_DDL_STATEMENT = HISTORY_DDL;
 
     const EVENTS_DDL_STATEMENT = EVENTS_DDL;
@@ -183,7 +186,7 @@ class Database {
                     self::refresh_db_best_lbgs( LogRequestType::AUTOMATIC );
                     // create_all_tables() already called lbg_translations_init(), no need to call again here;
                     foreach ( self::$LANG_CODES as $code ) {
-                        self::refresh_lbg_translation_table( LogRequestType::AUTOMATIC, $code );
+                        self::refresh_lbgs_translation_table( LogRequestType::AUTOMATIC, $code );
                     }
                     // Skips all other upgrade steps by setting the version to the highest
                     update_option( self::OPTION_NAME_PLUGIN_DB_VERSION, self::TARGET_PLUGIN_DB_VERSION );
@@ -192,7 +195,7 @@ class Database {
                 // Added LBGS translations
                 case 1:
                     // in case of upgrading from version 1, however, we need to call lbg_translations_init();
-                    self::lbg_translations_init();
+                    self::lbgs_translations_init();
                     $operation = 'Upgrading DB by adding translation tables';
                     foreach ( self::$LANG_CODES as $code ) {
                         self::create_table(
@@ -200,7 +203,7 @@ class Database {
                                 $wpdb->prefix . self::BEST_LBGS_TRANSLATION_TABLE_PREFIX . $code,
                                 self::LBGS_TRANSLATION_DDL_STATEMENT ),
                             LogTarget::LBGS, LogRequestType::AUTOMATIC, $operation );
-                        self::refresh_lbg_translation_table( LogRequestType::AUTOMATIC, $code );
+                        self::refresh_lbgs_translation_table( LogRequestType::AUTOMATIC, $code );
                     }
                     break;
                 // End switch ( $current_db_version )
@@ -247,7 +250,7 @@ class Database {
         self::create_table(
             str_replace( '??', $wpdb->prefix . TableName::LBGS, self::LBGS_DDL_STATEMENT ),
             LogTarget::LBGS, $request_type, $operation );
-        self::lbg_translations_init();
+        self::lbgs_translations_init();
         $operation = 'Upgrading DB by adding translation tables';
         foreach ( self::$LANG_CODES as $code ) {
             self::create_table(
@@ -270,7 +273,7 @@ class Database {
         global $wpdb;
 
         $success = true;
-        self::lbg_translations_init();
+        self::lbgs_translations_init();
         foreach ( self::$LANG_CODES as $code ) {
             if ( ! $wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . self::BEST_LBGS_TRANSLATION_TABLE_PREFIX .
                                  $code )
@@ -559,7 +562,7 @@ class Database {
      *
      * @return bool true on success, false on failure (@see @return of replace_db_table())
      */
-    public static function refresh_lbg_translation_table( $request_type, $lang_code ) {
+    public static function refresh_lbgs_translation_table( $request_type, $lang_code ) {
         $lbgs = simplexml_load_file( BEST_Courses_LBGS::instance()->assets_dir . '/lang_xml/'
                                      . str_replace( '??', $lang_code, self::$TRANSLATION_XML_FILENAME )
                                      . '.xml' );
@@ -617,7 +620,7 @@ class Database {
      *
      * @return bool true on success, false on failure
      */
-    public static function lbg_translations_init() {
+    public static function lbgs_translations_init() {
         $config = simplexml_load_file( BEST_Courses_LBGS::instance()->assets_dir . '/lang_xml/lang.conf.xml' );
         if ( $config ) {
             self::$TRANSLATION_XML_FILENAME = $config->xpath( './format' )[0];
@@ -634,6 +637,13 @@ class Database {
     /**
      * Creates a database table by running an SQL DDL statement (e.g. 'CREATE TABLE ...')
      *
+     * <p>TODO: reconsider usefulness of this function, it literally only queries the code to the DB.
+     * <p>TODO: encapsulate lbgs_translations_init() in a way that it runs automatically before creating a
+     * relevant table, this can give function create_table() a purpose. I think that putting a large switch
+     * in this function for each TABLE NAME target, instead of $sql_ddl_statement is the best choice here,
+     * automatically choosing DDLs as cases. Log target should be also implicitly defined together with each table.
+     * We want the DB to be as safe as possible, not letting other parts of code change the query when calling this.
+     *
      * @param $sql_ddl_statement string of the DDL SQL statement
      * @param $log_target        string of the target (table) to create, use enum LogTarget
      * @param $request_type      string request type, use enum LogRequestType
@@ -644,7 +654,9 @@ class Database {
      * @return int|false false on logging error
      */
     public static function create_table(
-        $sql_ddl_statement, $log_target, $request_type = LogRequestType::AUTOMATIC,
+        $sql_ddl_statement,
+        $log_target,
+        $request_type = LogRequestType::AUTOMATIC,
         $operation = 'Table creation if missing'
     ) {
         global $wpdb;
@@ -695,6 +707,33 @@ class Database {
     }
 
     /**
+     * Returns up to a N rows from the database.
+     *
+     * @param $max_number_of_rows       string number of rows that can be returned at most
+     * @param $table_name_no_prefix     string name of the table without prefix to be selected from, use enum TableName
+     * @param $condition                string|null SQL-safe condition (use esc_sql()) within 'WHERE' to be used to get
+     *                                  the result, optional
+     * @param $order_by                 string|null SQL-safe part (use esc_sql()) within 'ORDER BY' to order the
+     *                                  results, optional
+     *
+     * @return array|null associative array column => value for the row values, null on error
+     */
+    public static function get_rows( $max_number_of_rows, $table_name_no_prefix, $condition = null, $order_by = null ) {
+        global $wpdb;
+        $table_name = esc_sql( "{$wpdb->prefix}$table_name_no_prefix" );
+        if ( $condition ) {
+            $condition = " WHERE $condition";
+        }
+        if ( $order_by ) {
+            $order_by = " ORDER BY $order_by";
+        }
+
+        $rows = intval( $max_number_of_rows );
+
+        return $wpdb->get_results( "SELECT * FROM $table_name$condition$order_by LIMIT $rows", ARRAY_A );
+    }
+
+    /**
      * Returns up to a single row from the database.
      *
      * @param $table_name_no_prefix string name of the table without prefix to be selected from, use enum TableName
@@ -706,15 +745,6 @@ class Database {
      * @return array|null associative array column => value for the row values, null on error
      */
     public static function get_single_row( $table_name_no_prefix, $condition = null, $order_by = null ) {
-        global $wpdb;
-        $table_name = esc_sql( "{$wpdb->prefix}$table_name_no_prefix" );
-        if ( $condition ) {
-            $condition = " WHERE $condition";
-        }
-        if ( $order_by ) {
-            $order_by = " ORDER BY $order_by";
-        }
-
-        return $wpdb->get_results( "SELECT * FROM $table_name$condition$order_by LIMIT 1", ARRAY_A );
+        return self::get_rows( 1, $table_name_no_prefix, $condition, $order_by );
     }
 }
