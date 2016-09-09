@@ -68,7 +68,7 @@ module.exports = function (grunt) {
             options: {
                 sourcemap: false,
                 mergeLonghand: true,
-				autoprefixer: {browsers: 'last 2 versions'},
+                autoprefixer: {browsers: 'last 2 versions'},
             },
             dist: {
                 files: {
@@ -139,10 +139,31 @@ module.exports = function (grunt) {
             }
         },
 
+        // Unit tests
+        phpunit: {
+            classes: {
+                dir: 'tests/php/'
+            },
+            options: {
+                bin: 'vendor/bin/phpunit',
+                bootstrap: 'vendor/autoload.php',
+                colors: true
+            }
+        },
 
-
-
-
+        // Git hooks
+        githooks: {
+            options: {
+                // Task-specific options go here.
+            },
+            all: {
+                options: {
+                    // Target-specific options go here
+                },
+                // Hook definitions go there (space-separated)
+                'pre-commit': 'phpunit',
+            }
+        },
     });
 
     // Load NPM tasks to be used here
@@ -153,7 +174,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-wp-i18n');
     grunt.loadNpmTasks('grunt-cssnano');
-
+    grunt.loadNpmTasks('grunt-phpunit');
+    grunt.loadNpmTasks('grunt-githooks');
 
     // Register tasks
     grunt.registerTask('default', [

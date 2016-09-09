@@ -5,12 +5,17 @@
   "homepage": "https://github.com/BEST-Kosice/wp_best_courses_lbgs/",
   "main": "Gruntfile.js",
   "dependencies": {
-      "grunt": "~1.0.1",
-      "grunt-contrib-cssmin": "~1.0.1",
-      "grunt-contrib-less": "~1.4.0",
-      "grunt-contrib-uglify": "~2.0.0",
-      "grunt-contrib-watch": "~1.0.0",
-      "grunt-sass": "^1.2.0",
-      "grunt-wp-i18n": "^0.5.4"
+    "grunt": "~1.0.1",
+    "grunt-contrib-cssmin": "~1.0.1",
+    "grunt-contrib-less": "~1.4.0",
+    "grunt-contrib-uglify": "~2.0.0",
+    "grunt-contrib-watch": "~1.0.0",
+    "grunt-phpunit": "^0.3.6",
+    "grunt-sass": "^1.2.0",
+    "grunt-wp-i18n": "^0.5.4"
+  },
+  "devDependencies": {
+    "grunt-githooks": "^0.6.0",
+    "grunt-phpunit": "^0.3.6"
   }
 }
