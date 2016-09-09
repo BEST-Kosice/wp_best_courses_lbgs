@@ -42,6 +42,9 @@ abstract class LogTarget {
 /**
  * Enum for names of all tables (without prefix) that will be used for methods within this class.
  * <p>Use with global $wpdb->prefix as a prefix to make a full database table name for query purposes.
+ * <p>TODO: make this enum just "represent" a table (e.g. rename to TableDB):
+ * there will be a table_name() function that converts the enum to the table name (using all prefixes).
+ * I don't like name of $table_name_no_prefix, it would mean that we have to explicitly keep track of which one is it
  *
  * @package best\kosice\best_courses_lbgs
  */
@@ -99,6 +102,8 @@ PRIMARY KEY (lbg_id)
 
 /**
  * Static class for Database operations within the plugin.
+ * <p>Methods of this class should never be called directly from any other classes than DAO.
+ * <p>Other classes must use DAO as an intermediator to communicate with the database.
  *
  * <p>TODO tasks:
  * Option for administrator to delete old history (either by defining max rows, or manually).
@@ -632,6 +637,24 @@ class Database {
         }
     }
 
+    /**
+     * TODO: PHPDocs start using this instead of nasty code like
+     * $table_name = esc_sql( "{$wpdb->prefix}$table_name_no_prefix" );
+     * We have to rename TableName to something else and refactor everything.
+     * TODO: consider how to use it with translation tables, maybe an overload of parameters?
+     * or a totally new function and the exclusion of translation table from the TableName enum.
+     *
+     * @param string $table_db table of which to show the database name, use enum TableName
+     *
+     * @see TableName
+     * @return string table name usable directly in the SQL query
+     */
+    public static function table_name( $table_db ) {
+        global $wpdb;
+
+        return esc_sql( "{$wpdb->prefix}$table_db" );
+    }
+
     //General database querying and manipulation methods
 
     /**
@@ -716,25 +739,20 @@ class Database {
      * @param $order_by                 string|null SQL-safe part (use esc_sql()) within 'ORDER BY' to order the
      *                                  results, optional
      *
-     * @return array|null associative array column => value for the row values, null on error
+     * @return array|null array of associative arrays with a column => value format for the row values, null on error
      */
     public static function get_rows( $max_number_of_rows, $table_name_no_prefix, $condition = null, $order_by = null ) {
         global $wpdb;
-        $table_name = esc_sql( "{$wpdb->prefix}$table_name_no_prefix" );
-        if ( $condition ) {
-            $condition = " WHERE $condition";
-        }
-        if ( $order_by ) {
-            $order_by = " ORDER BY $order_by";
-        }
 
-        $rows = intval( $max_number_of_rows );
-
-        return $wpdb->get_results( "SELECT * FROM $table_name$condition$order_by LIMIT $rows", ARRAY_A );
+        return $wpdb->get_results(
+            self::get_simple_select_query(
+                $table_name_no_prefix, "*", $condition, $order_by, $max_number_of_rows ),
+            ARRAY_A );
     }
 
     /**
      * Returns up to a single row from the database.
+     * <p>TODO: refactor so that it returns the first index already (safely - without accessing the index if null).
      *
      * @param $table_name_no_prefix string name of the table without prefix to be selected from, use enum TableName
      * @param $condition            string|null SQL-safe condition (use esc_sql()) within 'WHERE' to be used to get the
@@ -742,9 +760,50 @@ class Database {
      * @param $order_by             string|null SQL-safe part (use esc_sql()) within 'ORDER BY' to order the results,
      *                              optional
      *
-     * @return array|null associative array column => value for the row values, null on error
+     * @return array|null associative array with a column => value format for the row values, null on error
      */
     public static function get_single_row( $table_name_no_prefix, $condition = null, $order_by = null ) {
         return self::get_rows( 1, $table_name_no_prefix, $condition, $order_by );
     }
+
+    /**
+     * Creates a SQL query in a string format with specified parameters.
+     *
+     * @param $table_name_no_prefix string name of the table without prefix to be selected from, use enum TableName
+     * @param $select_columns       string|null SQL-safe select part within 'SELECT' to choose columns to be returned
+     *                              by the query, null or "*" to select all
+     * @param $condition            string|null SQL-safe condition (use esc_sql()) within 'WHERE' to be used to get the
+     *                              result, optional
+     * @param $order_by             string|null SQL-safe part (use esc_sql()) within 'ORDER BY' to order the results,
+     *                              optional
+     * @param $max_rows             int|null number of rows to be selected at most, optional - null if no limit
+     *
+     * @return string SQL query containing specified parts
+     */
+    public static function get_simple_select_query(
+        $table_name_no_prefix, $select_columns = null, $condition = null, $order_by = null, $max_rows = null
+    ) {
+        global $wpdb;
+        $table_name = esc_sql( "{$wpdb->prefix}$table_name_no_prefix" );
+
+        if ( ! $select_columns ) {
+            $select_columns = "*";
+        }
+        if ( $condition ) {
+            $condition = " WHERE $condition";
+        }
+        if ( $order_by ) {
+            $order_by = " ORDER BY $order_by";
+        }
+
+        if ( $max_rows ) {
+            $limit = intval( $max_rows );
+            $limit = " LIMIT $limit";
+        } else {
+            $limit = '';
+        }
+
+        return "SELECT $select_columns FROM $table_name$condition$order_by$limit";
+    }
+
 }

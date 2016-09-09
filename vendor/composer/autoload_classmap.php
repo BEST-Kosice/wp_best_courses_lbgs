@@ -12,5 +12,8 @@ return array(
     'best\\kosice\\best_courses_lbgs\\LogRequestType' => $baseDir . '/includes/class-database.php',
     'best\\kosice\\best_courses_lbgs\\LogTarget' => $baseDir . '/includes/class-database.php',
     'best\\kosice\\best_courses_lbgs\\Settings' => $baseDir . '/includes/class-settings.php',
+    'best\\kosice\\best_courses_lbgs\\TableName' => $baseDir . '/includes/class-database.php',
+    'best\\kosice\\best_courses_lbgs\\dao\\DAO_Events' => $baseDir . '/includes/dao/class-dao-events.php',
+    'best\\kosice\\best_courses_lbgs\\dao\\DAO_LBGS' => $baseDir . '/includes/dao/class-dao-lbgs.php',
     'best\\kosice\\datalib\\best_kosice_data' => $baseDir . '/includes/class-wp-best-courses-lbgs-parser.php',
 );
