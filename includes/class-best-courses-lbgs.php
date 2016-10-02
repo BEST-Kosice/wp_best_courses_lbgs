@@ -8,15 +8,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Main class of plugin wp_best_courses_lbgs.
- * Simple instantiation takes care of registering everything the plugin needs to work within the WordPress.
+ *
+ * <p>Simple instantiation takes care of registering everything the plugin needs to work within the WordPress.
  *
  * @package best\kosice\best_courses_lbgs
  */
-class Best_Courses_LBGS {
+class BEST_Courses_LBGS {
 
     /**
-     * The single instance of best_courses_lbgs.
-     * @var      Best_Courses_LBGS
+     * The single instance of Best_Courses_LBGS.
+     * @var      BEST_Courses_LBGS
      * @since    1.0.0
      */
     private static $_instance = null;
@@ -78,11 +79,11 @@ class Best_Courses_LBGS {
     public $script_suffix;
 
     /**
-     * Constructor function.
+     * Constructor function with private access, singleton class.
      *
      * @since   1.0.0
      */
-    public function __construct( $file = '', $version = '1.0.0' ) {
+    private function __construct( $file = '', $version = '1.0.0' ) {
         $this->_version = $version;
         $this->_token   = PLUGIN_NAME;
 
@@ -203,10 +204,10 @@ class Best_Courses_LBGS {
     } // End load_plugin_textdomain()
 
     /**
-     * Main best_courses_lbgs Instance. When called for the first time during a single PHP execution,
-     * it should be called from a current file using __FILE__ as $file to initialize the script path.
+     * Main Best_Courses_LBGS Instance. When called for the first time during a single PHP execution,
+     * it should be called from a current file using \_\_FILE\_\_ as $file to initialize the script path.
      *
-     * Ensures only one instance of best_courses_lbgs is loaded or can be loaded.
+     * <p>Ensures only one instance of Best_Courses_LBGS is loaded or can be loaded.
      *
      * @since  1.0.0
      * @return self main instance
@@ -241,11 +242,11 @@ class Best_Courses_LBGS {
      * This function removes registered WP Cron events by a specified event name.
      * Source: <https://wordpress.org/support/topic/wp_unschedule_event-and-wp_clear_scheduled_hook-do-not-clear-events>
      *
-     * Alternatives that were tried first, but were not working correctly:
+     * <p>Alternatives that were tried first, but were not working correctly:
      * wp_clear_scheduled_hook('best_courses_lbgs_cron_task');
      * wp_unschedule_event(wp_next_scheduled('best_courses_lbgs_cron_task'),'best_courses_lbgs_cron_task');
      *
-     * @param $event_name string registered name of the scheduled cron event
+     * @param string $event_name registered name of the scheduled cron event
      */
     public static function unschedule_cron_events_by_name( $event_name ) {
         $cron_events = _get_cron_array();
@@ -259,9 +260,9 @@ class Best_Courses_LBGS {
 
     /**
      * Cron periodical (hourly) event of this plugin.
-     * Is also run in the plugin activation event.
+     * <p>Is also run in the plugin activation event.
      *
-     * List of actions:
+     * <p>List of actions:
      * 1. Refreshes BEST database tables (if not disabled by the user)
      */
     function cron_task() {
@@ -277,7 +278,7 @@ class Best_Courses_LBGS {
     /**
      * Plugin installation event. Runs on activation.
      *
-     * List of actions:
+     * <p>List of actions:
      * 1. Stores the plugin version number as an option.
      * 2. Schedules cron events
      * 3. Attempts to upgrade the database and then creates any missing SQL tables
@@ -290,17 +291,18 @@ class Best_Courses_LBGS {
 
         wp_schedule_event( time(), 'hourly', 'best_courses_lbgs_cron_task' );
 
-        // Attempts to upgrade the database version before creating any missing tables
-        Database::upgrade_database();
-        Database::create_all_tables();
-
-        $this->cron_task();
+        // Attempts to upgrade the database version, initializing the database if needed during the first installation.
+        // If there is no pending upgrade, tries to recreate any missing tables as a fail-safe and updates the content.
+        if ( ! Database::upgrade_database() ) {
+            Database::create_all_tables();
+            $this->cron_task();
+        }
     } // End install()
 
     /**
      * Plugin deactivation event.
      *
-     * List of actions:
+     * <p>List of actions:
      * 1. Removes cron scheduling
      */
     public function deactivation() {
@@ -309,9 +311,9 @@ class Best_Courses_LBGS {
 
     /**
      * Runs a PHP code in a file and instead of displaying the resulting HTML page, only returns it as a string.
-     * Source: <http://stackoverflow.com/questions/1683771/execute-a-php-file-and-return-the-result-as-a-string>
+     * <p>Source: <http://stackoverflow.com/questions/1683771/execute-a-php-file-and-return-the-result-as-a-string>
      *
-     * @param $php_file string PHP file to be run
+     * @param string $php_file name of the PHP file to be run
      *
      * @return string PHP result as HTML, that is supposed to be displayed in the browser
      */
@@ -362,7 +364,7 @@ class Best_Courses_LBGS {
     }
 
     /**
-     * Add custom buttons to the TinyMCE editor using javascript.
+     * Add custom buttons to the TinyMCE editor using Javascript.
      */
     public function wptuts_add_buttons( $plugin_array ) {
         $plugin_array['wptuts'] = $this->assets_url . 'js/shortcode.min.js';
@@ -382,7 +384,7 @@ class Best_Courses_LBGS {
     /**
      * Initialization event, gets executed each time a page loads.
      *
-     * List of actions:
+     * <p>List of actions:
      * 1. Handle localization
      * 2. Upgrades the database to the newest version
      * 3. Applying TinyMCE filters to add new buttons.

@@ -1,14 +1,14 @@
-    var map_container = document.getElementById("svg_map");
+    var map_container = document.getElementById("lbg_map");
     if (map_container) {
         var s = Snap(map_container);
         countries_add_effects('#1973BE', "#144173", s.selectAll("#Countries > g"));
-        LBGs_add_effects("#FAA331", "#FFF0BE", s.selectAll("#LBGs > #current > path"));
-        LBGs_add_effects("#91C3EB", "#C8EBFA", s.selectAll("#LBGs > #former > path"));
-        LBGs_add_effects("#69CD28", "#BED746", s.selectAll("#LBGs > #observer > path"));
+        LBGs_add_effects("#FAA331", "#FFF0BE", s.selectAll("#LBGs > #current > a > path"));
+        LBGs_add_effects("#91C3EB", "#C8EBFA", s.selectAll("#LBGs > #former > a > path"));
+        LBGs_add_effects("#69CD28", "#BED746", s.selectAll("#LBGs > #observer > a > path"));
     }
 
     // Moved country code translation to backend, keeping this code just in case it is needed
-    /*var countryNames = {
+	/*var countryNames = {
             'SE' : 'Švédsko', 'DK' : 'Dánsko', 'NO' : 'Nórsko', 'IS' : 'Island', 'FI' : 'Fínsko', 'RU' : 'Rusko', 
             'BE' : 'Belgicko', 'NL' : 'Holandsko', 'GB' : 'Veľká Británia', 'IE' : 'Írsko', 'FR' : 'Francúzsko', 
             'DE' : 'Nemecko', 'AT' : 'Rakúsko', 'CH' : 'Švajčiarsko', 'LI' : 'Lichtenštajnsko', 'LU' : 'Luxembursko',

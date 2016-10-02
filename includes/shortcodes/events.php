@@ -1,13 +1,14 @@
 <?php
 
-use best\kosice\best_courses_lbgs\Best_Courses_LBGS;
+use best\kosice\best_courses_lbgs\BEST_Courses_LBGS;
+use best\kosice\best_courses_lbgs\dao\DAO_Events;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-Best_Courses_LBGS::instance()->enqueue_styles();
-Best_Courses_LBGS::instance()->enqueue_scripts();
+BEST_Courses_LBGS::instance()->enqueue_styles();
+BEST_Courses_LBGS::instance()->enqueue_scripts();
 
 // TODO add translation string
 ?>
@@ -155,18 +156,37 @@ Best_Courses_LBGS::instance()->enqueue_scripts();
                 <?php echo $tbody; ?>
         </tbody>
         <tfoot>
+        <tr>
+            <th colspan="9">*Úroveň kurzu označuje mieru špecializácie daného kurzu na uvedenú tému.
+                <br> Rozoznávajú sa úrovne základná (Basic, B) čo je všeobecný úvod k danej téme (viac
+                interdisciplinárne) a pokročilá (Advanced, A) ktorá poskytuje užšie a hlbšie zameranie na danú tému.
+                <br> N/A (not available) znamená, že úroveň nie je uvedená.
+            </th>
+        </tr>
+        <?php
+        // Displays the date of a last data refresh
+        // TODO: check if it looks visually correct: a smaller text without a grey background could be less aggressive
+        $dao = DAO_Events::instance()->get_time_of_most_recent_refresh();
+        if ( $dao ):
+            ?>
             <tr>
-                <th colspan="9">*Úroveň kurzu označuje mieru špecializácie daného kurzu na uvedenú tému.
-                    <br> Rozoznávajú sa úrovne základná (Basic, B) čo je všeobecný úvod k danej téme (viac interdisciplinárne) a pokročilá (Advanced, A) ktorá poskytuje užšie a hlbšie zameranie na danú tému.
-                    <br> N/A (not available) znamená, že úroveň nie je uvedená.</th>
+                <th colspan="9">
+                    Naposledy aktualizované
+                    <?php
+                    echo $dao
+                    ?>
+                </th>
             </tr>
+            <?php
+        endif
+        ?>
         </tfoot>
     </table>
 <?php
 else :
  ?>
 
-Viac o kurzoch sa dozvieš na <a href="https://best.eu.org/courses/welcome.jsp" terget="_blank">https://best.eu.org/</a>
+Viac o kurzoch sa dozvieš na <a href="https://best.eu.org/courses/welcome.jsp" target="_blank">https://best.eu.org/</a>
 
 <?php
 endif;

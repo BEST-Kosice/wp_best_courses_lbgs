@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Available translations with an existing corresponding lbgs_??.xml file -->
+<config>
+    <!-- 
+        Prototype for filename without .xml extension for LBG translations, 
+        ?? represents language codes.
+    -->
+    <format>lbgs_??</format>
+    <!-- available languages -->
+    <langs>
+	    <lang id="sk"></lang>
+    </langs>
+</config>

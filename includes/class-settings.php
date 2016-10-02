@@ -131,7 +131,9 @@ class Settings {
 
     /**
      * Build settings fields to be registered in register_settings().
+     *
      * @see register_settings()
+     *
      * @return array Fields to be displayed on the settings page
      */
     private function settings_fields() {
@@ -141,6 +143,10 @@ class Settings {
 
         $settings['lbgs'] = array(
             'title' => __( 'Local BEST groups', PLUGIN_NAME ),
+        );
+
+        $settings['translations'] = array(
+            'title' => __( 'LBG translations', PLUGIN_NAME ),
         );
 
         $settings['configuration'] = array(
@@ -181,6 +187,7 @@ class Settings {
     /**
      * Register plugin settings to be later rendered to the website using settings_page(),
      * adding all setting fields using the prepared array to the page.
+     *
      * @see settings_page()
      */
     public function register_settings() {
@@ -278,26 +285,37 @@ class Settings {
             //TODO: find in the code below where this default is defined and use that condition instead
             default:
             case 'events':
-                //Checks for the request for manually updating table
+                // Checks for the request for manually updating table
                 if ( isset( $_POST['manually_update'] ) ) {
                     Database::refresh_db_best_events( LogRequestType::MANUAL );
                 }
-                $target = 'events_db';
+                $target = LogTarget::EVENTS;
                 break;
             case 'lbgs':
-                //Checks for the request for manually updating table
+                // Checks for the request for manually updating table
                 if ( isset( $_POST['manually_update'] ) ) {
                     Database::refresh_db_best_lbgs( LogRequestType::MANUAL );
                 }
-                $target = 'lbgs_db';
+                $target = LogTarget::LBGS;
+                break;
+            case 'translations':
+                // LBG translations
+                // Checks for the request for manually updating table
+                if ( isset( $_POST['manually_update'] ) ) {
+                    Database::lbgs_translations_init();
+                    foreach ( Database::$LANG_CODES as $code ) {
+                        Database::refresh_lbgs_translation_table( LogRequestType::MANUAL, $code );
+                    }
+                }
+                $target = LogTarget::TRANSLATION;
                 break;
             case 'configuration':
-                //Checks for the request for erasing the DB
+                // Checks for the request for erasing the DB
                 if ( isset( $_POST['erase_db'] ) ) {
-                    Database::erase_table( Database::BEST_EVENTS_TABLE, LogRequestType::MANUAL );
-                    Database::erase_table( Database::BEST_LBGS_TABLE, LogRequestType::MANUAL );
+                    Database::erase_table( TableName::EVENTS, LogRequestType::MANUAL );
+                    Database::erase_table( TableName::LBGS, LogRequestType::MANUAL );
                 }
-                $target = 'meta';
+                $target = LogTarget::META;
                 break;
         }
 
@@ -341,15 +359,32 @@ class Settings {
                 $html .= '</h2>' . "\n";
             }
 
-        if ( $tab != 'configuration' ) {
-            // Displaying number of entries in the table
-            $table_name        = ( $tab == 'lbgs' ? Database::BEST_LBGS_TABLE : Database::BEST_EVENTS_TABLE );
-            $table_row_entries = Database::count_db_table_rows( $table_name );
-            $table_context     = $tab == 'lbgs'
-                ? __( 'Aktuálny počet lokálnych BEST skupín v tabuľke', PLUGIN_NAME )
-                : __( 'Aktuálny počet eventov v tabuľke', PLUGIN_NAME );
-            $html .= '<p>' . $table_context . ': ' . $table_row_entries . '</p>';
-        }
+            $manual_update_button_text = "";
+            if ( $tab != 'configuration' ) {
+                $table_context = "";
+                switch ( $tab ) {
+                    // TODO: translate a formatted string instead, improves readability and in case of case 'translation', solves a problem
+                    case 'events':
+                        $manual_update_button_text = __( 'Update events', PLUGIN_NAME );
+                        $table_context             = __( 'Aktuálny počet eventov v tabuľke',
+                                PLUGIN_NAME ) . ': ' . Database::count_db_table_rows( TableName::EVENTS );
+                        break;
+                    case 'lbgs':
+                        $manual_update_button_text = __( 'Update groups', PLUGIN_NAME );
+                        $table_context             = __( 'Aktuálny počet lokálnych BEST skupín v tabuľke',
+                                PLUGIN_NAME ) . ': ' . Database::count_db_table_rows( TableName::LBGS );
+                        break;
+                    case 'translations':
+                        $manual_update_button_text = __( 'Update translations', PLUGIN_NAME );
+                        $table_context             = __( 'Aktuálny počet prekladových tabuliek pre '
+                                                         . Database::count_db_table_rows( TableName::LBGS ) .
+                                                         ' lokálnych skupín', PLUGIN_NAME ) . ': ' .
+                                                     count( Database::$LANG_CODES );
+                        break;
+                }
+                // Displaying number of entries in the table
+                $html .= '<p>' . $table_context . '</p>';
+            }
 
             // Setting fields and submit button
             $html .= '<form method="post" action="options.php" enctype="multipart/form-data">' . "\n";
@@ -382,10 +417,6 @@ class Settings {
                 $html .= '</form>' . "\n";
             }
 
-            $manual_update_button_text = $tab == 'lbgs'
-                ? __( 'Update groups', PLUGIN_NAME )
-                : __( 'Update events', PLUGIN_NAME );
-
             // Form for manual database update
             if($tab != 'configuration') {
                 $html .= '<form method="post">' . "\n";
@@ -398,14 +429,14 @@ class Settings {
                 $html .= '</form>' . "\n";
             }
 
-        // Displays an updates history table
-        $html .= '<hr />';
-        $html .= $this->updates_history_table( $target, 'history_table' );
+            // Displays an updates history table
+            $html .= '<hr />';
+            $html .= $this->updates_history_table( $target, 'history_table' );
 
         $html .= '</div>' . "\n";
 
         // Displays a message about last update
-        if($tab != 'configuration') {
+        if ( $tab != 'configuration' ) {
             $this->display_last_update_status( $target );
         }
         echo $html;
@@ -423,7 +454,7 @@ class Settings {
                 isset ( $_POST['settings_message_error'] ) ? 'error' : 'updated' );
         } else {
             $last_history_row = Database::get_single_row(
-                Database::BEST_HISTORY_TABLE,
+                TableName::HISTORY,
                 "target = '" . esc_sql( $target ) . "'",
                 esc_sql( 'time DESC' )
             );
@@ -453,7 +484,7 @@ class Settings {
      */
     private function updates_history_table( $target = null, $html_class = null ) {
         global $wpdb;
-        $table_name = esc_sql( $wpdb->prefix . Database::BEST_HISTORY_TABLE );
+        $table_name = esc_sql( $wpdb->prefix . TableName::HISTORY );
 
         $history_max_displayed_rows = get_option(
             Database::OPTION_BASE_PREFIX . self::OPTION_NAME_HISTORY_DISPLAY_MAX_ROWS,
@@ -466,7 +497,7 @@ class Settings {
             $wpdb->prepare(
                 "SELECT * FROM $table_name WHERE target LIKE %s "
                 . ( $display_history_success ? "" : "AND error_message IS NOT null " )
-                . "ORDER BY time DESC LIMIT %d"
+                . "ORDER BY id_history DESC LIMIT %d"
                 , $target == null ? '%' : $target
                 , $history_max_displayed_rows
             ), ARRAY_A
@@ -503,7 +534,7 @@ class Settings {
 
             // Request type
             $request_type = $history['request_type'];
-            $request_type = $this->translate_request_type($request_type);
+            $request_type = $this->translate_request_type( $request_type );
             $html .= '<td>' . $request_type . '</td>';
 
             // Operation
@@ -534,7 +565,7 @@ class Settings {
      *
      * @return string translated request type
      */
-    public function translate_request_type($request_type){
+    public function translate_request_type( $request_type ) {
         switch ( $request_type ) {
             case LogRequestType::AUTOMATIC:
                 $request_type = _x( 'Automatic', 'update type', PLUGIN_NAME );
@@ -543,13 +574,14 @@ class Settings {
                 $request_type = _x( 'Manual', 'update type', PLUGIN_NAME );
                 break;
         }
+
         return $request_type;
     }
 
     /**
      * Main Settings instance.
      *
-     * Ensures only one instance of Settings is loaded or can be loaded.
+     * <p>Ensures only one instance of Settings is loaded or can be loaded.
      *
      * @since 1.0.0
      * @see   best_courses_lbgs
