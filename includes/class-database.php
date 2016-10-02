@@ -406,7 +406,7 @@ class Database {
      *
      * @return bool true on success, false on failure
      */
-    public static function replace_db_table( $table_name_no_prefix, $request_type, $target, $operation, callable $insert
+    public static function replace_db_table( $table_name_no_prefix, $request_type, $target, $operation, $insert
     ) {
         global $wpdb;
         $table_name = esc_sql( "{$wpdb->prefix}$table_name_no_prefix" );
@@ -628,7 +628,9 @@ class Database {
     public static function lbgs_translations_init() {
         $config = simplexml_load_file( BEST_Courses_LBGS::instance()->assets_dir . '/lang_xml/lang.conf.xml' );
         if ( $config ) {
-            self::$TRANSLATION_XML_FILENAME = $config->xpath( './format' )[0];
+
+
+            self::$TRANSLATION_XML_FILENAME = $config->xpath( './format/text()' );
             self::$LANG_CODES               = $config->xpath( './langs/lang/@id' );
 
             return true;

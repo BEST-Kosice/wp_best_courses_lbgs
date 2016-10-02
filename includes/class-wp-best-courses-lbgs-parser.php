@@ -114,7 +114,6 @@ class best_kosice_data
 
             return false;
         }
-
         return $data;
     }
 
@@ -254,9 +253,12 @@ class best_kosice_data
             $returnData['learning']['data'] = $learning_events;
         }
 
-        $leisure_events_table = $html->find('table',1);
 
-        $leisure_events = $this->parse_table($leisure_events_table);
+        $leisure_events_table = $html->find('table',1);
+        $leisure_events = false;
+        if ($leisure_events_table) {
+            $leisure_events = $this->parse_table($leisure_events_table);
+        }
 
         if ($leisure_events) {
             $returnData['leisure']['data'] = $leisure_events;
@@ -275,17 +277,18 @@ class best_kosice_data
     private function parse_lbgs($html)
     {
         $theData = array();
-        
+
 		$html = HtmlDomParser::str_get_html($html);
-        
+
 		foreach($html->find("#map .city-description section") as $lbg){
             //get homepage URL of LBG from link inside heading
-			$name = preg_replace( '/\s+Local\s+Group\s+/', '', $lbg->find("h4 > a")[0]->innertext() );
+            $link = $lbg->find("h4 > a");
+			$name = preg_replace( '/\s+Local\s+Group\s+/', '', $link[0]->innertext() );
 			if (preg_match('/\s+Local\s+Group\s+/', $name) == 1)
 				$name = preg_replace( '/\s+Local\s+Group\s+/', '', $name );
 			else
 				$name = preg_replace( '/\s+Observer\s+Group\s+/', '', $name );
-			//get LBG code from <img> src attribute	
+			//get LBG code from <img> src attribute
 		    $code = $lbg->find("img");
 			if ($code)
 				$code = substr($code[0]->src, -2);
@@ -306,7 +309,7 @@ class best_kosice_data
             array_push( $theData, array($url, $code, $name) );
         }
         return $theData;
-		
+
 		//old parser
         /*foreach ($html as $key => $value) {
             $rowData = false;
@@ -360,13 +363,7 @@ class best_kosice_data
             }
         }
 
-
         return $theData;
-
-
-
-
-
     }
 
     private function parse_dates($html)

@@ -69,7 +69,7 @@ BEST_Courses_LBGS::instance()->enqueue_scripts();
 		$res = $svg->xpath('./svg:g[@id="LBGs"]/svg:g[@id="former"]');
 	    $dom = dom_import_simplexml($res[0]);
 		$dom->parentNode->removeChild($dom);
-		
+
 		// legacy code - translate country codes in the id attributes into Slovak
 		/*$res = $svg->xpath('./svg:g[@id="LBGs"]/svg:g/svg:path');
 		$countryNames = array(
@@ -83,7 +83,7 @@ BEST_Courses_LBGS::instance()->enqueue_scripts();
 			'ES' => 'Španielsko', 'PT' => 'Portugalsko', 'IT' => 'Taliansko', 'MT' => 'Malta', 'AD' => 'Andora',
 			'CY' => 'Cyprus', 'AM' => 'Arménsko', 'AZ' => 'Azerbajdžan', 'GE' => 'Gruzínsko', 'KZ' => 'Kazachstan'
 		);
-		
+
 		foreach ($res as $lbg){
 			$idx = substr( $lbg->attributes()["id"], -2 );
 			$lbg->attributes()["id"] = substr_replace(
@@ -96,7 +96,7 @@ BEST_Courses_LBGS::instance()->enqueue_scripts();
 					$lbg->attributes()["id"] .= ": " . $item["web_page"];
 			}
 		}*/
-		
+
 	    // create links and change the id of all svg:path objects (dots) to what will be displayed in the decription boxes
 	    function add_link($group, $lbg_db_table, $id_addition){
 			$group->registerXPathNamespace('svg', 'http://www.w3.org/2000/svg');
@@ -106,21 +106,21 @@ BEST_Courses_LBGS::instance()->enqueue_scripts();
 				$link = new DOMElement("a");
 				$dom->appendChild( $link )->appendChild(dom_import_simplexml($lbg));
 				foreach ($lbg_db_table as $item){
-					if (stripos($lbg->attributes()["id"], $item["lbg_id"]) === 0){
-						$link->setAttribute("xlink:href", $item["web_page"]);
-						$link->setAttribute("target", '_blank');
-						$lbg->attributes()["id"] = $item["name"] . $id_addition;
-						break;
-					}
+					// if (stripos($lbg->attributes()["id"], $item["lbg_id"]) === 0){
+					// 	$link->setAttribute("xlink:href", $item["web_page"]);
+					// 	$link->setAttribute("target", '_blank');
+					// 	$lbg->attributes()["id"] = $item["name"] . $id_addition;
+					// 	break;
+					// }
 				}
 			}
 	    }
 
-		add_link($svg->xpath('./svg:g[@id="LBGs"]/svg:g[@id="current"]')[0], $data, "");
-	    add_link($svg->xpath('./svg:g[@id="LBGs"]/svg:g[@id="observer"]')[0], $data, " (pozorovateľská skupina)");
-	
+	//	add_link($svg->xpath('./svg:g[@id="LBGs"]/svg:g[@id="current"]')[0], $data, "");
+	//    add_link($svg->xpath('./svg:g[@id="LBGs"]/svg:g[@id="observer"]')[0], $data, " (pozorovateľská skupina)");
+
 		// echo the SVG code
 		echo $svg->asXML();
-	
+
     ?>
 </div>
