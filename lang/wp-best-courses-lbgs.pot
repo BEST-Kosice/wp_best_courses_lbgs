@@ -2,10 +2,10 @@
 # This file is distributed under the same license as the wp_best_courses_lbgs package.
 msgid ""
 msgstr ""
-"Project-Id-Version: wp_best_courses_lbgs 1.0\n"
+"Project-Id-Version: wp_best_courses_lbgs 0.0.2-rc0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-best-courses-lbgs\n"
-"POT-Creation-Date: 2016-08-19 09:00:18+00:00\n"
+"POT-Creation-Date: 2016-10-03 12:31:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -41,21 +41,21 @@ msgstr ""
 msgid "Remove image"
 msgstr ""
 
-#: includes/class-best-courses-lbgs.php:228
-#: includes/class-best-courses-lbgs.php:237 includes/class-settings.php:572
-#: includes/class-settings.php:581
+#: includes/class-best-courses-lbgs.php:229
+#: includes/class-best-courses-lbgs.php:238 includes/class-settings.php:604
+#: includes/class-settings.php:613
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: includes/class-best-courses-lbgs.php:408
+#: includes/class-best-courses-lbgs.php:410
 msgid "BEST Events"
 msgstr ""
 
-#: includes/class-best-courses-lbgs.php:409
+#: includes/class-best-courses-lbgs.php:411
 msgid "BEST Event"
 msgstr ""
 
-#: includes/class-settings.php:84 includes/class-settings.php:306
+#: includes/class-settings.php:84 includes/class-settings.php:324
 msgid "Správa BEST databázy"
 msgstr ""
 
@@ -67,106 +67,158 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: includes/class-settings.php:139
+#: includes/class-settings.php:141
 msgid "BEST events"
 msgstr ""
 
-#: includes/class-settings.php:143
+#: includes/class-settings.php:145
 msgid "Local BEST groups"
 msgstr ""
 
-#: includes/class-settings.php:147
-msgid "Configuration"
-msgstr ""
-
-#: includes/class-settings.php:148
-msgid "Plugin configuration section"
-msgstr ""
-
-#: includes/class-settings.php:152
-msgid "Displayed rows"
+#: includes/class-settings.php:149
+msgid "LBG translations"
 msgstr ""
 
 #: includes/class-settings.php:153
+msgid "Configuration"
+msgstr ""
+
+#: includes/class-settings.php:154
+msgid "Plugin configuration section"
+msgstr ""
+
+#: includes/class-settings.php:158
+msgid "Displayed rows"
+msgstr ""
+
+#: includes/class-settings.php:159
 msgid ""
 "Maximum number of rows in the history (under all tabs) to be displayed at "
 "once"
 msgstr ""
 
-#: includes/class-settings.php:161
+#: includes/class-settings.php:167
 msgid "Display success"
 msgstr ""
 
-#: includes/class-settings.php:162
+#: includes/class-settings.php:168
 msgid "Shows successful operations in the history table"
 msgstr ""
 
-#: includes/class-settings.php:168
+#: includes/class-settings.php:174
 msgid "Automatic refresh"
 msgstr ""
 
-#: includes/class-settings.php:169
+#: includes/class-settings.php:175
 msgid "Allows database to be updated in regular intervals"
 msgstr ""
 
-#: includes/class-settings.php:349
-msgid "Aktuálny počet lokálnych BEST skupín v tabuľke"
-msgstr ""
-
-#: includes/class-settings.php:350
-msgid "Aktuálny počet eventov v tabuľke"
-msgstr ""
-
-#: includes/class-settings.php:367
-msgid "Save Settings"
-msgstr ""
-
-#: includes/class-settings.php:378
-msgid "Are you sure you want to delete contents of all plugin tables?"
-msgstr ""
-
-#: includes/class-settings.php:386
-msgid "Update groups"
-msgstr ""
-
-#: includes/class-settings.php:387
+#: includes/class-settings.php:368
 msgid "Update events"
 msgstr ""
 
-#: includes/class-settings.php:436
+#: includes/class-settings.php:369
+msgid "Aktuálny počet eventov v tabuľke"
+msgstr ""
+
+#: includes/class-settings.php:373
+msgid "Update groups"
+msgstr ""
+
+#: includes/class-settings.php:374
+msgid "Aktuálny počet lokálnych BEST skupín v tabuľke"
+msgstr ""
+
+#: includes/class-settings.php:378
+msgid "Update translations"
+msgstr ""
+
+#: includes/class-settings.php:402
+msgid "Save Settings"
+msgstr ""
+
+#: includes/class-settings.php:413
+msgid "Are you sure you want to delete contents of all plugin tables?"
+msgstr ""
+
+#: includes/class-settings.php:467
 msgid "update of the database has failed"
 msgstr ""
 
-#: includes/class-settings.php:438
+#: includes/class-settings.php:469
 msgid "update of the database has finished successfully"
 msgstr ""
 
-#: includes/class-settings.php:477
+#: includes/class-settings.php:508
 msgid "Problem with history table"
 msgstr ""
 
-#: includes/class-settings.php:478
+#: includes/class-settings.php:509
 msgid "The requested query was"
 msgstr ""
 
-#: includes/class-settings.php:492
+#: includes/class-settings.php:523
 msgid "Čas aktualizácie"
 msgstr ""
 
-#: includes/class-settings.php:493
+#: includes/class-settings.php:524
 msgid "Typ aktualizácie"
 msgstr ""
 
-#: includes/class-settings.php:494
+#: includes/class-settings.php:525
 msgid "Operation"
 msgstr ""
 
-#: includes/class-settings.php:495
+#: includes/class-settings.php:526
 msgid "Result"
 msgstr ""
 
-#: includes/class-settings.php:516
+#: includes/class-settings.php:547
 msgid "OK"
+msgstr ""
+
+#: includes/shortcodes/events.php:87
+msgid "BEST learning events"
+msgstr ""
+
+#: includes/shortcodes/events.php:93
+msgid "Name"
+msgstr ""
+
+#: includes/shortcodes/events.php:100
+msgid "Type"
+msgstr ""
+
+#: includes/shortcodes/events.php:106
+msgid "Place"
+msgstr ""
+
+#: includes/shortcodes/events.php:122
+msgid "Fee"
+msgstr ""
+
+#: includes/shortcodes/events.php:128
+msgid "Duration"
+msgstr ""
+
+#: includes/shortcodes/events.php:134
+msgid "From - Till"
+msgstr ""
+
+#: includes/shortcodes/events.php:140
+msgid "Complexity"
+msgstr ""
+
+#: includes/shortcodes/events.php:168
+msgid "Last synchronisation"
+msgstr ""
+
+#: includes/shortcodes/events.php:180
+msgid "More about courses you can find on"
+msgstr ""
+
+#: includes/shortcodes/local-best-groups.php:20
+msgid "List of Local Best Groups"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
@@ -185,12 +237,12 @@ msgstr ""
 msgid "BEST AJ TY"
 msgstr ""
 
-#: includes/class-settings.php:540
+#: includes/class-settings.php:571
 msgctxt "update type"
 msgid "Automatic"
 msgstr ""
 
-#: includes/class-settings.php:543
+#: includes/class-settings.php:574
 msgctxt "update type"
 msgid "Manual"
 msgstr ""

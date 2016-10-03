@@ -9,8 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 BEST_Courses_LBGS::instance()->enqueue_styles();
 BEST_Courses_LBGS::instance()->enqueue_scripts();
 
-
-
 global $wpdb;
 $data = $wpdb->get_results('SELECT * FROM '.$wpdb->prefix.'best_lbg', ARRAY_A);
 

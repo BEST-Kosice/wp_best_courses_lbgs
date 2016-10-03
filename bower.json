@@ -1,0 +1,23 @@
+{
+  "name": "wp_best_courses_lbgs",
+  "description": "",
+  "main": "Gruntfile.js",
+  "authors": [
+    "Daniel Demečko <daniel.demecko@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/BEST-Kosice/wp_best_courses_lbgs",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.1",
+    "stacktable.js": "stackable#^1.0.1",
+    "Snap.svg": "snap.svg#^0.4.1"
+  }
+}
