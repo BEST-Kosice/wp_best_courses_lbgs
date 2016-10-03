@@ -321,7 +321,7 @@ class Settings {
 
         // Build page HTML
         $html = '<div class="wrap" id="' . $this->parent->_token . '_settings">' . "\n";
-            $html .= '<h2>' . __( 'Správa BEST databázy', PLUGIN_NAME ) . '</h2>' . "\n";
+            $html .= '<h2>' . __( 'BEST database administration', PLUGIN_NAME ) . '</h2>' . "\n";
 
             // Show page tabs
             if ( is_array( $this->settings ) && 1 < count( $this->settings ) ) {
@@ -366,12 +366,12 @@ class Settings {
                     // TODO: translate a formatted string instead, improves readability and in case of case 'translation', solves a problem
                     case 'events':
                         $manual_update_button_text = __( 'Update events', PLUGIN_NAME );
-                        $table_context             = __( 'Aktuálny počet eventov v tabuľke',
+                        $table_context             = __( 'Number of events in table',
                                 PLUGIN_NAME ) . ': ' . Database::count_db_table_rows( TableName::EVENTS );
                         break;
                     case 'lbgs':
                         $manual_update_button_text = __( 'Update groups', PLUGIN_NAME );
-                        $table_context             = __( 'Aktuálny počet lokálnych BEST skupín v tabuľke',
+                        $table_context             = __( 'Number of Local BEST Groups in table',
                                 PLUGIN_NAME ) . ': ' . Database::count_db_table_rows( TableName::LBGS );
                         break;
                     case 'translations':
@@ -505,7 +505,7 @@ class Settings {
 
         $html = '';
         if ( $history_rows === null ) {
-            $html .= "<p>" . __( 'Problem with history table', PLUGIN_NAME ) . ": {$wpdb->last_error}"
+            $html .= "<p>" . __( 'Error in history table', PLUGIN_NAME ) . ": {$wpdb->last_error}"
                      . "<br/>" . __( 'The requested query was', PLUGIN_NAME ) . ": {$wpdb->last_query}</p>";
             Database::log_error( LogTarget::META, LogRequestType::AUTOMATIC
                 , 'Displaying history table', $wpdb->last_query, $wpdb->last_error );
@@ -520,8 +520,8 @@ class Settings {
         }
         $html .= '><tr>';
 
-        $html .= '<th>' . __( 'Čas aktualizácie', PLUGIN_NAME ) . '</th>';
-        $html .= '<th>' . __( 'Typ aktualizácie', PLUGIN_NAME ) . '</th>';
+        $html .= '<th>' . __( 'Time of update', PLUGIN_NAME ) . '</th>';
+        $html .= '<th>' . __( 'Type of update', PLUGIN_NAME ) . '</th>';
         $html .= '<th>' . __( 'Operation', PLUGIN_NAME ) . '</th>';
         $html .= '<th>' . __( 'Result', PLUGIN_NAME ) . '</th>';
         $html .= '</tr>';
