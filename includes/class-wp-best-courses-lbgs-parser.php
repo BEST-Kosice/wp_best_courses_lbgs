@@ -1,27 +1,4 @@
 <?php
-/**
- * return parsed data for courses and list of Local BEST groups
- * ->courses
- * ->lbgs
- * on error return false
- * ->error_id  1 - can't download file
- * 			   2 - changed structure of file.
- **/
-
-// basic usage example
-
-// use best\kosice\datalib as BST_data;
-//
-//
-// $BEST_data = new BST_data\best_kosice_data();
-//
-// echo '<pre>';
-// $parsed = $BEST_data->season_courses();
-// var_dump($parsed);
-//
-
-
-
 /*
   TODO refactor to static class? (note: it is singleton to allow access to last error, pure static class would not allow it)
   php parser for courses  data
@@ -37,9 +14,6 @@ use Sunra\PhpSimple\HtmlDomParser;
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-
-// load lib for parsing
-//require 'vendor/simple_html_dom.php';
 
 // TODO: rename using convention: Large first characters, no explicit namespace repetition; rename file using wp convention
 class best_kosice_data
@@ -284,14 +258,17 @@ class best_kosice_data
             //get homepage URL of LBG from link inside heading
             $link = $lbg->find("h4 > a");
 			$name = preg_replace( '/\s+Local\s+Group\s+/', '', $link[0]->innertext() );
-			if (preg_match('/\s+Local\s+Group\s+/', $name) == 1)
-				$name = preg_replace( '/\s+Local\s+Group\s+/', '', $name );
-			else
-				$name = preg_replace( '/\s+Observer\s+Group\s+/', '', $name );
+			if (preg_match('/\s+Local\s+Group\s+/', $name) == 1) {
+                $name = preg_replace( '/\s+Local\s+Group\s+/', '', $name );
+            }
+			else {
+                $name = preg_replace( '/\s+Observer\s+Group\s+/', '', $name );
+            }
 			//get LBG code from <img> src attribute
 		    $code = $lbg->find("img");
-			if ($code)
-				$code = substr($code[0]->src, -2);
+			if ($code) {
+                $code = substr($code[0]->src, -2);
+            }
 			//if there is no image next to an LBG item, we will guess it is an observer group
 			else {
 				$observers = $html->find("#list section.lbg-list", 1);
@@ -302,36 +279,22 @@ class best_kosice_data
 			}
 			//get homepage URL
 		    $url = $lbg->find("dd a[href^=http]");
-            if (!$url)
+            if (!$url) {
                 $url = $this->parsed_link_prefix . '/aboutBEST/structure/lbgView.jsp?lbginfo=' . $code;
-            else
+            }
+            else {
                 $url = $url[0]->href;
+            }
             array_push( $theData, array($url, $code, $name) );
         }
         return $theData;
-
-		//old parser
-        /*foreach ($html as $key => $value) {
-            $rowData = false;
-            if (preg_match("/<option\s[^>]*value=(\"??)([^\" >]*?)\\1[^>]*>(.*)<\/option>/siU", $value, $matches)) {
-                if ($matches[2] != '') {
-                    $rowData = array();
-                    $rowData[] = $matches[2];
-                    // parsing state
-                    preg_match('#\((.*?)\)#', $matches[3], $state);
-                    $rowData[] = $state[1];
-                    $rowData[] = trim(substr($matches[3], 0, strpos($matches[3], '(')));
-                }
-            }
-
-            if ($rowData) {
-                $theData[] = $rowData;
-            }
-        }
-
-        return $theData;*/
     }
 
+    /**
+     * Parse html table into array
+     * @param  [type] $table [description]
+     * @return [array]        array parse values
+     */
     private function parse_table($table) {
 
 
@@ -364,31 +327,6 @@ class best_kosice_data
         }
 
         return $theData;
-    }
-
-    private function parse_dates($html)
-    {
-        $theData = false;
-        $html = HtmlDomParser::str_get_html($html);
-
-        foreach ($html->find('#contentBar') as $element) {
-
-            //var_dump($element->nodes);
-
-            //
-
-            //
-            // while ($element->hasChildNodes()){
-            //
-            //     var_dump(un$element->firstChild());
-            //     break;
-            //  }
-
-            $parentNode = $element->innertext();
-
-                // $regex = '/<[^>]*>[^<]*<[^>]*>/';
-           // preg_replace($regex, '', $element->innertext);
-        }
     }
 // end of class
 }

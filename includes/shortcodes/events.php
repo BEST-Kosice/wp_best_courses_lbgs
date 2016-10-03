@@ -10,19 +10,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 BEST_Courses_LBGS::instance()->enqueue_styles();
 BEST_Courses_LBGS::instance()->enqueue_scripts();
 
-// TODO add translation string
-?>
+global $wpdb;
+$data = $wpdb->get_results('SELECT * FROM '.$wpdb->prefix.'best_events', ARRAY_A);
 
-<?php
-    global $wpdb;
-    $data = $wpdb->get_results('SELECT * FROM '.$wpdb->prefix.'best_events', ARRAY_A);
+// TODO all operation make a as functions
 
-    $num_rows = $wpdb->num_rows;
+$num_rows = $wpdb->num_rows;
     if ($data){
-        $months_short = array('Jan', 'Feb', 'Mar', 'Ap', 'May', 'Jun',
-                              'Jul', 'Au', 'Sep', 'Oct', 'Nov', 'Dec');
-        $month_numbers = array('1.','2.','3.','4.','5.','6.',
-                               '7.','8.','9.','10.','11.','12.');
+        $months_short = array('Jan', 'Feb', 'Mar', 'Ap', 'May', 'Jun', 'Jul', 'Au', 'Sep', 'Oct', 'Nov', 'Dec');
+        $month_numbers = array('1.', '2.', '3.', '4.', '5.', '6.', '7.' ,'8.' ,'9.' , '10.', '11.', '12.');
         $tbody = '';
         for ($i = 0; $i < $num_rows; $i++){
             //data parsing
@@ -88,64 +84,60 @@ BEST_Courses_LBGS::instance()->enqueue_scripts();
 
     if ($data) :
     ?>
-    <h2>BEST learning events</h2>
-    <p>Pre zobrazenie stránky prihlásenia na daný kurz klikni na názov kurzu.</p>
+    <h2><?php echo __( 'BEST learning events', PLUGIN_NAME ) ?></h2>
     <table class="best-events js-best-events" data-sortable>
         <thead>
             <tr>
                 <th id="name" width="10%">
-                    <div><span>Názov</span></div>
+                    <div>
+                        <span><?php echo __( 'Name', PLUGIN_NAME ) ?></span>
+                    </div>
                     <div class="fa fa-fw fa-sort"></div>
                     <div class="fa fa-caret-down"></div>
                     <div class="fa fa-caret-up"></div>
                 </th>
                 <th id="type" width="15%">
-                    <div><span>Zameranie</span></div>
+                    <div><span><?php echo __( 'Type', PLUGIN_NAME ) ?></span></div>
                     <div class="fa fa-fw fa-sort"></div>
                     <div class="fa fa-caret-down"></div>
                     <div class="fa fa-caret-up"></div>
                 </th>
                 <th id="place" width="10%">
-                    <div><span>Miesto</span></div>
+                    <div><span><?php echo __( 'Place', PLUGIN_NAME ) ?></span></div>
                     <div class="fa fa-fw fa-sort"></div>
                     <div class="fa fa-caret-down"></div>
                     <div class="fa fa-caret-up"></div>
                 </th>
-                <?php /*
-                <th id="state" width="10%">
-                    <div><span>Štát</span></div>
-                    <div class="fa fa-fw fa-sort"></div>
-                    <div class="fa fa-caret-down"></div>
-                    <div class="fa fa-caret-up"></div>
-                </th>
-                <th id="app_deadline" width="15%">
-                    <div><span>Deadline prihlásenia</span></div>
-                    <div class="fa fa-fw fa-sort"></div>
-                    <div class="fa fa-caret-down"></div>
-                    <div class="fa fa-caret-up"></div>
-                </th>
+                <?php
+                /*
+                    <th id="app_deadline" width="15%">
+                        <div><span>Deadline prihlásenia</span></div>
+                        <div class="fa fa-fw fa-sort"></div>
+                        <div class="fa fa-caret-down"></div>
+                        <div class="fa fa-caret-up"></div>
+                    </th>
                 */
                 ?>
                 <th id="fee" width="10%" data-sortable-type="numeric">
-                    <div><span>Cena</span></div>
+                    <div><span><?php echo __( 'Fee', PLUGIN_NAME ) ?></span></div>
                     <div class="fa fa-fw fa-sort"></div>
                     <div class="fa fa-caret-down"></div>
                     <div class="fa fa-caret-up"></div>
                 </th>
                 <th id="duration" width="10%" data-sortable-type="numeric">
-                    <div><span>Trvanie</span></div>
+                    <div><span><?php echo __( 'Duration', PLUGIN_NAME ) ?></span></div>
                     <div class="fa fa-fw fa-sort"></div>
                     <div class="fa fa-caret-down"></div>
                     <div class="fa fa-caret-up"></div>
                 </th>
                 <th id="dates" width="10%" data-sortable-type="interval">
-                    <div><span>Od-do</span></div>
+                    <div><span><?php echo __( 'From - Till', PLUGIN_NAME ) ?></span></div>
                     <div class="fa fa-fw fa-sort"></div>
                     <div class="fa fa-caret-down"></div>
                     <div class="fa fa-caret-up"></div>
                 </th>
                 <th id="acad_complaxity" width="10%">
-                    <div><span>Úroveň*</span></div>
+                    <div><span><?php echo __( 'Complexity', PLUGIN_NAME ) ?></span></div>
                     <div class="fa fa-fw fa-sort"></div>
                     <div class="fa fa-caret-down"></div>
                     <div class="fa fa-caret-up"></div>
@@ -157,6 +149,7 @@ BEST_Courses_LBGS::instance()->enqueue_scripts();
         </tbody>
         <tfoot>
         <tr>
+            <?php // TODO TRANSLATE ?>
             <th colspan="9">*Úroveň kurzu označuje mieru špecializácie daného kurzu na uvedenú tému.
                 <br> Rozoznávajú sa úrovne základná (Basic, B) čo je všeobecný úvod k danej téme (viac
                 interdisciplinárne) a pokročilá (Advanced, A) ktorá poskytuje užšie a hlbšie zameranie na danú tému.
@@ -171,9 +164,9 @@ BEST_Courses_LBGS::instance()->enqueue_scripts();
             ?>
             <tr>
                 <th colspan="9">
-                    Naposledy aktualizované
                     <?php
-                    echo $dao
+                        echo __( 'Last synchronisation', PLUGIN_NAME );
+                        echo $dao;
                     ?>
                 </th>
             </tr>
@@ -184,9 +177,8 @@ BEST_Courses_LBGS::instance()->enqueue_scripts();
     </table>
 <?php
 else :
- ?>
-
-Viac o kurzoch sa dozvieš na <a href="https://best.eu.org/courses/welcome.jsp" target="_blank">https://best.eu.org/</a>
-
+echo  __( 'More about courses you can find on', PLUGIN_NAME );
+?>
+<a href="https://best.eu.org/courses/welcome.jsp" target="_blank">https://best.eu.org/</a>
 <?php
 endif;
